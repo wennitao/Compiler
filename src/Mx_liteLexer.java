@@ -1,4 +1,4 @@
-// Generated from src/Mx_lite.g4 by ANTLR 4.9
+// Generated from Mx_lite.g4 by ANTLR 4.9
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
