@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name": "Debug ANTLR4 grammar",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "src/mx_test/codegen/e1.mx",
+            "grammar": "src/MxLite.g4",
+            "startRule": "program",
+            "printParseTree": true,
+            "visualParseTree": true
+        }
+    ]
+}

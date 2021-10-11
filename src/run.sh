@@ -1,4 +1,4 @@
 source ~/.bash_profile
-antlr4 Mx_lite.g4
-javac Mx_lite*.java
-grun Mx_lite program -gui < mx_test/codegen/e1.mx
+antlr4 MxLite.g4
+javac MxLite*.java
+grun MxLite program -gui < mx_test/codegen/e1.mx
