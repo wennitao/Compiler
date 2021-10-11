@@ -51,6 +51,8 @@ primary
     : '(' expression ')'
     | Identifier
     | literal
+    | functionCall
+    | string
     ;
 
 literal
@@ -143,3 +145,29 @@ LineComment
     :   '//' ~[\r\n]* 
         -> skip
     ;
+
+builtinFunctionName
+    : builtin_print
+    | builtin_println
+    | builtin_printInt
+    | builtin_printlnInt
+    | builtin_getString
+    | builtin_getInt
+    | builtin_toString
+    ;
+
+builtin_print : 'print';
+builtin_println : 'println';
+builtin_printInt : 'printInt';
+builtin_printlnInt : 'printlnInt';
+builtin_getString : 'getString';
+builtin_getInt : 'getInt';
+builtin_toString : 'toString';
+
+functionParameter : expression;
+
+functionCall : (builtinFunctionName | Identifier) '(' (expression (',' expression)* )? ')';
+
+anyString : .*?;
+
+string : '"' anyString '"';

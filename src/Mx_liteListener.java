@@ -156,4 +156,124 @@ public interface Mx_liteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(Mx_liteParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtinFunctionName}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltinFunctionName(Mx_liteParser.BuiltinFunctionNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtinFunctionName}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltinFunctionName(Mx_liteParser.BuiltinFunctionNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_print}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_print(Mx_liteParser.Builtin_printContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_print}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_print(Mx_liteParser.Builtin_printContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_println}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_println(Mx_liteParser.Builtin_printlnContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_println}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_println(Mx_liteParser.Builtin_printlnContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_printInt}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_printInt(Mx_liteParser.Builtin_printIntContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_printInt}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_printInt(Mx_liteParser.Builtin_printIntContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_printlnInt}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_printlnInt(Mx_liteParser.Builtin_printlnIntContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_printlnInt}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_printlnInt(Mx_liteParser.Builtin_printlnIntContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_getString}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_getString(Mx_liteParser.Builtin_getStringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_getString}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_getString(Mx_liteParser.Builtin_getStringContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_getInt}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_getInt(Mx_liteParser.Builtin_getIntContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_getInt}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_getInt(Mx_liteParser.Builtin_getIntContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#builtin_toString}.
+	 * @param ctx the parse tree
+	 */
+	void enterBuiltin_toString(Mx_liteParser.Builtin_toStringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#builtin_toString}.
+	 * @param ctx the parse tree
+	 */
+	void exitBuiltin_toString(Mx_liteParser.Builtin_toStringContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#functionParameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionParameter(Mx_liteParser.FunctionParameterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#functionParameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionParameter(Mx_liteParser.FunctionParameterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionCall(Mx_liteParser.FunctionCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#functionCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionCall(Mx_liteParser.FunctionCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#anyString}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnyString(Mx_liteParser.AnyStringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#anyString}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnyString(Mx_liteParser.AnyStringContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Mx_liteParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void enterString(Mx_liteParser.StringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Mx_liteParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void exitString(Mx_liteParser.StringContext ctx);
 }
