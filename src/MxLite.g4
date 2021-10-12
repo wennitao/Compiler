@@ -4,6 +4,7 @@ program : (varDefineStmt | functionDef | classDef)*;
 
 builtinType : Int | Bool | String;
 varType : builtinType | Identifier | varType '[' ']';
+newVarType : builtinType | Identifier | newVarType '[' expression? ']';
 functionType : Void | varType;
 
 varDef : varType varDeclaration (',' varDeclaration)*;
@@ -12,7 +13,7 @@ varDeclaration : Identifier ('=' expression)?;
 functionDef : functionType Identifier '(' functionParameterDef ')' suite;
 functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
 
-classDef : Class '{' classConstructor? (varDef | functionDef)* '}' ';';
+classDef : Class Identifier '{' classConstructor? (varDefineStmt | functionDef)* '}' ';';
 classConstructor : Identifier '(' ')' suite;
 
 suite: '{' statement* '}';
@@ -31,6 +32,8 @@ statement
     ;
 varDefineStmt : varDef ';';
 
+lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite '(' expressionList? ')'; 
+
 expressionList : expression (',' expression)*;
 expression
     : expression op = ('+' | '-') expression
@@ -41,17 +44,20 @@ expression
     | expression op = '&' expression
     | expression op = '^' expression
     | expression op = '|' expression
-    | expression op = '~' expression
     | expression op = '&&' expression
     | expression op = '||' expression
-    | expression op = '!' expression
+    | <assoc=right> ('+' | '-') expression
+    | <assoc=right> '~' expression
+    | <assoc=right> '!' expression
     | <assoc=right> expression '=' expression
     | <assoc=right> (SelfPlus | SelfMinus) expression
+    | <assoc=right> New newVarType
     | expression (SelfPlus | SelfMinus)
     | expression Dot expression
     | expression '[' expression ']'
     | expression '(' expressionList? ')'
     | primary
+    | lambdaStmt
     ;
 
 primary
@@ -59,7 +65,7 @@ primary
     | Identifier
     | literal
     | This
-    |Null
+    | Null
     ;
 
 literal

@@ -51,6 +51,18 @@ public class MxLiteBaseListener implements MxLiteListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNewVarType(MxLiteParser.NewVarTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewVarType(MxLiteParser.NewVarTypeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunctionType(MxLiteParser.FunctionTypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -166,6 +178,18 @@ public class MxLiteBaseListener implements MxLiteListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVarDefineStmt(MxLiteParser.VarDefineStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLambdaStmt(MxLiteParser.LambdaStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLambdaStmt(MxLiteParser.LambdaStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

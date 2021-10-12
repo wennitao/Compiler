@@ -37,6 +37,16 @@ public interface MxLiteListener extends ParseTreeListener {
 	 */
 	void exitVarType(MxLiteParser.VarTypeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MxLiteParser#newVarType}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewVarType(MxLiteParser.NewVarTypeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxLiteParser#newVarType}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewVarType(MxLiteParser.NewVarTypeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MxLiteParser#functionType}.
 	 * @param ctx the parse tree
 	 */
@@ -136,6 +146,16 @@ public interface MxLiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVarDefineStmt(MxLiteParser.VarDefineStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MxLiteParser#lambdaStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterLambdaStmt(MxLiteParser.LambdaStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxLiteParser#lambdaStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitLambdaStmt(MxLiteParser.LambdaStmtContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MxLiteParser#expressionList}.
 	 * @param ctx the parse tree
