@@ -3,9 +3,9 @@ package AST;
 import Util.position;
 
 public class forConditionNode extends ASTNode {
-    public expressionNode expression ;
+    public ExpressionNode expression ;
 
-    public forConditionNode (position pos, expressionNode _expression) {
+    public forConditionNode (position pos, ExpressionNode _expression) {
         super (pos) ;
         expression = _expression ;
     }

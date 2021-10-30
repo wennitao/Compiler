@@ -2,7 +2,7 @@ package AST;
 
 import Util.position;
 
-public class functionDefNode extends ASTNode {
+public class functionDefNode extends BeginDefNode {
     public functionTypeNode functionType ;
     public String name ;
     public functionParameterDefNode parameters ;

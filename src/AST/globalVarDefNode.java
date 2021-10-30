@@ -2,7 +2,7 @@ package AST;
 
 import Util.position;
 
-public class globalVarDefNode extends ASTNode {
+public class globalVarDefNode extends BeginDefNode {
     public varDefNode varDef ;
 
     public globalVarDefNode (position pos, varDefNode _varDef) {

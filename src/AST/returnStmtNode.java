@@ -2,10 +2,10 @@ package AST;
 
 import Util.position;
 
-public class returnStmtNode extends controlStmtNode {
-    public expressionNode expression ;
+public class returnStmtNode extends ControlStmtNode {
+    public ExpressionNode expression ;
     
-    public returnStmtNode (position pos, expressionNode _expression) {
+    public returnStmtNode (position pos, ExpressionNode _expression) {
         super (pos) ;
         expression = _expression ;
     }

@@ -3,9 +3,9 @@ package AST;
 import Util.position;
 
 public class forIncrNode extends ASTNode {
-    public expressionNode expression ;
+    public ExpressionNode expression ;
      
-    public forIncrNode (position pos, expressionNode _expression) {
+    public forIncrNode (position pos, ExpressionNode _expression) {
         super (pos) ;
         expression = _expression ;
     }

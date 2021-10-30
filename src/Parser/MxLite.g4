@@ -1,10 +1,12 @@
 grammar MxLite;
 
-program : (globalVarDefStmt | functionDef | classDef)*;
+beginDef : (globalVarDefStmt | functionDef | classDef) ;
+program : beginDef*;
 
 builtinType : Int | Bool | String;
 varType : builtinType | Identifier | varType '[' ']';
-newVarType : builtinType | Identifier | newVarType '[' expression? ']';
+newVar : (builtinType | Identifier) (newSize*) ;
+newSize : '[' expression? ']' ;
 functionType : Void | varType;
 
 varDef : varType varDeclaration (',' varDeclaration)*;
@@ -49,28 +51,28 @@ lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite '(' expressionList? '
 
 expressionList : expression (',' expression)*;
 expression
-    : expression op = ('+' | '-') expression
-    | expression op = ('*' | '/' | '%') expression
-    | expression op = ('<' | '<=' | '>' | '>=') expression
-    | expression op = ('==' | '!=') expression
-    | expression op = ('<<' | '>>') expression
-    | expression op = '&' expression
-    | expression op = '^' expression
-    | expression op = '|' expression
-    | expression op = '&&' expression
-    | expression op = '||' expression
-    | <assoc=right> ('+' | '-') expression
-    | <assoc=right> '~' expression
-    | <assoc=right> '!' expression
-    | <assoc=right> expression '=' expression
-    | <assoc=right> (SelfPlus | SelfMinus) expression
-    | <assoc=right> New newVarType
-    | expression (SelfPlus | SelfMinus)
-    | expression Dot expression
-    | expression '[' expression ']'
-    | expression '(' expressionList? ')'
-    | primary
-    | lambdaStmt
+    : expression op = (Plus | Minus) expression                                 #binaryExpr
+    | expression op = (Mul | Div | Mod) expression                              #binaryExpr
+    | expression op = (Less | LessEqual | Greater | GreaterEqual) expression    #binaryExpr
+    | expression op = (Equal | NotEqual) expression                             #binaryExpr
+    | expression op = (LeftShift | RightShift) expression                       #binaryExpr
+    | expression op = And expression                                            #binaryExpr
+    | expression op = Caret expression                                          #binaryExpr
+    | expression op = Or expression                                             #binaryExpr
+    | expression op = AndAnd expression                                         #binaryExpr
+    | expression op = OrOr expression                                           #binaryExpr
+    | <assoc=right> (Plus | Minus) expression                                   #unaryExpr
+    | <assoc=right> Tilde expression                                            #unaryExpr
+    | <assoc=right> Not expression                                              #unaryExpr
+    | <assoc=right> expression Assign expression                                #binaryExpr
+    | <assoc=right> (SelfPlus | SelfMinus) expression                           #preIncExpr
+    | <assoc=right> New newVar                                                  #newExpr
+    | expression (SelfPlus | SelfMinus)                                         #postIncExpr
+    | expression Dot expression                                                 #binaryExpr
+    | expression '[' expression ']'                                             #arrayExpr
+    | expression '(' expressionList? ')'                                        #functionCallExpr
+    | primary                                                                   #atomExpr
+    | lambdaStmt                                                                #lambdaExpr
     ;
 
 primary

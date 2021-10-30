@@ -6,7 +6,7 @@ import Util.position;
 
 public class varDeclarationNode extends ASTNode{
     public String name ;
-    public expressionNode expression ;
+    public ExpressionNode expression ;
     public Boolean isInitialized ;
 
     public varDeclarationNode (position pos, String _name) {
@@ -15,7 +15,7 @@ public class varDeclarationNode extends ASTNode{
         isInitialized = false ;
     }
 
-    public varDeclarationNode (position pos, String _name, expressionNode _expression) {
+    public varDeclarationNode (position pos, String _name, ExpressionNode _expression) {
         name = _name ;
         expression = _expression ;
         isInitialized = true ;

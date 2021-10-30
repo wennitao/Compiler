@@ -2,12 +2,12 @@ package AST;
 
 import Util.position;
 
-public class ifStmtNode extends statementNode {
-    public expressionNode expression ;
-    public statementNode trueStatement ;
-    public statementNode falseStatement ;
+public class ifStmtNode extends StatementNode {
+    public ExpressionNode expression ;
+    public StatementNode trueStatement ;
+    public StatementNode falseStatement ;
 
-    public ifStmtNode (position pos, expressionNode _expression, statementNode _trueStatement, statementNode _falseStatement) {
+    public ifStmtNode (position pos, ExpressionNode _expression, StatementNode _trueStatement, StatementNode _falseStatement) {
         super (pos) ;
         expression = _expression ;
         trueStatement = _trueStatement ;

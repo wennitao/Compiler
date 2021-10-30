@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Util.position;
 
-public class classDefNode extends ASTNode {
+public class classDefNode extends BeginDefNode {
     public String name ;
     public classConstructorNode classConstructor ;
     public ArrayList<functionDefNode> functionDef ;

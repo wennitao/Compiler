@@ -2,14 +2,14 @@ package AST;
 
 import Util.position;
 
-public class forStmtNode extends loopStmtNode {
+public class forStmtNode extends LoopStmtNode {
     public forInitNode forInit ;
     public forConditionNode forCondition ;
     public forIncrNode forIncr ;
 
-    public statementNode statement ;
+    public StatementNode statement ;
 
-    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, expressionNode _expression) {
+    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, ExpressionNode _expression) {
         super (pos) ;
         forInit = _forInit ;
         forCondition = _forCondition ;

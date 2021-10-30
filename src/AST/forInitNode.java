@@ -4,9 +4,9 @@ import Util.position;
 
 public class forInitNode extends ASTNode {
     public varDefNode varDef ;
-    public expressionNode expression ;
+    public ExpressionNode expression ;
 
-    public forInitNode (position pos, varDefNode _varDef, expressionNode _expression) {
+    public forInitNode (position pos, varDefNode _varDef, ExpressionNode _expression) {
         super (pos) ;
         varDef = _varDef ;
         expression = _expression ;

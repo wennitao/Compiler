@@ -2,7 +2,7 @@ package AST;
 
 import Util.position;
 
-public class continueStmtNode extends controlStmtNode {
+public class continueStmtNode extends ControlStmtNode {
     public continueStmtNode (position pos) {
         super (pos) ;
     }

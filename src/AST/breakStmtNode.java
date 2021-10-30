@@ -2,7 +2,7 @@ package AST;
 
 import Util.position;
 
-public class breakStmtNode extends controlStmtNode {
+public class breakStmtNode extends ControlStmtNode {
     public breakStmtNode (position pos) {
         super (pos) ;
     }

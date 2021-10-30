@@ -2,8 +2,8 @@ package AST;
 
 import Util.position;
 
-abstract public class expressionNode extends statementNode {
-    public expressionNode (position pos) {
+abstract public class ExpressionNode extends StatementNode {
+    public ExpressionNode (position pos) {
         super (pos) ;
     }
 }
