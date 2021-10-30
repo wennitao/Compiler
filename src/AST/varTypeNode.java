@@ -1,7 +1,6 @@
 package AST;
 
 import Util.position;
-import Util.Type.basicType;
 
 public class varTypeNode extends ASTNode {
     public String classID ;

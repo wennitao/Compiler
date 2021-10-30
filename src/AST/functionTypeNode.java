@@ -1,7 +1,5 @@
 package AST;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import Util.position;
 
 public class functionTypeNode extends ASTNode {

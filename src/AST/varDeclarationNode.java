@@ -1,7 +1,5 @@
 package AST;
 
-import java.beans.Expression;
-
 import Util.position;
 
 public class varDeclarationNode extends ASTNode{
@@ -16,6 +14,7 @@ public class varDeclarationNode extends ASTNode{
     }
 
     public varDeclarationNode (position pos, String _name, ExpressionNode _expression) {
+        super (pos) ;
         name = _name ;
         expression = _expression ;
         isInitialized = true ;
