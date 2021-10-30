@@ -1,6 +1,6 @@
 grammar MxLite;
 
-program : (varDefineStmt | functionDef | classDef)*;
+program : (globalVarDefStmt | functionDef | classDef)*;
 
 builtinType : Int | Bool | String;
 varType : builtinType | Identifier | varType '[' ']';
@@ -11,31 +11,39 @@ varDef : varType varDeclaration (',' varDeclaration)*;
 varDeclaration : Identifier ('=' expression)?;
 
 functionDef : functionType Identifier '(' functionParameterDef ')' suite;
-functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
+functionParameterDef : (parameter (',' parameter)* )?;
+parameter : varType Identifier ;
 
-classDef : Class Identifier '{' classConstructor? (varDefineStmt | functionDef)* '}' ';';
+classDef : Class Identifier '{' classConstructor? (varDefStmt | functionDef)* '}' ';';
 classConstructor : Identifier '(' ')' suite;
 
 suite: '{' statement* '}';
 
+forInit : varDef | expression;
+forCondition : expression;
+forIncr : expression;
+
 ifStmt : If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? ;
-forStmt : For '(' (varDef | expression)? ';' expression? ';' expression? ')' statement ;
+forStmt : For '(' forInit? ';' forIncr? ';' forIncr? ')' statement ;
 whileStmt : While '(' expression ')' statement;
+loopStmt : forStmt | whileStmt ;
+breakStmt : Break ';';
+continueStmt : Continue ';';
 returnStmt : Return expression? ';';
-controlStmt : (Break | Continue) ';';
+controlStmt : breakStmt | continueStmt | returnStmt ;
 
 statement
     : suite
-    | varDefineStmt
+    | varDefStmt
     | ifStmt
-    | forStmt
-    | whileStmt
-    | returnStmt
+    | loopStmt
     | controlStmt
     | expression ';'
     | ';'
     ;
-varDefineStmt : varDef ';';
+
+globalVarDefStmt : varDef ';';
+varDefStmt : varDef ';';
 
 lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite '(' expressionList? ')'; 
 
