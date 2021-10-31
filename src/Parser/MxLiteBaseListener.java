@@ -1,6 +1,5 @@
+// Generated from Parser/MxLite.g4 by ANTLR 4.9.1
 package Parser;
-
-// Generated from MxLite.g4 by ANTLR 4.9.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -449,6 +448,18 @@ public class MxLiteBaseListener implements MxLiteListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBracketExpr(MxLiteParser.BracketExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBracketExpr(MxLiteParser.BracketExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunctionCallExpr(MxLiteParser.FunctionCallExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -504,18 +515,6 @@ public class MxLiteBaseListener implements MxLiteListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPrimary(MxLiteParser.PrimaryContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterLiteral(MxLiteParser.LiteralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLiteral(MxLiteParser.LiteralContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

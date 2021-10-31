@@ -16,7 +16,7 @@ import java.io.InputStream;
 
 public class main {
     public static void main(String[] args) throws Exception{
-        String name = "test.mx";
+        String name = "e1.mx";
         InputStream raw = System.in;
         // InputStream raw = new FileInputStream(name);
         try {
@@ -31,6 +31,7 @@ public class main {
 
             ParseTree parseTreeRoot = parser.program();
             ASTBuilder astBuilder = new ASTBuilder();
+            // System.out.println("visit root\n");
             RootNode ASTRoot = (RootNode) astBuilder.visit(parseTreeRoot);
 
             globalScope gScope = new globalScope();

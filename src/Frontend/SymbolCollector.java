@@ -150,6 +150,7 @@ public class SymbolCollector implements ASTVisitor {
 
     @Override public void visit (arrayExprNode it) {}
     @Override public void visit (binaryExprNode it) {}
+    @Override public void visit (bracketExprNode it) {}
     @Override public void visit (breakStmtNode it) {}
     @Override public void visit (builtinTypeNode it) {}
     @Override public void visit (classConstructorNode it) {}
@@ -168,6 +169,7 @@ public class SymbolCollector implements ASTVisitor {
     @Override public void visit (newVarNode it) {}
     @Override public void visit (postIncExprNode it) {}
     @Override public void visit (preIncExprNode it) {}
+    @Override public void visit (primaryNode it) {}
     @Override public void visit (returnStmtNode it) {}
     @Override public void visit (suiteNode it) {}
     @Override public void visit (unaryExprNode it) {}

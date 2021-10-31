@@ -51,7 +51,11 @@ lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite '(' expressionList? '
 
 expressionList : expression (',' expression)*;
 expression
-    : expression op = (Plus | Minus) expression                                 #binaryExpr
+    : expression Dot expression                                                 #binaryExpr
+    | expression '(' expressionList? ')'                                        #functionCallExpr
+    | lambdaStmt                                                                #lambdaExpr
+    | expression '[' expression ']'                                             #arrayExpr
+    | expression op = (Plus | Minus) expression                                 #binaryExpr
     | expression op = (Mul | Div | Mod) expression                              #binaryExpr
     | expression op = (Less | LessEqual | Greater | GreaterEqual) expression    #binaryExpr
     | expression op = (Equal | NotEqual) expression                             #binaryExpr
@@ -68,26 +72,19 @@ expression
     | <assoc=right> (SelfPlus | SelfMinus) expression                           #preIncExpr
     | <assoc=right> New newVar                                                  #newExpr
     | expression (SelfPlus | SelfMinus)                                         #postIncExpr
-    | expression Dot expression                                                 #binaryExpr
-    | expression '[' expression ']'                                             #arrayExpr
-    | expression '(' expressionList? ')'                                        #functionCallExpr
-    | primary                                                                   #atomExpr
-    | lambdaStmt                                                                #lambdaExpr
+    | '(' expression ')'                                                        #bracketExpr
+    | primary                                                                   #atomExpr 
     ;
+
+
 
 primary
-    : '(' expression ')'
-    | Identifier
-    | literal
-    | This
+    : This
     | Null
-    ;
-
-literal
-    : DecimalInteger
+    | DecimalInteger
+    | BoolLiteral
     | StringObject
-    | True
-    | False
+    | Identifier
     ;
 
 Int : 'int';
@@ -157,6 +154,8 @@ DecimalInteger
     : [1-9] [0-9]*
     | '0'
     ;
+
+BoolLiteral : True | False ;
 
 StringObject : '"' (' ' | PrintableCharacter | EscapeCharacter)* '"';
 

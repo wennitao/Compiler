@@ -19,7 +19,8 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitGlobalVarDefStmt (MxLiteParser.GlobalVarDefStmtContext ctx) {
-        return visit (ctx.varDef()) ;
+        return new globalVarDefNode(new position(ctx), (varDefNode) visit (ctx.varDef())) ;
+        // return visit (ctx.varDef()) ;
     }
 
     @Override
@@ -30,6 +31,11 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitArrayExpr (MxLiteParser.ArrayExprContext ctx) {
         return new arrayExprNode(new position(ctx), (ExpressionNode) visit (ctx.expression(0)), (ExpressionNode) visit (ctx.expression(1))) ;
+    }
+
+    @Override
+    public ASTNode visitAtomExpr (MxLiteParser.AtomExprContext ctx) {
+        return visit (ctx.primary()) ;
     }
 
     @Override
@@ -56,6 +62,11 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
         else if (ctx.Assign() != null) binaryExpr.binaryOp = binaryExprNode.binaryOperator.Assign ;
         else if (ctx.Dot() != null) binaryExpr.binaryOp = binaryExprNode.binaryOperator.Dot ;
         return binaryExpr ;
+    }
+
+    @Override
+    public ASTNode visitBracketExpr (MxLiteParser.BracketExprContext ctx) {
+        return new bracketExprNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
     }
 
     @Override
@@ -120,6 +131,8 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitFunctionCallExpr (MxLiteParser.FunctionCallExprContext ctx) {
+        ExpressionNode e1 = (ExpressionNode) visit (ctx.expression()) ;
+        expressionListNode e2 = (expressionListNode) visit (ctx.expressionList()) ;
         return new functionCallExprNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (expressionListNode) visit (ctx.expressionList())) ;
     }
 
@@ -152,6 +165,11 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     }
 
     @Override
+    public ASTNode visitNewExpr (MxLiteParser.NewExprContext ctx) {
+        return visit (ctx.newVar()) ;
+    }
+
+    @Override
     public ASTNode visitNewSize (MxLiteParser.NewSizeContext ctx) {
         return new newSizeNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
     }
@@ -181,6 +199,16 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     }
 
     @Override
+    public ASTNode visitPrimary (MxLiteParser.PrimaryContext ctx) {
+        if (ctx.This() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.This, null) ;
+        else if (ctx.Null() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Null, null) ;
+        else if (ctx.DecimalInteger() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Int, null) ;
+        else if (ctx.BoolLiteral() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Bool, null) ;
+        else if (ctx.StringObject() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.String, ctx.StringObject().toString()) ;
+        else return new primaryNode(new position(ctx), primaryNode.primaryType.Identifier, ctx.Identifier().toString()) ;
+    }
+
+    @Override
     public ASTNode visitReturnStmt (MxLiteParser.ReturnStmtContext ctx) {
         return new returnStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
     }
@@ -204,7 +232,7 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitVarDeclaration (MxLiteParser.VarDeclarationContext ctx) {
-        if (ctx.expression() != null) return new varDeclarationNode(new position(ctx), ctx.Identifier().toString()) ;
+        if (ctx.expression() == null) return new varDeclarationNode(new position(ctx), ctx.Identifier().toString()) ;
         else return new varDeclarationNode(new position(ctx), ctx.Identifier().toString(), (ExpressionNode) visit (ctx.expression())) ;
     }
 

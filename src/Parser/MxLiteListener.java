@@ -1,6 +1,5 @@
+// Generated from Parser/MxLite.g4 by ANTLR 4.9.1
 package Parser;
-
-// Generated from MxLite.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -379,6 +378,18 @@ public interface MxLiteListener extends ParseTreeListener {
 	 */
 	void exitLambdaExpr(MxLiteParser.LambdaExprContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code bracketExpr}
+	 * labeled alternative in {@link MxLiteParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterBracketExpr(MxLiteParser.BracketExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code bracketExpr}
+	 * labeled alternative in {@link MxLiteParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitBracketExpr(MxLiteParser.BracketExprContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code functionCallExpr}
 	 * labeled alternative in {@link MxLiteParser#expression}.
 	 * @param ctx the parse tree
@@ -436,14 +447,4 @@ public interface MxLiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPrimary(MxLiteParser.PrimaryContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MxLiteParser#literal}.
-	 * @param ctx the parse tree
-	 */
-	void enterLiteral(MxLiteParser.LiteralContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MxLiteParser#literal}.
-	 * @param ctx the parse tree
-	 */
-	void exitLiteral(MxLiteParser.LiteralContext ctx);
 }

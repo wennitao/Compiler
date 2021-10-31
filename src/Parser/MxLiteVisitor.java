@@ -1,6 +1,5 @@
+// Generated from Parser/MxLite.g4 by ANTLR 4.9.1
 package Parser;
-
-// Generated from MxLite.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -233,6 +232,13 @@ public interface MxLiteVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLambdaExpr(MxLiteParser.LambdaExprContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code bracketExpr}
+	 * labeled alternative in {@link MxLiteParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBracketExpr(MxLiteParser.BracketExprContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code functionCallExpr}
 	 * labeled alternative in {@link MxLiteParser#expression}.
 	 * @param ctx the parse tree
@@ -266,10 +272,4 @@ public interface MxLiteVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPrimary(MxLiteParser.PrimaryContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MxLiteParser#literal}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLiteral(MxLiteParser.LiteralContext ctx);
 }

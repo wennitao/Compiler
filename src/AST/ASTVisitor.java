@@ -17,10 +17,12 @@ public interface ASTVisitor {
     
     void visit (arrayExprNode it) ;
     void visit (binaryExprNode it) ;
+    void visit (bracketExprNode it) ;
     void visit (functionCallExprNode it) ;
     void visit (lambdaStmtNode it) ;
     void visit (postIncExprNode it) ;
     void visit (preIncExprNode it) ;
+    void visit (primaryNode it) ;
     void visit (unaryExprNode it) ;
 
     void visit (suiteNode it) ;
