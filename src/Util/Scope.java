@@ -8,6 +8,11 @@ public class Scope {
     private HashMap<String, Type> members ;
     private Scope parentScope ;
 
+    public Scope () {
+        members = new HashMap<>() ;
+        parentScope = null ;
+    }
+
     public Scope (Scope _parentScope) {
         members = new HashMap<>() ;
         parentScope = _parentScope ;
@@ -17,9 +22,9 @@ public class Scope {
         return parentScope ;
     }
 
-    public void defineVariable (String name, Type t, position pos) {
+    public void defineVariable (String name, Type type, position pos) {
         if (members.containsKey(name)) throw new semanticError("redefined variable " + name, pos) ;
-        members.put(name, t) ;
+        members.put(name, type) ;
     }
 
     public boolean containsVariable (String name, boolean lookUpon) {
@@ -28,9 +33,9 @@ public class Scope {
         else return false ;
     }
 
-    public Type getType (String name, boolean lookUpon) {
+    public Type getType (position pos, String name, boolean lookUpon) {
         if (members.containsKey(name)) return members.get(name) ;
-        else if (parentScope != null && lookUpon) return parentScope.getType(name, true) ;
-        else return null ;
+        else if (parentScope != null && lookUpon) return parentScope.getType(pos, name, true) ;
+        else throw new semanticError("identifier " + name + " not found", pos);
     }
 }

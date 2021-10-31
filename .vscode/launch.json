@@ -2,6 +2,13 @@
     "version": "2.0.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch main",
+            "request": "launch",
+            "mainClass": "main",
+            "projectName": "Test_dcafd25c"
+        },
+        {
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",

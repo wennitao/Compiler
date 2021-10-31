@@ -5,7 +5,7 @@ import Util.position;
 public class varTypeNode extends ASTNode {
     public String classID ;
     public builtinTypeNode builtinType ;
-    int dim ;
+    public int dim ;
 
     public varTypeNode (position pos, String _classID, builtinTypeNode _builtinType, int _dim) {
         super (pos) ;
