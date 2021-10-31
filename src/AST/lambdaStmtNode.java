@@ -2,12 +2,12 @@ package AST;
 
 import Util.position;
 
-public class lambdaExprNode extends ExpressionNode {
+public class lambdaStmtNode extends ExpressionNode {
     public functionParameterDefNode functionParameters ;
     public suiteNode suite ;
     public expressionListNode expressionList ;
 
-    public lambdaExprNode (position pos, functionParameterDefNode _functionParameters, suiteNode _suite, expressionListNode _expressionList) {
+    public lambdaStmtNode (position pos, functionParameterDefNode _functionParameters, suiteNode _suite, expressionListNode _expressionList) {
         super (pos) ;
         functionParameters = _functionParameters;
         suite = _suite ;

@@ -4,7 +4,7 @@ beginDef : (globalVarDefStmt | functionDef | classDef) ;
 program : beginDef*;
 
 builtinType : Int | Bool | String;
-varType : builtinType | Identifier | varType '[' ']';
+varType : (builtinType | Identifier) ('[' ']')* ;
 newVar : (builtinType | Identifier) (newSize*) ;
 newSize : '[' expression? ']' ;
 functionType : Void | varType;
@@ -26,7 +26,7 @@ forCondition : expression;
 forIncr : expression;
 
 ifStmt : If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? ;
-forStmt : For '(' forInit? ';' forIncr? ';' forIncr? ')' statement ;
+forStmt : For '(' forInit? ';' forCondition? ';' forIncr? ')' statement ;
 whileStmt : While '(' expression ')' statement;
 loopStmt : forStmt | whileStmt ;
 breakStmt : Break ';';

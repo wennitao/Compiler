@@ -9,11 +9,12 @@ public class forStmtNode extends LoopStmtNode {
 
     public StatementNode statement ;
 
-    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, ExpressionNode _expression) {
+    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, StatementNode _statement) {
         super (pos) ;
         forInit = _forInit ;
         forCondition = _forCondition ;
         forIncr = _forIncr ;
+        statement = _statement ;
     } 
 
     @Override
