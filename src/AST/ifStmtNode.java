@@ -4,8 +4,7 @@ import Util.position;
 
 public class ifStmtNode extends StatementNode {
     public ExpressionNode expression ;
-    public StatementNode trueStatement ;
-    public StatementNode falseStatement ;
+    public StatementNode trueStatement, falseStatement ;
 
     public ifStmtNode (position pos, ExpressionNode _expression, StatementNode _trueStatement, StatementNode _falseStatement) {
         super (pos) ;

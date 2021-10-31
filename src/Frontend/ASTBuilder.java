@@ -1,5 +1,7 @@
 package Frontend;
 
+import java.beans.Statement;
+
 import AST.*;
 import AST.postIncExprNode.postIncOperator;
 import AST.preIncExprNode.preIncOperator;
@@ -109,6 +111,12 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
         return expressionList ;
     }
 
+    @Override 
+    public ASTNode visitLoopStmt (MxLiteParser.LoopStmtContext ctx) {
+        if (ctx.forStmt() != null) return visit (ctx.forStmt()) ;
+        else return visit (ctx.whileStmt()) ;
+    }
+
     @Override
     public ASTNode visitForCondition (MxLiteParser.ForConditionContext ctx) {
         return new forConditionNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
@@ -121,18 +129,20 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitForInit (MxLiteParser.ForInitContext ctx) {
-        return new forInitNode(new position(ctx), (varDefNode) visit (ctx.varDef()), (ExpressionNode) visit (ctx.expression())) ;
+        if (ctx.varDef() != null) return new forInitNode(new position(ctx), (varDefNode) visit (ctx.varDef()), null) ;
+        else return new forInitNode(new position(ctx), null, (ExpressionNode) visit (ctx.expression())) ;
     }
 
     @Override
     public ASTNode visitForStmt (MxLiteParser.ForStmtContext ctx) {
-        return new forStmtNode(new position(ctx), (forInitNode) visit(ctx.forInit()), (forConditionNode) visit (ctx.forCondition()), (forIncrNode) visit (ctx.forIncr()), (StatementNode) visit (ctx.statement())) ;
+        forInitNode forInit = ctx.forInit() != null ?  (forInitNode) visit (ctx.forInit()) : null ;
+        forConditionNode forCondition = ctx.forCondition() != null ? (forConditionNode) visit (ctx.forCondition()) : null ;
+        forIncrNode forIncr = ctx.forIncr() != null ? (forIncrNode) visit (ctx.forIncr()) : null ;
+        return new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
     }
 
     @Override
     public ASTNode visitFunctionCallExpr (MxLiteParser.FunctionCallExprContext ctx) {
-        ExpressionNode e1 = (ExpressionNode) visit (ctx.expression()) ;
-        expressionListNode e2 = (expressionListNode) visit (ctx.expressionList()) ;
         return new functionCallExprNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (expressionListNode) visit (ctx.expressionList())) ;
     }
 
@@ -156,7 +166,10 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitIfStmt (MxLiteParser.IfStmtContext ctx) {
-        return new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement(0)), (StatementNode) visit (ctx.statement(1))) ;
+        ifStmtNode ifStatement = new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement(0)), null) ;
+        if (ctx.statement(1) != null) ifStatement.falseStatement = (StatementNode) visit (ctx.statement(1)) ;
+        return ifStatement ;
+        // return new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement(0)), (StatementNode) visit (ctx.statement(1))) ;
     }
 
     @Override
@@ -202,8 +215,8 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     public ASTNode visitPrimary (MxLiteParser.PrimaryContext ctx) {
         if (ctx.This() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.This, null) ;
         else if (ctx.Null() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Null, null) ;
-        else if (ctx.DecimalInteger() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Int, null) ;
-        else if (ctx.BoolLiteral() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Bool, null) ;
+        else if (ctx.DecimalInteger() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Int, ctx.DecimalInteger().toString()) ;
+        else if (ctx.BoolLiteral() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.Bool, ctx.BoolLiteral().toString()) ;
         else if (ctx.StringObject() != null) return new primaryNode(new position(ctx), primaryNode.primaryType.String, ctx.StringObject().toString()) ;
         else return new primaryNode(new position(ctx), primaryNode.primaryType.Identifier, ctx.Identifier().toString()) ;
     }

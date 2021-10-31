@@ -25,7 +25,7 @@ forInit : varDef | expression;
 forCondition : expression;
 forIncr : expression;
 
-ifStmt : If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? ;
+ifStmt : If '(' expression ')' statement (Else statement)? ;
 forStmt : For '(' forInit? ';' forCondition? ';' forIncr? ')' statement ;
 whileStmt : While '(' expression ')' statement;
 loopStmt : forStmt | whileStmt ;
@@ -47,12 +47,12 @@ statement
 globalVarDefStmt : varDef ';';
 varDefStmt : varDef ';';
 
-lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite '(' expressionList? ')'; 
+lambdaStmt : '[&]' '(' functionParameterDef ')' '->' suite expressionList ; 
 
-expressionList : expression (',' expression)*;
+expressionList : '(' (expression (',' expression)*)? ')' ;
 expression
     : expression Dot expression                                                 #binaryExpr
-    | expression '(' expressionList? ')'                                        #functionCallExpr
+    | expression expressionList                                                 #functionCallExpr
     | lambdaStmt                                                                #lambdaExpr
     | expression '[' expression ']'                                             #arrayExpr
     | expression op = (Plus | Minus) expression                                 #binaryExpr
