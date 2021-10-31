@@ -1,4 +1,6 @@
-// Generated from MxLite.g4 by ANTLR 4.9
+package Parser;
+
+// Generated from MxLite.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -6,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  * {@link MxLiteParser}.
  */
 public interface MxLiteListener extends ParseTreeListener {
+	/**
+	 * Enter a parse tree produced by {@link MxLiteParser#beginDef}.
+	 * @param ctx the parse tree
+	 */
+	void enterBeginDef(MxLiteParser.BeginDefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxLiteParser#beginDef}.
+	 * @param ctx the parse tree
+	 */
+	void exitBeginDef(MxLiteParser.BeginDefContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MxLiteParser#program}.
 	 * @param ctx the parse tree
@@ -37,15 +49,25 @@ public interface MxLiteListener extends ParseTreeListener {
 	 */
 	void exitVarType(MxLiteParser.VarTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MxLiteParser#newVarType}.
+	 * Enter a parse tree produced by {@link MxLiteParser#newVar}.
 	 * @param ctx the parse tree
 	 */
-	void enterNewVarType(MxLiteParser.NewVarTypeContext ctx);
+	void enterNewVar(MxLiteParser.NewVarContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MxLiteParser#newVarType}.
+	 * Exit a parse tree produced by {@link MxLiteParser#newVar}.
 	 * @param ctx the parse tree
 	 */
-	void exitNewVarType(MxLiteParser.NewVarTypeContext ctx);
+	void exitNewVar(MxLiteParser.NewVarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MxLiteParser#newSize}.
+	 * @param ctx the parse tree
+	 */
+	void enterNewSize(MxLiteParser.NewSizeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxLiteParser#newSize}.
+	 * @param ctx the parse tree
+	 */
+	void exitNewSize(MxLiteParser.NewSizeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MxLiteParser#functionType}.
 	 * @param ctx the parse tree

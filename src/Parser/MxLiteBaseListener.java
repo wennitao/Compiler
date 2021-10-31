@@ -1,4 +1,6 @@
-// Generated from MxLite.g4 by ANTLR 4.9
+package Parser;
+
+// Generated from MxLite.g4 by ANTLR 4.9.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -10,6 +12,18 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * of the available methods.
  */
 public class MxLiteBaseListener implements MxLiteListener {
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBeginDef(MxLiteParser.BeginDefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBeginDef(MxLiteParser.BeginDefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -51,13 +65,25 @@ public class MxLiteBaseListener implements MxLiteListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNewVarType(MxLiteParser.NewVarTypeContext ctx) { }
+	@Override public void enterNewVar(MxLiteParser.NewVarContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNewVarType(MxLiteParser.NewVarTypeContext ctx) { }
+	@Override public void exitNewVar(MxLiteParser.NewVarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNewSize(MxLiteParser.NewSizeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewSize(MxLiteParser.NewSizeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
