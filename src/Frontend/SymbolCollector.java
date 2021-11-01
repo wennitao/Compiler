@@ -94,8 +94,8 @@ public class SymbolCollector implements ASTVisitor {
     public void visit (classDefNode it) {
         curScope = ((globalScope) curScope).getScopeFromClassName(it.pos, it.name) ;
         gScope = (globalScope) curScope ;
-        it.functionDef.forEach(x -> x.accept(this));
         it.varDef.forEach(x -> x.accept(this));
+        it.functionDef.forEach(x -> x.accept(this));
         curScope = curScope.parentScope() ;
         gScope = (globalScope) gScope.parentScope() ;
     }

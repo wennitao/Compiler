@@ -94,8 +94,8 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     public ASTNode visitClassDef (MxLiteParser.ClassDefContext ctx) {
         classDefNode classDef = new classDefNode(new position(ctx), ctx.Identifier().toString()) ;
         if (ctx.classConstructor() != null) classDef.classConstructor = (classConstructorNode) visit (ctx.classConstructor()) ;
-        ctx.functionDef().forEach(v -> classDef.functionDef.add((functionDefNode) visit (v)));
         ctx.varDefStmt().forEach(v -> classDef.varDef.add ((varDefNode) visit (v)));
+        ctx.functionDef().forEach(v -> classDef.functionDef.add((functionDefNode) visit (v)));
         return classDef ;
     }
 
@@ -254,6 +254,11 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
         varDefNode varDef = new varDefNode(new position(ctx), (varTypeNode) visit (ctx.varType())) ;
         ctx.varDeclaration().forEach(v -> varDef.varDeclarations.add ((varDeclarationNode) visit (v)));
         return varDef ;
+    }
+
+    @Override
+    public ASTNode visitVarDefStmt (MxLiteParser.VarDefStmtContext ctx) {
+        return visit (ctx.varDef()) ;
     }
 
     @Override
