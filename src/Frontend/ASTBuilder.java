@@ -178,13 +178,19 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     }
 
     @Override
+    public ASTNode visitLambdaStmt (MxLiteParser.LambdaStmtContext ctx) {
+        functionParameterDefNode parameters = ctx.functionParameterDef() != null ? (functionParameterDefNode)visit (ctx.functionParameterDef()) : null ;
+        return new lambdaStmtNode(new position(ctx), parameters, (suiteNode) visit (ctx.suite()), (expressionListNode) visit (ctx.expressionList())) ;
+    }
+
+    @Override
     public ASTNode visitNewExpr (MxLiteParser.NewExprContext ctx) {
         return visit (ctx.newVar()) ;
     }
 
     @Override
     public ASTNode visitNewSize (MxLiteParser.NewSizeContext ctx) {
-        return new newSizeNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
+        return new newSizeNode(new position(ctx), ctx.expression() != null ? (ExpressionNode) visit (ctx.expression()) : null) ;
     }
 
     @Override

@@ -16,7 +16,7 @@ functionDef : functionType Identifier '(' functionParameterDef ')' suite;
 functionParameterDef : (parameter (',' parameter)* )?;
 parameter : varType Identifier ;
 
-classDef : Class Identifier '{' classConstructor? (varDefStmt | functionDef)* '}' ';';
+classDef : Class Identifier '{' (varDefStmt | functionDef)* classConstructor? (varDefStmt | functionDef)* '}' ';';
 classConstructor : Identifier '(' ')' suite;
 
 suite: '{' statement* '}';
@@ -25,7 +25,7 @@ forInit : varDef | expression;
 forCondition : expression;
 forIncr : expression;
 
-ifStmt : If '(' expression ')' statement (Else statement)? ;
+ifStmt : If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? ;
 forStmt : For '(' forInit? ';' forCondition? ';' forIncr? ')' statement ;
 whileStmt : While '(' expression ')' statement;
 loopStmt : forStmt | whileStmt ;

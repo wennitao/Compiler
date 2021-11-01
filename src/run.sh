@@ -5,4 +5,4 @@ javac AST/*.java
 javac Util/*.java
 javac Frontend/*.java
 javac main.java
-java main < e1.mx
+java main
