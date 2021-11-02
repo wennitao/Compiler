@@ -103,6 +103,13 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     }
 
     @Override
+    public ASTNode visitControlStmt (MxLiteParser.ControlStmtContext ctx) {
+        if (ctx.breakStmt() != null) return visit (ctx.breakStmt()) ;
+        else if (ctx.continueStmt() != null) return visit (ctx.continueStmt()) ;
+        else return visit (ctx.returnStmt()) ;
+    }
+
+    @Override
     public ASTNode visitExpressionList (MxLiteParser.ExpressionListContext ctx) {
         expressionListNode expressionList = new expressionListNode(new position(ctx)) ;
         ctx.expression().forEach(v -> expressionList.expressions.add ((ExpressionNode) visit (v)));
@@ -136,7 +143,9 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
         forInitNode forInit = ctx.forInit() != null ?  (forInitNode) visit (ctx.forInit()) : null ;
         forConditionNode forCondition = ctx.forCondition() != null ? (forConditionNode) visit (ctx.forCondition()) : null ;
         forIncrNode forIncr = ctx.forIncr() != null ? (forIncrNode) visit (ctx.forIncr()) : null ;
-        return new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
+        forStmtNode cur = new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
+        return cur ;
+        // return new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
     }
 
     @Override
@@ -228,6 +237,16 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
     @Override
     public ASTNode visitReturnStmt (MxLiteParser.ReturnStmtContext ctx) {
         return new returnStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
+    }
+
+    @Override
+    public ASTNode visitStatement (MxLiteParser.StatementContext ctx) {
+        if (ctx.suite() != null) return visit (ctx.suite()) ;
+        else if (ctx.varDefStmt() != null) return visit (ctx.varDefStmt()) ;
+        else if (ctx.ifStmt() != null) return visit(ctx.ifStmt()) ;
+        else if (ctx.loopStmt() != null) return visit (ctx.loopStmt()) ;
+        else if (ctx.controlStmt() != null) return visit (ctx.controlStmt()) ;
+        else return visit (ctx.expression()) ;
     }
 
     @Override

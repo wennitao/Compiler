@@ -324,12 +324,13 @@ public class SemanticChecker implements ASTVisitor {
             newSizeNode curNode = it.newSize.get(i) ;
             if (curNode.expression == null) valid = false ;
             else {
-                curNode.accept(this) ;
+                curNode.expression.accept(this) ;
                 if (returnType.type != basicType.Int || returnType.dim > 0)
                     throw new semanticError("index is not int", curNode.pos) ;
             }
         }
         if (!valid) throw new semanticError("an index is empty", it.pos) ;
+        returnType = type ;
     }
 
     @Override

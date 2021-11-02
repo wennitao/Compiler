@@ -105,7 +105,7 @@ public class SymbolCollector implements ASTVisitor {
         Type returnType ;
         if (it.functionType.isVoid) returnType = new Type(basicType.Void, 0, false) ;
         else {
-            it.functionType.accept(this) ;
+            it.functionType.type.accept(this) ;
             returnType = type ;
         }
         Scope functionScope = new Scope(curScope) ;
