@@ -1,6 +1,7 @@
 import AST.RootNode;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
+import Frontend.SemanticChecker;
 import Parser.MxLiteLexer;
 import Parser.MxLiteParser;
 import Util.*;
@@ -36,7 +37,7 @@ public class main {
 
             globalScope gScope = new globalScope();
             new SymbolCollector(gScope).visit(ASTRoot);
-            // new SemanticChecker(gScope).visit(ASTRoot);
+            new SemanticChecker(gScope).visit(ASTRoot);
         } catch(error er) {
             System.err.println(er.toString());
             throw new RuntimeException();
