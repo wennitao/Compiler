@@ -22,7 +22,7 @@ public class SemanticChecker implements ASTVisitor {
     boolean isFunctionID ;
 
     public SemanticChecker (globalScope _gScope) {
-        curScope = gScope = _gScope ;
+        gScope = _gScope; curScope = _gScope ;
         isFunctionID = false ;
     }
 
@@ -87,12 +87,12 @@ public class SemanticChecker implements ASTVisitor {
             if (returnType.type != basicType.Class && returnType.type != basicType.String && returnType.type != basicType.This && returnType.dim <= 0)
                 throw new semanticError("it cannot use dot operator", it.pos) ;
             isFunctionID = isFunctionIDBackup ;
-                globalScope globalScopeBackup = gScope ;
+            globalScope globalScopeBackup = gScope ;
             Scope curScopeBackup = curScope ;
-            if (returnType.dim > 0) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "__array") ;
-            else if (returnType.type == basicType.String) gScope.getScopeFromClassName(it.pos, "string") ;
-            else if (returnType.type == basicType.Class) gScope.getScopeFromClassName(it.pos, returnType.Identifier) ;
-            curScopeBackup = gScope ;
+            if (returnType.dim > 0) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "__Array") ;
+            else if (returnType.type == basicType.String) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "string") ;
+            else if (returnType.type == basicType.Class) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, returnType.Identifier) ;
+            curScope = gScope ;
             it.rightExpression.accept(this) ;
             curScope = curScopeBackup ;
             gScope = globalScopeBackup ;
@@ -190,9 +190,6 @@ public class SemanticChecker implements ASTVisitor {
         }
         it.functionDef.forEach(x -> {
             if (x.name.equals(it.name)) throw new semanticError("function name duplicates with class name", it.pos) ;
-            x.accept(this) ;
-        });
-        it.varDef.forEach(x -> {
             x.accept(this) ;
         });
         gScope = (globalScope) gScope.parentScope() ;
@@ -384,7 +381,7 @@ public class SemanticChecker implements ASTVisitor {
     public void visit (returnStmtNode it) {
         if (it.expression != null) it.expression.accept(this) ;
         else returnType = new Type(basicType.Void, 0, false) ;
-
+        flowController.returnFunction(it.pos, gScope, returnType) ;
     }
 
     @Override

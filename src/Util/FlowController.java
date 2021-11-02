@@ -71,5 +71,6 @@ public class FlowController {
         } else {
             checkAssign(pos, gScope, functionReturnType, returnType) ;
         }
+        isReturned = true ;
     }
 }
