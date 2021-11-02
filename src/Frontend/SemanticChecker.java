@@ -1,21 +1,47 @@
 package Frontend;
 
 import java.util.ArrayList;
+import java.util.concurrent.Flow;
 
 import AST.*;
+import Util.FlowController;
 import Util.Scope;
 import Util.Type;
 import Util.globalScope;
+import Util.position;
 import Util.Type.basicType;
 import Util.error.semanticError;
 
 public class SemanticChecker implements ASTVisitor {
     private globalScope gScope ;
     private Scope curScope ;
+    private Type returnType ;
+    FlowController flowController ;
 
     public SemanticChecker (globalScope _gScope) {
         curScope = gScope = _gScope ;
     }
+
+    public void checkAssign (position pos, Type leftType, Type rightType) {
+        if (!leftType.isLeftValue) throw new semanticError("cannot assign to rvalue", pos) ;
+        if (rightType.type == Type.basicType.Null) {
+            if ((leftType.type != Type.basicType.Class && leftType.type != Type.basicType.This && leftType.type != Type.basicType.String && leftType.dim <= 0) || (leftType.type == Type.basicType.String && leftType.dim == 0))
+                throw new semanticError("cannot assign null", pos) ;
+        } else if (rightType.type == Type.basicType.This) {
+            if (leftType.type != basicType.Class) 
+                throw new semanticError("cannot assign this", pos) ;
+            if (!leftType.Identifier.equals(gScope.Identifier))
+                throw new semanticError("cannot assign this", pos) ;
+        } else {
+            if (leftType.type != rightType.type)
+                throw new semanticError("type of left and right does not match", pos) ;
+            if (leftType.type == basicType.Class)
+                if (rightType.Identifier == null || !leftType.Identifier.equals(rightType.Identifier))
+                    throw new semanticError("type does not match", pos) ;
+            if (leftType.dim != rightType.dim)
+                throw new semanticError("dimension not match", pos) ;
+        }
+    }    
 
     @Override
     public void visit (arrayExprNode it) {
@@ -44,13 +70,18 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (classConstructorNode it) {
-        
+        curScope = new Scope (curScope) ;
+        gScope.defineFunction(it.pos, it.name, curScope, new Type(Type.basicType.Void, 0, false), new ArrayList<>());
+        flowController = new FlowController(it.name) ;
+        it.suite.accept(this) ;
+        curScope = curScope.parentScope() ;
     }
 
     @Override
     public void visit (classDefNode it) {
         curScope = ((globalScope) curScope).getScopeFromClassName(it.pos, it.name) ;
         gScope = (globalScope) curScope ;
+        gScope.Identifier = it.name ;
         if (it.classConstructor != null) {
             if (!it.classConstructor.name.equals(it.name)) throw new semanticError("class constructor does not match", it.pos) ;
             it.classConstructor.accept(this) ;
@@ -103,7 +134,15 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (functionDefNode it) {
-
+        curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
+        flowController = new FlowController(it.name) ;
+        it.suite.accept(this) ;
+        if (!flowController.functionName.equals(new String("main"))) {
+            returnType = gScope.getReturnTypeFromFunctionName(it.pos, it.name) ;
+            if (returnType.type != Type.basicType.Void && !flowController.isReturned)
+                throw new semanticError("function does not return", it.pos) ;
+        }
+        curScope = curScope.parentScope() ;
     }
 
     @Override
@@ -118,7 +157,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (globalVarDefNode it) {
-
+        it.varDef.accept(this) ;
     }
 
     @Override
@@ -178,7 +217,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (suiteNode it) {
-
+        it.statementNodes.forEach(x -> x.accept(this)) ;
     }
 
     @Override
@@ -187,18 +226,32 @@ public class SemanticChecker implements ASTVisitor {
     }
 
     @Override
-    public void visit (varDeclarationNode it) {
-
-    }
+    public void visit (varDeclarationNode it) {}
 
     @Override
     public void visit (varDefNode it) {
-
+        it.type.accept(this) ;
+        Type varType = returnType;
+        it.varDeclarations.forEach(x -> {
+            if (gScope.findClass(x.name, true))
+                throw new semanticError("variable name duplciates with class", x.pos) ;
+            if (x.isInitialized) {
+                x.expression.accept(this) ;
+                checkAssign(x.pos, varType, returnType);
+            }
+            curScope.defineVariable(x.name, varType, x.pos) ;
+        });
     }
 
     @Override
     public void visit (varTypeNode it) {
-
+        if (it.classID != null) {
+            if (!gScope.findClass(it.classID, true))
+                throw new semanticError("class name not found", it.pos) ;
+            returnType = new Type(it.classID, it.dim, true) ;
+        } else {
+            returnType = new Type(it.builtinType.bType, it.dim, true) ;
+        }
     }
 
     @Override
