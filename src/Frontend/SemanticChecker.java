@@ -319,8 +319,9 @@ public class SemanticChecker implements ASTVisitor {
         boolean valid = true ;
         for (int i = 0; i < it.newSize.size(); i ++) {
             newSizeNode curNode = it.newSize.get(i) ;
-            if (curNode.expression == null) valid = false ;
-            else {
+            if (curNode.expression == null) {
+                if (i != it.newSize.size() - 1) valid = false ;
+            } else {
                 curNode.expression.accept(this) ;
                 if (returnType.type != basicType.Int || returnType.dim > 0)
                     throw new semanticError("index is not int", curNode.pos) ;
@@ -342,6 +343,7 @@ public class SemanticChecker implements ASTVisitor {
             throw new semanticError("wrong object with pre-increase expression", it.pos) ;
         if (!returnType.isLeftValue)
             throw new semanticError("object should be left value", it.pos) ;
+        returnType.isLeftValue = false ;
     }
 
     @Override
@@ -351,7 +353,6 @@ public class SemanticChecker implements ASTVisitor {
             throw new semanticError("wrong object with pre-increase expression", it.pos) ;
         if (!returnType.isLeftValue)
             throw new semanticError("object should be left value", it.pos) ;
-        returnType.isLeftValue = false ;
     }
 
     @Override

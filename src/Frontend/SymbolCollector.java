@@ -26,6 +26,10 @@ public class SymbolCollector implements ASTVisitor {
             if (x instanceof classDefNode) {
                 globalScope newGlobalScope = new globalScope(curScope, ((classDefNode) x).name) ;
                 ((globalScope)curScope).defineClass(it.pos, ((classDefNode) x).name, newGlobalScope) ;
+            }
+        });
+        it.statements.forEach(x -> {
+            if (x instanceof classDefNode) {
                 x.accept(this) ;
             }
         });
