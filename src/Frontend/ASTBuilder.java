@@ -236,7 +236,7 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitReturnStmt (MxLiteParser.ReturnStmtContext ctx) {
-        return new returnStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression())) ;
+        return new returnStmtNode(new position(ctx), ctx.expression() != null ? (ExpressionNode) visit (ctx.expression()) : null) ;
     }
 
     @Override
