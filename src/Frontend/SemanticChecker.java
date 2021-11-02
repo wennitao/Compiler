@@ -1,7 +1,6 @@
 package Frontend;
 
 import java.util.ArrayList;
-import java.util.concurrent.Flow;
 
 import AST.*;
 import Util.FlowController;
@@ -45,7 +44,13 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (arrayExprNode it) {
-        
+        it.arrayIndex.accept(this) ;
+        if (returnType.type != Type.basicType.Int || returnType.dim > 0)
+            throw new semanticError("wrong index tyep", it.arrayIndex.pos) ;
+        it.arrayIdentifier.accept(this) ;
+        returnType.dim -- ;
+        if (returnType.dim < 0)
+            throw new semanticError("dimension not matched", it.pos) ;
     }
 
     @Override
@@ -60,7 +65,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override 
     public void visit (breakStmtNode it) {
-        
+        flowController.breakLoop(it.pos) ;
     }
 
     @Override
@@ -99,7 +104,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (continueStmtNode it) {
-
+        flowController.continueLoop(it.pos) ;
     }
 
     @Override
@@ -109,7 +114,9 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override 
     public void visit (forConditionNode it) {
-
+        it.expression.accept(this) ;
+        if (returnType.type != Type.basicType.Bool || returnType.dim > 0) 
+            throw new semanticError("for condition should be bool", it.pos) ;
     }
 
     @Override
@@ -119,17 +126,38 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (forInitNode it) {
-
+        if (it.varDef != null) it.varDef.accept(this) ;
+        if (it.expression != null) it.expression.accept(this) ;
     }
 
     @Override
     public void visit (forStmtNode it) {
-
+        flowController.inLoop();
+        curScope = new Scope(curScope) ;
+        if (it.forInit != null) it.forInit.accept(this) ;
+        if (it.forCondition != null) it.forCondition.accept(this) ;
+        if (it.forIncr != null) it.forIncr.accept(this) ;
+        it.statement.accept(this) ;
+        curScope = curScope.parentScope() ;
+        flowController.outLoop();
     }
 
     @Override
     public void visit (functionCallExprNode it) {
-
+        it.functionIdentifier.accept(this) ;
+        if (returnType.type != Type.basicType.Function)
+            throw new semanticError("function call error", it.pos) ;
+        ArrayList<Type> functionParameters = returnType.functionParameters ;
+        Type functionReturnType = returnType.functionReturnType ;
+        if (it.expressionList.expressions.size() != functionParameters.size())
+            throw new semanticError("wrong size of funtion parameters", it.pos) ;
+        for (int i = 0; i < it.expressionList.expressions.size(); i ++) {
+            it.expressionList.expressions.get(i).accept(this) ;
+            Type curFunctionParameterType = functionParameters.get(i) ;
+            checkAssign(it.expressionList.pos, curFunctionParameterType, returnType) ;
+        }
+        returnType = new Type (functionReturnType) ;
+        returnType.isLeftValue = false ;
     }
 
     @Override
@@ -162,7 +190,17 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (ifStmtNode it) {
-
+        it.expression.accept(this) ;
+        if (returnType.type != Type.basicType.Bool || returnType.dim > 0)
+            throw new semanticError("expression type in if statement should be bool", it.pos) ;
+        curScope = new Scope(curScope) ;
+        it.trueStatement.accept(this) ;
+        curScope = curScope.parentScope() ;
+        if (it.falseStatement != null) {
+            curScope = new Scope (curScope) ;
+            it.falseStatement.accept(this) ;
+            curScope.parentScope() ;
+        }
     }
 
     @Override
@@ -202,6 +240,8 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (returnStmtNode it) {
+        if (it.expression != null) it.expression.accept(this) ;
+        else returnType = new Type(basicType.Void, 0, false) ;
 
     }
 
@@ -256,6 +296,13 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (whileStmtNode it) {
-
+        it.expression.accept(this) ;
+        if (returnType.type != Type.basicType.Bool || returnType.dim > 0)
+            throw new semanticError("expression in while statement should be bool", it.pos) ;
+        flowController.inLoop();
+        curScope = new Scope(curScope) ;
+        it.statement.accept(this) ;
+        curScope = curScope.parentScope() ;
+        flowController.outLoop();
     }
 }

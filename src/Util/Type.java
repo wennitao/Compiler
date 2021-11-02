@@ -35,5 +35,18 @@ public class Type {
         isLeftValue = false ;
     }
 
-
+    public Type (Type _type) {
+        type = _type.type ;
+        Identifier = _type.Identifier ;
+        dim = _type.dim ;
+        isLeftValue = _type.isLeftValue ;
+        if (_type.functionReturnType != null)
+            functionReturnType = new Type (functionReturnType) ;
+        else
+            functionReturnType = null ;
+        if (_type.functionParameters != null)
+            functionParameters = new ArrayList<>(_type.functionParameters) ;
+        else
+            functionParameters = null ;
+    }
 }
