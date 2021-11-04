@@ -396,7 +396,11 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (statementNode it) {
-        if (it.suite != null) it.suite.accept(this) ;
+        if (it.suite != null) {
+            curScope = new Scope(curScope) ;
+            it.suite.accept(this) ;
+            curScope = curScope.parentScope() ;
+        }
         if (it.varDefstmt != null) it.varDefstmt.accept(this) ;
         if (it.ifStmt != null) it.ifStmt.accept(this) ;
         if (it.loopStmt != null) it.loopStmt.accept(this) ;

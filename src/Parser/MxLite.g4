@@ -55,23 +55,23 @@ expression
     | expression expressionList                                                 #functionCallExpr
     | lambdaStmt                                                                #lambdaExpr
     | expression '[' expression ']'                                             #arrayExpr
+    | <assoc=right> (SelfPlus | SelfMinus) expression                           #preIncExpr
+    | expression (SelfPlus | SelfMinus)                                         #postIncExpr
     | expression op = (Plus | Minus) expression                                 #binaryExpr
+    | <assoc=right> Tilde expression                                            #unaryExpr
+    | <assoc=right> Not expression                                              #unaryExpr
+    | <assoc=right> New newVar                                                  #newExpr
     | expression op = (Mul | Div | Mod) expression                              #binaryExpr
+    | expression op = (LeftShift | RightShift) expression                       #binaryExpr
     | expression op = (Less | LessEqual | Greater | GreaterEqual) expression    #binaryExpr
     | expression op = (Equal | NotEqual) expression                             #binaryExpr
-    | expression op = (LeftShift | RightShift) expression                       #binaryExpr
     | expression op = And expression                                            #binaryExpr
     | expression op = Caret expression                                          #binaryExpr
     | expression op = Or expression                                             #binaryExpr
     | expression op = AndAnd expression                                         #binaryExpr
     | expression op = OrOr expression                                           #binaryExpr
     | <assoc=right> (Plus | Minus) expression                                   #unaryExpr
-    | <assoc=right> Tilde expression                                            #unaryExpr
-    | <assoc=right> Not expression                                              #unaryExpr
     | <assoc=right> expression Assign expression                                #binaryExpr
-    | <assoc=right> (SelfPlus | SelfMinus) expression                           #preIncExpr
-    | <assoc=right> New newVar                                                  #newExpr
-    | expression (SelfPlus | SelfMinus)                                         #postIncExpr
     | '(' expression ')'                                                        #bracketExpr
     | primary                                                                   #atomExpr 
     ;
