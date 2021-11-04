@@ -1,6 +1,7 @@
 package Frontend;
 
 import java.util.ArrayList;
+import java.util.Currency;
 
 import AST.*;
 import AST.binaryExprNode.binaryOperator;
@@ -183,7 +184,6 @@ public class SemanticChecker implements ASTVisitor {
     public void visit (classDefNode it) {
         curScope = ((globalScope) curScope).getScopeFromClassName(it.pos, it.name) ;
         gScope = (globalScope) curScope ;
-        gScope.Identifier = it.name ;
         if (it.classConstructor != null) {
             if (!it.classConstructor.name.equals(it.name)) throw new semanticError("class constructor does not match", it.pos) ;
             it.classConstructor.accept(this) ;
@@ -295,13 +295,37 @@ public class SemanticChecker implements ASTVisitor {
         if (it.falseStatement != null) {
             curScope = new Scope (curScope) ;
             it.falseStatement.accept(this) ;
-            curScope.parentScope() ;
+            curScope = curScope.parentScope() ;
         }
     }
 
     @Override
     public void visit (lambdaStmtNode it) {
-
+        curScope = new Scope (curScope) ;
+        ArrayList<Type> functionParameters = new ArrayList<>() ;
+        if (it.functionParameters != null) {
+            it.functionParameters.parameters.forEach(x -> {
+                x.type.accept(this) ;
+                curScope.defineVariable(x.name, returnType, x.pos) ;
+                functionParameters.add(returnType) ;
+            });
+        }
+        FlowController flowControllerBackup = flowController ;
+        flowController = new FlowController("__lambda") ;
+        it.suite.accept(this) ;
+        if (!flowController.isReturned) throw new semanticError("lambda statement has no return", it.pos) ;
+        Type lambdaReturnType = new Type (flowController.returnType) ;
+        flowController = flowControllerBackup ;
+        curScope = curScope.parentScope() ;
+        if (it.expressionList.expressions.size() != functionParameters.size())
+            throw new semanticError ("lmabda parameter size does not match", it.pos) ;
+        for (int i = 0; i < it.expressionList.expressions.size(); i ++) {
+            it.expressionList.expressions.get(i).accept(this) ;
+            Type parameterType = functionParameters.get(i) ;
+            checkAssign(it.pos, parameterType, returnType) ;
+        }
+        returnType = lambdaReturnType ;
+        returnType.isLeftValue = false ;
     }
 
     @Override
