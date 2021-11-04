@@ -45,4 +45,5 @@ public interface ASTVisitor {
     void visit (breakStmtNode it) ;
     void visit (continueStmtNode it) ;
     void visit (returnStmtNode it) ;
+    void visit (statementNode it) ;
 }

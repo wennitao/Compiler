@@ -4,8 +4,8 @@ import Util.position;
 
 import java.util.ArrayList;
 
-public class suiteNode extends StatementNode {
-    public ArrayList<StatementNode> statementNodes ;
+public class suiteNode extends ASTNode {
+    public ArrayList<statementNode> statementNodes ;
 
     public suiteNode (position pos) {
         super (pos) ;

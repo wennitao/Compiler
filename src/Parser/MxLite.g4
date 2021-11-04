@@ -5,7 +5,7 @@ program : beginDef*;
 
 builtinType : Int | Bool | String;
 varType : (builtinType | Identifier) ('[' ']')* ;
-newVar : (builtinType | Identifier) (newSize*) ;
+newVar : (builtinType | Identifier) ('(' ')' | newSize*) ;
 newSize : '[' expression? ']' ;
 functionType : Void | varType;
 
@@ -147,7 +147,7 @@ Assign : '=';
 Equal : '==';
 NotEqual : '!=';
 
-fragment EscapeCharacter : [\n\\] | '\\"';
+fragment EscapeCharacter : ["nr\\];
 fragment PrintableCharacter : ~[\\\r\n\f"];
 
 DecimalInteger 
@@ -157,7 +157,7 @@ DecimalInteger
 
 BoolLiteral : True | False ;
 
-StringObject : '"' (' ' | PrintableCharacter | EscapeCharacter)* '"';
+StringObject : '"' (' ' | PrintableCharacter | '\\' EscapeCharacter)* '"';
 
 Identifier
     : [a-zA-Z] [a-zA-Z_0-9]* 

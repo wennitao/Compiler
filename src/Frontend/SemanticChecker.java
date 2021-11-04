@@ -319,15 +319,14 @@ public class SemanticChecker implements ASTVisitor {
         boolean valid = true ;
         for (int i = 0; i < it.newSize.size(); i ++) {
             newSizeNode curNode = it.newSize.get(i) ;
-            if (curNode.expression == null) {
-                if (i != it.newSize.size() - 1) valid = false ;
-            } else {
+            if (curNode.expression == null) valid = false ;
+            else {
+                if (!valid) throw new semanticError("an index is empty", it.pos) ;
                 curNode.expression.accept(this) ;
                 if (returnType.type != basicType.Int || returnType.dim > 0)
                     throw new semanticError("index is not int", curNode.pos) ;
             }
         }
-        if (!valid) throw new semanticError("an index is empty", it.pos) ;
         returnType = type ;
     }
 
@@ -393,6 +392,16 @@ public class SemanticChecker implements ASTVisitor {
         if (mainReturnType.type != basicType.Int || mainReturnType.dim > 0) throw new semanticError("function main wrong return type", it.pos) ;
         ArrayList<Type> mainParameters = gScope.getParametersFromFunctionName(it.pos, "main") ;
         if (mainParameters.size() > 0) throw new semanticError("function main should not have parameters", it.pos) ; 
+    }
+
+    @Override
+    public void visit (statementNode it) {
+        if (it.suite != null) it.suite.accept(this) ;
+        if (it.varDefstmt != null) it.varDefstmt.accept(this) ;
+        if (it.ifStmt != null) it.ifStmt.accept(this) ;
+        if (it.loopStmt != null) it.loopStmt.accept(this) ;
+        if (it.controlStmt != null) it.controlStmt.accept(this) ;
+        if (it.expression != null) it.expression.accept(this) ;
     }
 
     @Override

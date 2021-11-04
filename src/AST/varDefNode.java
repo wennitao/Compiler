@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Util.position;
 
-public class varDefNode extends StatementNode {
+public class varDefNode extends ASTNode {
     public varTypeNode type ;
     public ArrayList<varDeclarationNode> varDeclarations ;
 

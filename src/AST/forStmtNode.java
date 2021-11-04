@@ -7,9 +7,9 @@ public class forStmtNode extends LoopStmtNode {
     public forConditionNode forCondition ;
     public forIncrNode forIncr ;
 
-    public StatementNode statement ;
+    public statementNode statement ;
 
-    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, StatementNode _statement) {
+    public forStmtNode (position pos, forInitNode _forInit, forConditionNode _forCondition, forIncrNode _forIncr, statementNode _statement) {
         super (pos) ;
         forInit = _forInit ;
         forCondition = _forCondition ;

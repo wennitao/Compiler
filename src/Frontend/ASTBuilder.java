@@ -143,7 +143,7 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
         forInitNode forInit = ctx.forInit() != null ?  (forInitNode) visit (ctx.forInit()) : null ;
         forConditionNode forCondition = ctx.forCondition() != null ? (forConditionNode) visit (ctx.forCondition()) : null ;
         forIncrNode forIncr = ctx.forIncr() != null ? (forIncrNode) visit (ctx.forIncr()) : null ;
-        forStmtNode cur = new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
+        forStmtNode cur = new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (statementNode) visit (ctx.statement())) ;
         return cur ;
         // return new forStmtNode(new position(ctx), forInit, forCondition, forIncr, (StatementNode) visit (ctx.statement())) ;
     }
@@ -173,8 +173,8 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitIfStmt (MxLiteParser.IfStmtContext ctx) {
-        ifStmtNode ifStatement = new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement(0)), null) ;
-        if (ctx.statement(1) != null) ifStatement.falseStatement = (StatementNode) visit (ctx.statement(1)) ;
+        ifStmtNode ifStatement = new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (statementNode) visit (ctx.statement(0)), null) ;
+        if (ctx.statement(1) != null) ifStatement.falseStatement = (statementNode) visit (ctx.statement(1)) ;
         return ifStatement ;
         // return new ifStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement(0)), (StatementNode) visit (ctx.statement(1))) ;
     }
@@ -241,18 +241,20 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitStatement (MxLiteParser.StatementContext ctx) {
-        if (ctx.suite() != null) return visit (ctx.suite()) ;
-        else if (ctx.varDefStmt() != null) return visit (ctx.varDefStmt()) ;
-        else if (ctx.ifStmt() != null) return visit(ctx.ifStmt()) ;
-        else if (ctx.loopStmt() != null) return visit (ctx.loopStmt()) ;
-        else if (ctx.controlStmt() != null) return visit (ctx.controlStmt()) ;
-        else return visit (ctx.expression()) ;
+        statementNode statement = new statementNode(new position(ctx)) ;
+        if (ctx.suite() != null) statement.suite = (suiteNode) visit (ctx.suite()) ;
+        if (ctx.varDefStmt() != null) statement.varDefstmt = (varDefNode) visit (ctx.varDefStmt()) ;
+        if (ctx.ifStmt() != null) statement.ifStmt = (ifStmtNode) visit(ctx.ifStmt()) ;
+        if (ctx.loopStmt() != null) statement.loopStmt = (LoopStmtNode) visit (ctx.loopStmt()) ;
+        if (ctx.controlStmt() != null) statement.controlStmt = (ControlStmtNode) visit (ctx.controlStmt()) ;
+        if (ctx.expression() != null) statement.expression = (ExpressionNode) visit (ctx.expression()) ;
+        return statement ;
     }
 
     @Override
     public ASTNode visitSuite (MxLiteParser.SuiteContext ctx) {
         suiteNode suite = new suiteNode(new position(ctx)) ;
-        ctx.statement().forEach(v -> suite.statementNodes.add ((StatementNode) visit (v)));
+        ctx.statement().forEach(v -> suite.statementNodes.add ((statementNode) visit (v)));
         return suite ;
     }
 
@@ -293,6 +295,6 @@ public class ASTBuilder extends MxLiteBaseVisitor<ASTNode> {
 
     @Override
     public ASTNode visitWhileStmt (MxLiteParser.WhileStmtContext ctx) {
-        return new whileStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (StatementNode) visit (ctx.statement())) ;
+        return new whileStmtNode(new position(ctx), (ExpressionNode) visit (ctx.expression()), (statementNode) visit (ctx.statement())) ;
     }
 }
