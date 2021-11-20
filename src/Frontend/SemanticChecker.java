@@ -1,7 +1,6 @@
 package Frontend;
 
 import java.util.ArrayList;
-import java.util.Currency;
 
 import AST.*;
 import AST.binaryExprNode.binaryOperator;
@@ -58,7 +57,7 @@ public class SemanticChecker implements ASTVisitor {
         isFunctionID = false ;
         it.arrayIndex.accept(this) ;
         if (returnType.type != Type.basicType.Int || returnType.dim > 0)
-            throw new semanticError("wrong index tyep", it.arrayIndex.pos) ;
+            throw new semanticError("wrong index type", it.arrayIndex.pos) ;
         isFunctionID = isFunctionIDBackup ;
         it.arrayIdentifier.accept(this) ;
         returnType.dim -- ;
@@ -85,18 +84,17 @@ public class SemanticChecker implements ASTVisitor {
             Boolean isFunctionIDBackup = isFunctionID ;
             isFunctionID = false ;
             it.leftExpression.accept(this) ;
-            if (returnType.type != basicType.Class && returnType.type != basicType.String && returnType.type != basicType.This && returnType.dim <= 0)
-                throw new semanticError("it cannot use dot operator", it.pos) ;
             isFunctionID = isFunctionIDBackup ;
-            globalScope globalScopeBackup = gScope ;
+            Type leftExpressionType = returnType;
+            globalScope gScopeBackup = gScope ;
+            if (leftExpressionType.dim > 0) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "__Array") ;
+            else if (leftExpressionType.type == basicType.String) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "string") ;
+            else if (leftExpressionType.type == basicType.Class) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, returnType.Identifier) ;
+            else if (leftExpressionType.type != basicType.This) throw new semanticError("it cannot use dot operator", it.pos) ;
             Scope curScopeBackup = curScope ;
-            if (returnType.dim > 0) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "__Array") ;
-            else if (returnType.type == basicType.String) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, "string") ;
-            else if (returnType.type == basicType.Class) gScope = (globalScope) gScope.getScopeFromClassName(it.pos, returnType.Identifier) ;
             curScope = gScope ;
             it.rightExpression.accept(this) ;
-            curScope = curScopeBackup ;
-            gScope = globalScopeBackup ;
+            curScope = curScopeBackup; gScope = gScopeBackup ;
         } else {
             it.leftExpression.accept(this) ;
             Type leftExpressionType = returnType ;
@@ -109,21 +107,23 @@ public class SemanticChecker implements ASTVisitor {
                 if (leftExpressionType.dim > 0 || leftExpressionType.type == basicType.Class) {
                     if (it.binaryOp != binaryOperator.Equal && it.binaryOp != binaryOperator.NotEqual)
                         throw new semanticError("class or array can only compute with == or !=", it.pos) ;
+                    // = or !=
                     if (rightExpressionType.type != basicType.Null)
                         typeMatchCheck(it.pos, leftExpressionType, rightExpressionType) ;
                     returnType = new Type (basicType.Bool, 0, false) ;
                 } else if (rightExpressionType.dim > 0 || rightExpressionType.type == basicType.Class) {
                     if (it.binaryOp != binaryOperator.Equal && it.binaryOp != binaryOperator.NotEqual)
                         throw new semanticError("class or array can only compute with == or !=", it.pos) ;
+                    // = or !=
                     if (leftExpressionType.type != basicType.Null)
                         typeMatchCheck(it.pos, leftExpressionType, rightExpressionType) ;
                     returnType = new Type (basicType.Bool, 0, false) ;
                 } else {
                     if (leftExpressionType.type == basicType.Int) {
                         typeMatchCheck(it.pos, leftExpressionType, rightExpressionType);
-                        if (isCompareOperator(it.binaryOp))
+                        if (isCompareOperator(it.binaryOp)) // return bool
                             returnType = new Type (basicType.Bool, 0, false) ;
-                        else if (isArithmeticOperator(it.binaryOp))
+                        else if (isArithmeticOperator(it.binaryOp)) // return int
                             returnType = new Type (basicType.Int, 0, false) ;
                         else 
                             throw new semanticError("wrong operator with int", it.pos) ;    
@@ -142,7 +142,7 @@ public class SemanticChecker implements ASTVisitor {
                             returnType = new Type (basicType.Bool, 0, false) ;
                         else
                             throw new semanticError("wrong operator with string", it.pos) ;   
-                    }else if (leftExpressionType.type == basicType.Null) {
+                    } else if (leftExpressionType.type == basicType.Null) {
                         typeMatchCheck(it.pos, leftExpressionType, rightExpressionType) ;
                         if (it.binaryOp == binaryOperator.Equal || it.binaryOp == binaryOperator.NotEqual)
                             returnType = new Type (basicType.Bool, 0, false) ;
@@ -243,7 +243,7 @@ public class SemanticChecker implements ASTVisitor {
         if (returnType.type != Type.basicType.Function)
             throw new semanticError("function call error", it.pos) ;
         isFunctionID = false ;
-            ArrayList<Type> functionParameters = returnType.functionParameters ;
+        ArrayList<Type> functionParameters = returnType.functionParameters ;
         Type functionReturnType = returnType.functionReturnType ;
         if (it.expressionList.expressions.size() != functionParameters.size())
             throw new semanticError("wrong size of funtion parameters", it.pos) ;
