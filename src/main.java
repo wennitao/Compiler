@@ -1,6 +1,9 @@
 import AST.RootNode;
+import Backend.IRBuilder;
+import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
+import MIR.mainFn;
 import Frontend.SemanticChecker;
 import Parser.MxLiteLexer;
 import Parser.MxLiteParser;
@@ -37,7 +40,11 @@ public class main {
 
             globalScope gScope = new globalScope();
             new SymbolCollector(gScope).visit(ASTRoot);
-            new SemanticChecker(gScope).visit(ASTRoot);
+            // new SemanticChecker(gScope).visit(ASTRoot);
+
+            mainFn f = new mainFn() ;
+            new IRBuilder(f, gScope).visit(ASTRoot) ;
+            new IRPrinter().visitFn(f) ;
         } catch(error er) {
             System.err.println(er.toString());
             throw new RuntimeException();
