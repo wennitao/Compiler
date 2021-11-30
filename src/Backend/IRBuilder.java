@@ -1,14 +1,18 @@
 package Backend;
 
-import javax.lang.model.type.TypeKind;
-
 import AST.*;
+import AST.primaryNode.primaryType;
 import MIR.*;
 import MIR.IRType.IRIntType;
 import MIR.IRType.IRType;
+import MIR.binary.IROperator;
 import Util.Scope;
 import Util.Type;
 import Util.globalScope;
+import Util.Type.basicType;
+import AST.binaryExprNode.binaryOperator;
+
+import java.util.ArrayList;
 
 public class IRBuilder implements ASTVisitor{
     private block currentBlock ;
@@ -16,10 +20,35 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private Type returnType ;
+    private int curRegisterID ;
+    private entity returnEntity ;
+    private boolean isFunctionID ;
 
     public IRBuilder(mainFn _fn, globalScope _gScope) {
+        curRegisterID = 0 ;
         fn = _fn; gScope = _gScope ;curScope = _gScope ;
         currentBlock = fn.rootBlock ;
+    }
+
+    private IRType toIRType (Type type) {
+        IRType varIRType ;
+        if (type.type == Type.basicType.Int) varIRType = new IRIntType(32) ;
+        else if (type.type == Type.basicType.Bool) varIRType = new IRIntType(8) ;
+        else varIRType = new IRIntType(32) ;
+        return varIRType ;
+    }
+
+    public boolean isCompareOperator (binaryOperator op) {
+        return op == binaryOperator.Greater || op == binaryOperator.GreaterEqual
+        || op == binaryOperator.Less || op == binaryOperator.LessEqual
+        || op == binaryOperator.NotEqual || op == binaryOperator.Equal ;
+    }
+
+    public boolean isArithmeticOperator (binaryOperator op) {
+        return op == binaryOperator.Plus || op == binaryOperator.Minus
+        || op == binaryOperator.Mul || op == binaryOperator.Div || op == binaryOperator.Mod
+        || op == binaryOperator.RightShift || op == binaryOperator.LeftShift
+        || op == binaryOperator.And || op == binaryOperator.Or || op == binaryOperator.Caret ;
     }
 
     @Override 
@@ -27,7 +56,42 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (binaryExprNode it) {
-        
+        if (isArithmeticOperator(it.binaryOp)) {
+            it.leftExpression.accept(this) ;
+            Type leftType = returnType ;
+            entity left = returnEntity ;
+            it.rightExpression.accept(this) ;
+            Type rightType = returnType ;
+            entity right = returnEntity ;
+            if (leftType.type == basicType.Int) {
+                returnEntity = new register(curRegisterID, toIRType(leftType)) ;
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curRegisterID, toIRType(leftType)))) ;
+                curRegisterID ++ ;
+            }
+        } else if (isCompareOperator(it.binaryOp)) {
+            it.leftExpression.accept(this) ;
+            Type leftType = returnType ;
+            entity left = returnEntity ;
+            it.rightExpression.accept(this) ;
+            Type rightType = returnType ;
+            entity right = returnEntity ;
+            if (leftType.type == basicType.Int) {
+                register cmpRes = new register(curRegisterID, new IRIntType(1)) ; // i1
+                curRegisterID ++ ;
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curRegisterID, toIRType(leftType)))) ;
+                register i8Res = new register (curRegisterID, new IRIntType(8)) ; // i8
+                curRegisterID ++ ;
+                currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
+            }
+        } else if (it.binaryOp == binaryOperator.Assign) {
+
+        } else if (it.binaryOp == binaryOperator.Dot) {
+
+        } else if (it.binaryOp == binaryOperator.AndAnd) {
+
+        } else if (it.binaryOp == binaryOperator.OrOr) {
+
+        }
     }
 
     @Override
@@ -104,7 +168,33 @@ public class IRBuilder implements ASTVisitor{
     public void visit (preIncExprNode it) {}
 
     @Override
-    public void visit (primaryNode it) {}
+    public void visit (primaryNode it) {
+        if (it.type == primaryType.Int) {
+            IRType type = new IRIntType(32) ;
+            // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
+            currentBlock.push_back(new store(type, new constant(Integer.parseInt(it.identifier)), new register(curRegisterID, type)));
+            returnEntity = new register(curRegisterID, type) ;
+            curRegisterID ++ ;
+        } else if (it.type == primaryType.Bool) {
+            IRType type = new IRIntType(8) ;
+            // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
+            if (it.identifier == "true") {
+                currentBlock.push_back(new store(type, new constant(1), new register(curRegisterID, type)));
+            } else {
+                currentBlock.push_back(new store(type, new constant(0), new register(curRegisterID, type)));
+            }
+            returnEntity = new register(curRegisterID, type) ;
+            curRegisterID ++ ;
+        } else {
+            if (it.type == primaryType.Identifier) {
+                entity variableEntity = curScope.getEntity(it.identifier, true) ;
+                IRType type = ((register) variableEntity).type ;
+                returnEntity = new register(curRegisterID, type) ;
+                currentBlock.push_back(new load(type, variableEntity, new register(curRegisterID, type)));
+                curRegisterID ++ ;
+            }
+        }
+    }
 
     @Override
     public void visit (returnStmtNode it) {}
@@ -141,14 +231,15 @@ public class IRBuilder implements ASTVisitor{
     public void visit (varDefNode it) {
         it.type.accept(this) ;
         Type varType = returnType;
-        IRType varIRType ;
-        if (varType.type == Type.basicType.Int) varIRType = new IRIntType(32) ;
-        else if (varType.type == Type.basicType.Bool) varIRType = new IRIntType(8) ;
-        else varIRType = new IRIntType(32) ;
+        IRType varIRType = toIRType(varType) ;
         it.varDeclarations.forEach(x -> {
-            currentBlock.push_back (new alloca(x.name, varIRType));
+            int varRegID = curRegisterID ;
+            curScope.entities.put(x.name, new register(curRegisterID, varIRType)) ;
+            currentBlock.push_back (new alloca(new register(curRegisterID, varIRType), varIRType));
+            curRegisterID ++ ;
             if (x.isInitialized) {
                 x.expression.accept(this) ;
+                currentBlock.push_back(new store(varIRType, returnEntity, new register(varRegID, varIRType))) ;
             }
         });
     }

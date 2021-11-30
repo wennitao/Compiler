@@ -3,14 +3,14 @@ package MIR;
 import MIR.IRType.IRType;
 
 public class alloca extends statement {
-    public String identifier ;
+    public register reg ;
     public IRType type ;
-    public alloca (String _identifier, IRType _type) {
-        identifier = _identifier ;
+    public alloca (register _reg, IRType _type) {
+        reg = _reg ;
         type = _type ;
     }
     @Override 
     public String toString () {
-        return "%" + identifier + " = alloca " + type ;
+        return reg + " = alloca " + type ;
     }
 }

@@ -40,7 +40,7 @@ public class main {
 
             globalScope gScope = new globalScope();
             new SymbolCollector(gScope).visit(ASTRoot);
-            // new SemanticChecker(gScope).visit(ASTRoot);
+            new SemanticChecker(gScope).visit(ASTRoot);
 
             mainFn f = new mainFn() ;
             new IRBuilder(f, gScope).visit(ASTRoot) ;

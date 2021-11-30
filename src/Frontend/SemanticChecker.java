@@ -58,11 +58,13 @@ public class SemanticChecker implements ASTVisitor {
         it.arrayIndex.accept(this) ;
         if (returnType.type != Type.basicType.Int || returnType.dim > 0)
             throw new semanticError("wrong index type", it.arrayIndex.pos) ;
+        it.arrayIndex.type = new Type (returnType) ;
         isFunctionID = isFunctionIDBackup ;
         it.arrayIdentifier.accept(this) ;
         returnType.dim -- ;
         if (returnType.dim < 0)
             throw new semanticError("dimension not matched", it.pos) ;
+        it.type = new Type (returnType) ;
     }
 
     public boolean isCompareOperator (binaryOperator op) {
@@ -84,6 +86,7 @@ public class SemanticChecker implements ASTVisitor {
             Boolean isFunctionIDBackup = isFunctionID ;
             isFunctionID = false ;
             it.leftExpression.accept(this) ;
+            it.leftExpression.type = new Type (returnType) ;
             isFunctionID = isFunctionIDBackup ;
             Type leftExpressionType = returnType;
             globalScope gScopeBackup = gScope ;
@@ -94,12 +97,15 @@ public class SemanticChecker implements ASTVisitor {
             Scope curScopeBackup = curScope ;
             curScope = gScope ;
             it.rightExpression.accept(this) ;
+            it.rightExpression.type = new Type (returnType) ;
             curScope = curScopeBackup; gScope = gScopeBackup ;
         } else {
             it.leftExpression.accept(this) ;
+            it.leftExpression.type = new Type (returnType) ;
             Type leftExpressionType = returnType ;
             it.rightExpression.accept(this) ;
             Type rightExpressionType = returnType ;
+            it.rightExpression.type = new Type (returnType) ;
             if (it.binaryOp == binaryExprNode.binaryOperator.Assign) {
                 checkAssign(it.pos, leftExpressionType, rightExpressionType) ;
                 returnType.isLeftValue = false ;
@@ -159,6 +165,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit (bracketExprNode it) {
         it.expression.accept(this) ;
+        it.expression.type = new Type (returnType) ;
     }
 
     @Override 
@@ -209,6 +216,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override 
     public void visit (forConditionNode it) {
         it.expression.accept(this) ;
+        it.expression.type = new Type (returnType) ;
         if (returnType.type != Type.basicType.Bool || returnType.dim > 0) 
             throw new semanticError("for condition should be bool", it.pos) ;
     }
@@ -221,7 +229,10 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit (forInitNode it) {
         if (it.varDef != null) it.varDef.accept(this) ;
-        if (it.expression != null) it.expression.accept(this) ;
+        if (it.expression != null) {
+            it.expression.accept(this) ;
+            it.expression.type = new Type (returnType) ;
+        }
     }
 
     @Override
@@ -254,6 +265,7 @@ public class SemanticChecker implements ASTVisitor {
         }
         returnType = new Type (functionReturnType) ;
         returnType.isLeftValue = false ;
+        it.type = new Type (returnType) ;
     }
 
     @Override
@@ -287,6 +299,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit (ifStmtNode it) {
         it.expression.accept(this) ;
+        it.expression.type = new Type (returnType) ;
         if (returnType.type != Type.basicType.Bool || returnType.dim > 0)
             throw new semanticError("expression type in if statement should be bool", it.pos) ;
         curScope = new Scope(curScope) ;
@@ -326,6 +339,7 @@ public class SemanticChecker implements ASTVisitor {
         }
         returnType = lambdaReturnType ;
         returnType.isLeftValue = false ;
+        it.type = new Type (returnType) ;
     }
 
     @Override
@@ -352,6 +366,7 @@ public class SemanticChecker implements ASTVisitor {
             }
         }
         returnType = type ;
+        it.type = new Type (returnType) ;
     }
 
     @Override
@@ -362,6 +377,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit (postIncExprNode it) {
         it.expression.accept(this) ;
+        it.expression.type = new Type (returnType) ;
         if (returnType.type != basicType.Int || returnType.dim > 0)
             throw new semanticError("wrong object with pre-increase expression", it.pos) ;
         if (!returnType.isLeftValue)
@@ -372,6 +388,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit (preIncExprNode it) {
         it.expression.accept(this) ;
+        it.expression.type = new Type (returnType) ;
         if (returnType.type != basicType.Int || returnType.dim > 0)
             throw new semanticError("wrong object with pre-increase expression", it.pos) ;
         if (!returnType.isLeftValue)
@@ -448,6 +465,7 @@ public class SemanticChecker implements ASTVisitor {
                 throw new semanticError("wrong object with the unary operator", it.pos) ;
         }
         returnType.isLeftValue = false ;
+        it.type = new Type (returnType) ;
     }
 
     @Override

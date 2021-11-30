@@ -2,19 +2,23 @@ package Util;
 
 import java.util.HashMap;
 
+import MIR.entity;
 import Util.error.semanticError;
 
 public class Scope {
     private HashMap<String, Type> members ;
+    public HashMap<String, entity> entities ;
     private Scope parentScope ;
 
     public Scope () {
         members = new HashMap<>() ;
+        entities = new HashMap<>() ;
         parentScope = null ;
     }
 
     public Scope (Scope _parentScope) {
         members = new HashMap<>() ;
+        entities = new HashMap<>() ;
         parentScope = _parentScope ;
     }
 
@@ -37,5 +41,11 @@ public class Scope {
         if (members.containsKey(name)) return members.get(name) ;
         else if (parentScope != null && lookUpon) return parentScope.getType(pos, name, true) ;
         else throw new semanticError("identifier " + name + " not found", pos);
+    }
+
+    public entity getEntity (String name, boolean lookUpon) {
+        if (entities.containsKey(name)) return entities.get(name) ;
+        else if (parentScope != null && lookUpon) return parentScope.getEntity(name, true) ;
+        return null ;
     }
 }
