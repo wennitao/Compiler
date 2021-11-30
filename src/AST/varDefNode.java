@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import Util.position;
 
 public class varDefNode extends ASTNode {
-    public varTypeNode type ;
+    public varTypeNode typeNode ;
     public ArrayList<varDeclarationNode> varDeclarations ;
 
     public varDefNode (position pos, varTypeNode _type) {
         super (pos) ;
-        type = _type ;
+        typeNode = _type ;
         varDeclarations = new ArrayList<>();
     }
 

@@ -11,6 +11,6 @@ public class zext extends statement {
     }
     @Override
     public String toString() {
-        return to + " = zext " + fromType + from + " to " + toType ;
+        return to + " = zext " + fromType + " " + from + " to " + toType ;
     }
 }

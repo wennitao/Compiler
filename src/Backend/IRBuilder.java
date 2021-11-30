@@ -12,17 +12,13 @@ import Util.globalScope;
 import Util.Type.basicType;
 import AST.binaryExprNode.binaryOperator;
 
-import java.util.ArrayList;
-
 public class IRBuilder implements ASTVisitor{
     private block currentBlock ;
     private mainFn fn ;
     private Scope curScope ;
     private globalScope gScope ;
-    private Type returnType ;
     private int curRegisterID ;
     private entity returnEntity ;
-    private boolean isFunctionID ;
 
     public IRBuilder(mainFn _fn, globalScope _gScope) {
         curRegisterID = 0 ;
@@ -58,10 +54,10 @@ public class IRBuilder implements ASTVisitor{
     public void visit (binaryExprNode it) {
         if (isArithmeticOperator(it.binaryOp)) {
             it.leftExpression.accept(this) ;
-            Type leftType = returnType ;
+            Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
             it.rightExpression.accept(this) ;
-            Type rightType = returnType ;
+            Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
             if (leftType.type == basicType.Int) {
                 returnEntity = new register(curRegisterID, toIRType(leftType)) ;
@@ -70,18 +66,19 @@ public class IRBuilder implements ASTVisitor{
             }
         } else if (isCompareOperator(it.binaryOp)) {
             it.leftExpression.accept(this) ;
-            Type leftType = returnType ;
+            Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
             it.rightExpression.accept(this) ;
-            Type rightType = returnType ;
+            Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
             if (leftType.type == basicType.Int) {
                 register cmpRes = new register(curRegisterID, new IRIntType(1)) ; // i1
-                curRegisterID ++ ;
                 currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curRegisterID, toIRType(leftType)))) ;
-                register i8Res = new register (curRegisterID, new IRIntType(8)) ; // i8
                 curRegisterID ++ ;
+                register i8Res = new register (curRegisterID, new IRIntType(8)) ; // i8
                 currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
+                returnEntity = i8Res ;
+                curRegisterID ++ ;
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
 
@@ -170,21 +167,24 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (primaryNode it) {
         if (it.type == primaryType.Int) {
-            IRType type = new IRIntType(32) ;
+            // IRType type = new IRIntType(32) ;
             // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
-            currentBlock.push_back(new store(type, new constant(Integer.parseInt(it.identifier)), new register(curRegisterID, type)));
-            returnEntity = new register(curRegisterID, type) ;
-            curRegisterID ++ ;
+            // currentBlock.push_back(new store(type, new constant(Integer.parseInt(it.identifier)), new register(curRegisterID, type)));
+            // returnEntity = new register(curRegisterID, type) ;
+            returnEntity = new constant(Integer.parseInt(it.identifier)) ;
+            // curRegisterID ++ ;
         } else if (it.type == primaryType.Bool) {
-            IRType type = new IRIntType(8) ;
+            // IRType type = new IRIntType(8) ;
             // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
             if (it.identifier == "true") {
-                currentBlock.push_back(new store(type, new constant(1), new register(curRegisterID, type)));
+                returnEntity = new constant(1) ;
+                // currentBlock.push_back(new store(type, new constant(1), new register(curRegisterID, type)));
             } else {
-                currentBlock.push_back(new store(type, new constant(0), new register(curRegisterID, type)));
+                returnEntity = new constant(0) ;
+                // currentBlock.push_back(new store(type, new constant(0), new register(curRegisterID, type)));
             }
-            returnEntity = new register(curRegisterID, type) ;
-            curRegisterID ++ ;
+            // returnEntity = new register(curRegisterID, type) ;
+            // curRegisterID ++ ;
         } else {
             if (it.type == primaryType.Identifier) {
                 entity variableEntity = curScope.getEntity(it.identifier, true) ;
@@ -229,8 +229,8 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (varDefNode it) {
-        it.type.accept(this) ;
-        Type varType = returnType;
+        it.typeNode.accept(this) ;
+        Type varType = it.type ;
         IRType varIRType = toIRType(varType) ;
         it.varDeclarations.forEach(x -> {
             int varRegID = curRegisterID ;
@@ -245,13 +245,7 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (varTypeNode it) {
-        if (it.classID != null) {
-            returnType = new Type(it.classID, it.dim, true) ;
-        } else {
-            returnType = new Type(it.builtinType.bType, it.dim, true) ;
-        }
-    }
+    public void visit (varTypeNode it) {}
     
     @Override
     public void visit (whileStmtNode it) {}

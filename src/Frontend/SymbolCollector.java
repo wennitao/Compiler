@@ -121,7 +121,7 @@ public class SymbolCollector implements ASTVisitor {
 
     @Override
     public void visit (varDefNode it) {
-        it.type.accept(this) ;
+        it.typeNode.accept(this) ;
         Type varType = type ;
         it.varDeclarations.forEach(x -> {
             if (gScope.findClass(x.name, true)) throw new semanticError("variable has the same name with a class", x.pos) ;

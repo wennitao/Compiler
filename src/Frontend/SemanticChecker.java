@@ -473,7 +473,8 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (varDefNode it) {
-        it.type.accept(this) ;
+        it.typeNode.accept(this) ;
+        it.type = new Type (returnType) ;
         Type varType = returnType;
         it.varDeclarations.forEach(x -> {
             if (gScope.findClass(x.name, true))
