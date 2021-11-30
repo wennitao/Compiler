@@ -2,6 +2,10 @@
 #include <string>
 int main() {
     int a = 1, b = 2 ;
-    bool c = a < b ;
+    if (a < b) {
+        int c = 1 ;
+    }
+    int c = 1 ;
+    int d = c + 2 ;
     return 0 ;
 }

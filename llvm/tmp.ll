@@ -8,15 +8,26 @@ define i32 @main() #0 {
   %1 = alloca i32, align 4
   %2 = alloca i32, align 4
   %3 = alloca i32, align 4
-  %4 = alloca i8, align 1
+  %4 = alloca i32, align 4
+  %5 = alloca i32, align 4
+  %6 = alloca i32, align 4
   store i32 0, i32* %1, align 4
   store i32 1, i32* %2, align 4
   store i32 2, i32* %3, align 4
-  %5 = load i32, i32* %2, align 4
-  %6 = load i32, i32* %3, align 4
-  %7 = icmp slt i32 %5, %6
-  %8 = zext i1 %7 to i8
-  store i8 %8, i8* %4, align 1
+  %7 = load i32, i32* %2, align 4
+  %8 = load i32, i32* %3, align 4
+  %9 = icmp slt i32 %7, %8
+  br i1 %9, label %10, label %11
+
+10:                                               ; preds = %0
+  store i32 1, i32* %4, align 4
+  br label %11
+
+11:                                               ; preds = %10, %0
+  store i32 1, i32* %5, align 4
+  %12 = load i32, i32* %5, align 4
+  %13 = add nsw i32 %12, 2
+  store i32 %13, i32* %6, align 4
   ret i32 0
 }
 

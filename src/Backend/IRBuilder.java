@@ -17,13 +17,13 @@ public class IRBuilder implements ASTVisitor{
     private mainFn fn ;
     private Scope curScope ;
     private globalScope gScope ;
-    private int curRegisterID ;
     private entity returnEntity ;
+    private int curRegisterID ;
 
     public IRBuilder(mainFn _fn, globalScope _gScope) {
-        curRegisterID = 0 ;
         fn = _fn; gScope = _gScope ;curScope = _gScope ;
         currentBlock = fn.rootBlock ;
+        curRegisterID = 1 ;
     }
 
     private IRType toIRType (Type type) {
@@ -144,7 +144,34 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (ifStmtNode it) {}
+    public void visit (ifStmtNode it) {
+        it.expression.accept(this) ;
+        label trueLabel = new label(curRegisterID) ;
+        block trueBranch = new block(Integer.toString(curRegisterID ++)) ;
+        label falseLabel = new label(curRegisterID) ;
+        block falseBranch = new block(Integer.toString(curRegisterID ++)) ;
+        currentBlock.push_back(new branch((register) returnEntity, trueLabel, falseLabel));
+        
+        label ifOutLabel = new label (curRegisterID) ;
+        block ifOutBlock = new block(Integer.toString(curRegisterID ++)) ;
+        currentBlock = trueBranch ;
+        curScope = new Scope (curScope) ;
+        it.trueStatement.accept(this) ;
+        currentBlock.push_back(new branch(ifOutLabel)) ;
+        curScope = curScope.parentScope() ;
+        if (it.falseStatement != null) {
+            currentBlock = falseBranch ;
+            curScope = new Scope(curScope) ;
+            it.falseStatement.accept(this) ;
+            currentBlock.push_back(new branch(ifOutLabel));
+            curScope = curScope.parentScope() ;
+        }
+        currentBlock = ifOutBlock ;
+
+        fn.blocks.add(trueBranch); 
+        if (it.falseStatement != null) fn.blocks.add(falseBranch) ;
+        fn.blocks.add(ifOutBlock) ;
+    }
 
     @Override
     public void visit (lambdaStmtNode it) {}
@@ -167,24 +194,13 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (primaryNode it) {
         if (it.type == primaryType.Int) {
-            // IRType type = new IRIntType(32) ;
-            // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
-            // currentBlock.push_back(new store(type, new constant(Integer.parseInt(it.identifier)), new register(curRegisterID, type)));
-            // returnEntity = new register(curRegisterID, type) ;
             returnEntity = new constant(Integer.parseInt(it.identifier)) ;
-            // curRegisterID ++ ;
         } else if (it.type == primaryType.Bool) {
-            // IRType type = new IRIntType(8) ;
-            // currentBlock.push_back(new alloca(new register(curRegisterID, type), type));
             if (it.identifier == "true") {
                 returnEntity = new constant(1) ;
-                // currentBlock.push_back(new store(type, new constant(1), new register(curRegisterID, type)));
             } else {
                 returnEntity = new constant(0) ;
-                // currentBlock.push_back(new store(type, new constant(0), new register(curRegisterID, type)));
             }
-            // returnEntity = new register(curRegisterID, type) ;
-            // curRegisterID ++ ;
         } else {
             if (it.type == primaryType.Identifier) {
                 entity variableEntity = curScope.getEntity(it.identifier, true) ;
