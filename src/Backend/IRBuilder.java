@@ -13,17 +13,15 @@ import Util.Type.basicType;
 import AST.binaryExprNode.binaryOperator;
 
 public class IRBuilder implements ASTVisitor{
+    private globalDefine globalDef ;
     private block currentBlock ;
-    private mainFn fn ;
+    private function curFunction ;
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
-    private int curRegisterID ;
 
-    public IRBuilder(mainFn _fn, globalScope _gScope) {
-        fn = _fn; gScope = _gScope ;curScope = _gScope ;
-        currentBlock = fn.rootBlock ;
-        curRegisterID = 1 ;
+    public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
+        globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
     }
 
     private IRType toIRType (Type type) {
@@ -60,9 +58,9 @@ public class IRBuilder implements ASTVisitor{
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
             if (leftType.type == basicType.Int) {
-                returnEntity = new register(curRegisterID, toIRType(leftType)) ;
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curRegisterID, toIRType(leftType)))) ;
-                curRegisterID ++ ;
+                returnEntity = new register(curFunction.curRegisterID, toIRType(leftType)) ;
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
+                curFunction.curRegisterID ++ ;
             }
         } else if (isCompareOperator(it.binaryOp)) {
             it.leftExpression.accept(this) ;
@@ -72,13 +70,13 @@ public class IRBuilder implements ASTVisitor{
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
             if (leftType.type == basicType.Int) {
-                register cmpRes = new register(curRegisterID, new IRIntType(1)) ; // i1
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curRegisterID, toIRType(leftType)))) ;
-                curRegisterID ++ ;
-                register i8Res = new register (curRegisterID, new IRIntType(8)) ; // i8
+                register cmpRes = new register(curFunction.curRegisterID, new IRIntType(1)) ; // i1
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
+                curFunction.curRegisterID ++ ;
+                register i8Res = new register (curFunction.curRegisterID, new IRIntType(8)) ; // i8
                 currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
                 returnEntity = i8Res ;
-                curRegisterID ++ ;
+                curFunction.curRegisterID ++ ;
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
 
@@ -129,7 +127,11 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (functionDefNode it) {
-
+        function newFunc = new function(it.name) ;
+        curFunction = newFunc ;
+        globalDef.functions.add(newFunc) ;
+        currentBlock = newFunc.rootBlock ;
+        it.suite.accept(this) ;
     }
 
     @Override
@@ -146,14 +148,14 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (ifStmtNode it) {
         it.expression.accept(this) ;
-        label trueLabel = new label(curRegisterID) ;
-        block trueBranch = new block(Integer.toString(curRegisterID ++)) ;
-        label falseLabel = new label(curRegisterID) ;
-        block falseBranch = new block(Integer.toString(curRegisterID ++)) ;
+        label trueLabel = new label(curFunction.curRegisterID) ;
+        block trueBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label falseLabel = new label(curFunction.curRegisterID) ;
+        block falseBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
         currentBlock.push_back(new branch((register) returnEntity, trueLabel, falseLabel));
         
-        label ifOutLabel = new label (curRegisterID) ;
-        block ifOutBlock = new block(Integer.toString(curRegisterID ++)) ;
+        label ifOutLabel = new label (curFunction.curRegisterID) ;
+        block ifOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
         currentBlock = trueBranch ;
         curScope = new Scope (curScope) ;
         it.trueStatement.accept(this) ;
@@ -168,9 +170,9 @@ public class IRBuilder implements ASTVisitor{
         }
         currentBlock = ifOutBlock ;
 
-        fn.blocks.add(trueBranch); 
-        if (it.falseStatement != null) fn.blocks.add(falseBranch) ;
-        fn.blocks.add(ifOutBlock) ;
+        curFunction.blocks.add(trueBranch); 
+        if (it.falseStatement != null) curFunction.blocks.add(falseBranch) ;
+        curFunction.blocks.add(ifOutBlock) ;
     }
 
     @Override
@@ -205,9 +207,9 @@ public class IRBuilder implements ASTVisitor{
             if (it.type == primaryType.Identifier) {
                 entity variableEntity = curScope.getEntity(it.identifier, true) ;
                 IRType type = ((register) variableEntity).type ;
-                returnEntity = new register(curRegisterID, type) ;
-                currentBlock.push_back(new load(type, variableEntity, new register(curRegisterID, type)));
-                curRegisterID ++ ;
+                returnEntity = new register(curFunction.curRegisterID, type) ;
+                currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
+                curFunction.curRegisterID ++ ;
             }
         }
     }
@@ -235,7 +237,9 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override 
-    public void visit (suiteNode it) {}
+    public void visit (suiteNode it) {
+        it.statementNodes.forEach(x -> x.accept(this)) ;
+    }
 
     @Override
     public void visit (unaryExprNode it) {}
@@ -249,10 +253,10 @@ public class IRBuilder implements ASTVisitor{
         Type varType = it.type ;
         IRType varIRType = toIRType(varType) ;
         it.varDeclarations.forEach(x -> {
-            int varRegID = curRegisterID ;
-            curScope.entities.put(x.name, new register(curRegisterID, varIRType)) ;
-            currentBlock.push_back (new alloca(new register(curRegisterID, varIRType), varIRType));
-            curRegisterID ++ ;
+            int varRegID = curFunction.curRegisterID ;
+            curScope.entities.put(x.name, new register(curFunction.curRegisterID, varIRType)) ;
+            currentBlock.push_back (new alloca(new register(curFunction.curRegisterID, varIRType), varIRType));
+            curFunction.curRegisterID ++ ;
             if (x.isInitialized) {
                 x.expression.accept(this) ;
                 currentBlock.push_back(new store(varIRType, returnEntity, new register(varRegID, varIRType))) ;

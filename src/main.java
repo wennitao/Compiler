@@ -3,7 +3,8 @@ import Backend.IRBuilder;
 import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
-import MIR.mainFn;
+import MIR.function;
+import MIR.globalDefine;
 import Frontend.SemanticChecker;
 import Parser.MxLiteLexer;
 import Parser.MxLiteParser;
@@ -42,9 +43,10 @@ public class main {
             new SymbolCollector(gScope).visit(ASTRoot);
             new SemanticChecker(gScope).visit(ASTRoot);
 
-            mainFn f = new mainFn() ;
-            new IRBuilder(f, gScope).visit(ASTRoot) ;
-            new IRPrinter().visitFn(f) ;
+            globalDefine globalDef = new globalDefine() ;
+            // function mainFn = new function("main") ;
+            new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
+            new IRPrinter().visitGlobalDef(globalDef);
         } catch(error er) {
             System.err.println(er.toString());
             throw new RuntimeException();

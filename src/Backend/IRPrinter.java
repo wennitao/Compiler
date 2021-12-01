@@ -1,14 +1,16 @@
 package Backend;
 
-import MIR.block;
-import MIR.mainFn;
+import MIR.function;
+import MIR.globalDefine;
 
 public class IRPrinter {
-    public void visitBlock (block curBlock) {
-        curBlock.print() ;
-    }
-
-    public void visitFn (mainFn fn) {
-        visitBlock(fn.rootBlock) ;
+    public void visitGlobalDef (globalDefine globalDef) {
+        globalDef.globalDefStmt.forEach(x -> {
+            System.out.println(x) ;
+        });
+        System.out.println();
+        globalDef.functions.forEach(x -> {
+            x.print() ;
+        });
     }
 }

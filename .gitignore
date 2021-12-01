@@ -1,2 +1,3 @@
 codegen/*
 *.class
+.VSCodeCounter
