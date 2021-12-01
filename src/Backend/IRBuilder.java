@@ -19,9 +19,11 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
+    private boolean copyVariable ;
 
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
+        copyVariable = true ;
     }
 
     private IRType toIRType (Type type) {
@@ -80,7 +82,14 @@ public class IRBuilder implements ASTVisitor{
                 // curFunction.curRegisterID ++ ;
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
-            
+            copyVariable = false; it.leftExpression.accept(this) ;
+            Type leftType = it.leftExpression.type ;
+            entity left = returnEntity ;
+            copyVariable = true; it.rightExpression.accept(this) ;
+            Type rightType = it.rightExpression.type ;
+            entity right = returnEntity ;
+            currentBlock.push_back(new store(toIRType(leftType), right, left));
+            returnEntity = right ;
         } else if (it.binaryOp == binaryOperator.Dot) {
 
         } else if (it.binaryOp == binaryOperator.AndAnd) {
@@ -215,9 +224,13 @@ public class IRBuilder implements ASTVisitor{
             if (it.type == primaryType.Identifier) {
                 entity variableEntity = curScope.getEntity(it.identifier, true) ;
                 IRType type = ((register) variableEntity).type ;
-                returnEntity = new register(curFunction.curRegisterID, type) ;
-                currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
-                curFunction.curRegisterID ++ ;
+                if (copyVariable) {
+                    returnEntity = new register(curFunction.curRegisterID, type) ;
+                    currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
+                    curFunction.curRegisterID ++ ;
+                } else {
+                    returnEntity = variableEntity ;
+                }
             }
         }
     }
@@ -313,7 +326,7 @@ public class IRBuilder implements ASTVisitor{
         curScope = new Scope(curScope) ;
         it.statement.accept(this) ;
         curScope = curScope.parentScope() ;
-        currentBlock.push_back(new branch(whileOutLabel)) ;
+        currentBlock.push_back(new branch(conditionLabel)) ;
         curFunction.blocks.add(suiteBlock) ;
 
         currentBlock = whileOutBlock ;
