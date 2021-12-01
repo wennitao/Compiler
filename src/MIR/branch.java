@@ -2,9 +2,9 @@ package MIR;
 
 public class branch extends statement {
     boolean isConditioned ;
-    register condition ;
+    entity condition ;
     label trueBranch, falseBranch ;
-    public branch (register _condition, label _trueBranch, label _falseBranch) {
+    public branch (entity _condition, label _trueBranch, label _falseBranch) {
         condition = _condition ;
         trueBranch = _trueBranch; falseBranch = _falseBranch ;
         isConditioned = true ;

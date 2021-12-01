@@ -73,13 +73,14 @@ public class IRBuilder implements ASTVisitor{
                 register cmpRes = new register(curFunction.curRegisterID, new IRIntType(1)) ; // i1
                 currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
                 curFunction.curRegisterID ++ ;
-                register i8Res = new register (curFunction.curRegisterID, new IRIntType(8)) ; // i8
-                currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
-                returnEntity = i8Res ;
-                curFunction.curRegisterID ++ ;
+                returnEntity = cmpRes ; // i1
+                // register i8Res = new register (curFunction.curRegisterID, new IRIntType(8)) ; // i8
+                // currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
+                // returnEntity = i8Res ;
+                // curFunction.curRegisterID ++ ;
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
-
+            
         } else if (it.binaryOp == binaryOperator.Dot) {
 
         } else if (it.binaryOp == binaryOperator.AndAnd) {
@@ -131,7 +132,9 @@ public class IRBuilder implements ASTVisitor{
         curFunction = newFunc ;
         globalDef.functions.add(newFunc) ;
         currentBlock = newFunc.rootBlock ;
+        curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
         it.suite.accept(this) ;
+        curScope = curScope.parentScope() ;
     }
 
     @Override
@@ -148,11 +151,16 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (ifStmtNode it) {
         it.expression.accept(this) ;
+        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+            register i1Reg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+            alignWidth((register) returnEntity, i1Reg) ;
+            returnEntity = i1Reg ;
+        }
         label trueLabel = new label(curFunction.curRegisterID) ;
         block trueBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
         label falseLabel = new label(curFunction.curRegisterID) ;
         block falseBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        currentBlock.push_back(new branch((register) returnEntity, trueLabel, falseLabel));
+        currentBlock.push_back(new branch(returnEntity, trueLabel, falseLabel));
         
         label ifOutLabel = new label (curFunction.curRegisterID) ;
         block ifOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
@@ -247,6 +255,16 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (varDeclarationNode it) {}
 
+    public void alignWidth (register from, register to) {
+        int fromWidth = ((IRIntType)from.type).width ;
+        int toWidth = ((IRIntType)to.type).width ;
+        if (fromWidth < toWidth) {
+            currentBlock.push_back(new zext(from, to, from.type, to.type));
+        } else if (fromWidth > toWidth) {
+            currentBlock.push_back(new trunc(from, to, from.type, to.type));
+        }
+    }
+
     @Override
     public void visit (varDefNode it) {
         it.typeNode.accept(this) ;
@@ -254,12 +272,15 @@ public class IRBuilder implements ASTVisitor{
         IRType varIRType = toIRType(varType) ;
         it.varDeclarations.forEach(x -> {
             int varRegID = curFunction.curRegisterID ;
-            curScope.entities.put(x.name, new register(curFunction.curRegisterID, varIRType)) ;
-            currentBlock.push_back (new alloca(new register(curFunction.curRegisterID, varIRType), varIRType));
+            register varReg = new register(varRegID, varIRType) ;
+            curScope.entities.put(x.name, varReg) ;
+            currentBlock.push_back (new alloca(varReg, varIRType));
             curFunction.curRegisterID ++ ;
             if (x.isInitialized) {
                 x.expression.accept(this) ;
-                currentBlock.push_back(new store(varIRType, returnEntity, new register(varRegID, varIRType))) ;
+                if (returnEntity instanceof register)
+                    alignWidth((register) returnEntity, varReg);
+                currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
             }
         });
     }
@@ -268,5 +289,34 @@ public class IRBuilder implements ASTVisitor{
     public void visit (varTypeNode it) {}
     
     @Override
-    public void visit (whileStmtNode it) {}
+    public void visit (whileStmtNode it) {
+        label conditionLabel = new label(curFunction.curRegisterID) ;
+        block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        currentBlock.push_back(new branch(conditionLabel));
+        
+        currentBlock = conditionBlock ;
+        it.expression.accept(this) ;
+        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+            register i1Reg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+            alignWidth((register) returnEntity, i1Reg) ;
+            returnEntity = i1Reg ;
+        }
+
+        label suiteLabel = new label(curFunction.curRegisterID) ;
+        block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label whileOutLabel = new label(curFunction.curRegisterID) ;
+        block whileOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        currentBlock.push_back(new branch(returnEntity, suiteLabel, whileOutLabel));
+        curFunction.blocks.add(conditionBlock) ;
+        
+        currentBlock = suiteBlock ;
+        curScope = new Scope(curScope) ;
+        it.statement.accept(this) ;
+        curScope = curScope.parentScope() ;
+        currentBlock.push_back(new branch(whileOutLabel)) ;
+        curFunction.blocks.add(suiteBlock) ;
+
+        currentBlock = whileOutBlock ;
+        curFunction.blocks.add(whileOutBlock) ;
+    }
 }

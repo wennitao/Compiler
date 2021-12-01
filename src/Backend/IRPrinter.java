@@ -1,6 +1,5 @@
 package Backend;
 
-import MIR.function;
 import MIR.globalDefine;
 
 public class IRPrinter {
