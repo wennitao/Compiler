@@ -121,16 +121,63 @@ public class IRBuilder implements ASTVisitor{
     public void visit (expressionListNode it) {}
 
     @Override
-    public void visit (forConditionNode it) {}
+    public void visit (forConditionNode it) {
+        it.expression.accept(this) ;
+        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+            register i1Reg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+            alignWidth((register) returnEntity, i1Reg) ;
+            returnEntity = i1Reg ;
+        }
+    }
 
     @Override
-    public void visit (forIncrNode it) {}
+    public void visit (forIncrNode it) {
+        it.expression.accept(this) ;
+    }
 
     @Override
-    public void visit (forInitNode it) {}
+    public void visit (forInitNode it) {
+        if (it.varDef != null) it.varDef.accept(this) ;
+        if (it.expression != null) it.expression.accept(this) ;
+    }
 
     @Override
-    public void visit (forStmtNode it) {}
+    public void visit (forStmtNode it) {
+        curScope = new Scope (curScope) ;
+        if (it.forInit != null) it.forInit.accept(this) ;
+        
+        label conditionLabel = new label(curFunction.curRegisterID) ;
+        block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label suiteLabel = new label(curFunction.curRegisterID) ;
+        block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label incrLabel = new label(curFunction.curRegisterID) ;
+        block incrBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label forOutLabel = new label(curFunction.curRegisterID) ;
+        block forOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+
+        currentBlock.push_back(new branch(conditionLabel)) ;
+        currentBlock = conditionBlock ;
+        it.forCondition.accept(this) ;
+        entity conditionReg = returnEntity ;
+        currentBlock.push_back(new branch(conditionReg, suiteLabel, forOutLabel));
+        curFunction.blocks.add(conditionBlock) ;
+        
+        currentBlock = suiteBlock ;
+        it.statement.accept(this) ;
+        currentBlock.push_back(new branch(incrLabel));
+        curFunction.blocks.add (suiteBlock) ;
+
+        if (it.forIncr != null) {
+            currentBlock = incrBlock ;
+            it.forIncr.accept(this) ;
+            currentBlock.push_back(new branch(conditionLabel));
+            curFunction.blocks.add(incrBlock) ;
+        }
+        
+        currentBlock = forOutBlock ;
+        curFunction.blocks.add (forOutBlock) ;
+        curScope = curScope.parentScope() ;
+    }
 
     @Override
     public void visit (functionCallExprNode it) {}
@@ -205,10 +252,26 @@ public class IRBuilder implements ASTVisitor{
     public void visit (parameterNode it) {}
 
     @Override
-    public void visit (postIncExprNode it) {}
+    public void visit (postIncExprNode it) {
+        copyVariable = false; it.expression.accept(this); copyVariable = true ;
+        register varCopy = new register(curFunction.curRegisterID ++, ((register) returnEntity).type) ;
+        currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
+        register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
+        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1), resReg)) ;
+        currentBlock.push_back(new store(varCopy.type, resReg, returnEntity)) ;
+        returnEntity = varCopy ;
+    }
 
     @Override
-    public void visit (preIncExprNode it) {}
+    public void visit (preIncExprNode it) {
+        copyVariable = false; it.expression.accept(this); copyVariable = true ;
+        register varCopy = new register(curFunction.curRegisterID ++, ((register) returnEntity).type) ;
+        currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
+        register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
+        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1), resReg)) ;
+        currentBlock.push_back(new store(varCopy.type, resReg, returnEntity)) ;
+        returnEntity = resReg ;
+    }
 
     @Override
     public void visit (primaryNode it) {

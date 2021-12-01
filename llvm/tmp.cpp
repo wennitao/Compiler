@@ -1,9 +1,9 @@
 #include <cstdio>
 #include <string>
 int main() {
-    int a = 1, b = 10 ;
-    while (a < b) {
-        a = a + 1 ;
+    for (int i = 1, j = 2; i <= 10; i ++) {
+        int a = 1, b = 2 ;
+        int c = a + b ;
     }
     return 0 ;
 }

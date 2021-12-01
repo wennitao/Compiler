@@ -210,7 +210,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (expressionListNode it) {
-
+        it.expressions.forEach(x -> x.accept(this)) ;
     }
 
     @Override 
@@ -223,7 +223,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit (forIncrNode it) {
-
+        it.expression.accept(this) ;
     }
 
     @Override
@@ -241,6 +241,7 @@ public class SemanticChecker implements ASTVisitor {
         curScope = new Scope(curScope) ;
         if (it.forInit != null) it.forInit.accept(this) ;
         if (it.forCondition != null) it.forCondition.accept(this) ;
+        else throw new semanticError("empty for condition", it.pos) ;
         if (it.forIncr != null) it.forIncr.accept(this) ;
         it.statement.accept(this) ;
         curScope = curScope.parentScope() ;
