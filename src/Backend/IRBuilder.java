@@ -5,6 +5,7 @@ import AST.primaryNode.primaryType;
 import MIR.*;
 import MIR.IRType.IRIntType;
 import MIR.IRType.IRType;
+import MIR.IRType.IRVoidType;
 import MIR.binary.IROperator;
 import Util.Scope;
 import Util.Type;
@@ -20,9 +21,11 @@ public class IRBuilder implements ASTVisitor{
     private globalScope gScope ;
     private entity returnEntity ;
     private boolean copyVariable ;
+    private int functionIDNumber ;
 
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
+        functionIDNumber = 0 ;
         copyVariable = true ;
     }
 
@@ -93,7 +96,7 @@ public class IRBuilder implements ASTVisitor{
         } else if (it.binaryOp == binaryOperator.Dot) {
 
         } else if (it.binaryOp == binaryOperator.AndAnd) {
-
+            
         } else if (it.binaryOp == binaryOperator.OrOr) {
 
         }
@@ -185,16 +188,25 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (functionDefNode it) {
         function newFunc = new function(it.name) ;
+        newFunc.functionIDNumber = functionIDNumber ++ ;
+        if (it.functionType.isVoid == true) newFunc.returnType = new IRVoidType() ;
+        else newFunc.returnType = toIRType(it.functionType.type.type) ;
         curFunction = newFunc ;
         globalDef.functions.add(newFunc) ;
         currentBlock = newFunc.rootBlock ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
+        it.parameters.accept(this) ;
         it.suite.accept(this) ;
         curScope = curScope.parentScope() ;
     }
 
     @Override
-    public void visit (functionParameterDefNode it) {}
+    public void visit (functionParameterDefNode it) {
+        it.parameters.forEach(x -> {
+            x.accept(this) ;
+            curFunction.parameters.add ((register) returnEntity) ;
+        }) ;
+    }
     
     @Override
     public void visit (functionTypeNode it) {}
@@ -249,7 +261,12 @@ public class IRBuilder implements ASTVisitor{
     public void visit (newVarNode it) {}
 
     @Override
-    public void visit (parameterNode it) {}
+    public void visit (parameterNode it) {
+        IRType curIRType = toIRType(it.type.type) ;
+        register curParameter = new register(curFunction.curRegisterID ++, curIRType) ;
+        curScope.entities.put(it.name, curParameter) ;
+        returnEntity = curParameter ;
+    }
 
     @Override
     public void visit (postIncExprNode it) {

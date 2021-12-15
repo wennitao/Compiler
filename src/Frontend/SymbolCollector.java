@@ -137,6 +137,7 @@ public class SymbolCollector implements ASTVisitor {
         } else {
             type = new Type(it.builtinType.bType, it.dim, true) ;
         }
+        it.type = type ;
     }
 
     @Override
