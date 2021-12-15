@@ -6,4 +6,8 @@ public class IRPointerType extends IRType {
         super () ;
         type = _type ;
     }
+    @Override
+    public String toString () {
+        return type + "*" ;
+    }
 }

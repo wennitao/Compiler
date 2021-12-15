@@ -9,7 +9,7 @@ public class function {
     public String identifier ;
     public block rootBlock ;
     public ArrayList<block> blocks ;
-    public int curRegisterID, functionIDNumber ;
+    public int curRegisterID ;
     public IRType returnType ;
     public ArrayList<register> parameters ;
     public ArrayList<String> parameterId ;
@@ -32,7 +32,7 @@ public class function {
             register curParameter = parameters.get(parameters.size() - 1) ;
             out.print (curParameter.type + " " + curParameter) ;
         }
-        out.println (") #" + functionIDNumber + " {") ;
+        out.println (")" + " {") ;
         blocks.forEach(x -> {
             x.print(out) ;
             out.println();

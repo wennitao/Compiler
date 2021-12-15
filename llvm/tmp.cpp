@@ -1,17 +1,9 @@
-// #include <cstdio>
-// #include <string>
-int f (int a, int b) {
-    int sum = a + b ;
-    return sum ;
-}
-int main() { 
-    int a = 1, b = 2 ;
-    int c = a + b ;
-    c = a * b ;
-    if (c == 2) {   
-        int d = a + b ;
-    } else {
-        int e = a + b ;
-    }
+#include <cstdio>
+#include <string>
+// int a[20][20] ;
+int b = 1, c = 2 ;
+int main() {
+    // int sum = a[0][1] + a[2][3] ;
+    int e = b + c ;
     return 0 ;
 }

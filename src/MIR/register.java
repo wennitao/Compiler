@@ -4,10 +4,9 @@ import MIR.IRType.IRType;
 
 public class register extends entity {
     public int registerID ;
-    public IRType type ;
     public register (int _registerID, IRType _type) {
-        super () ;
-        registerID = _registerID; type = _type ;
+        super (_type) ;
+        registerID = _registerID ;
     }
     @Override
     public String toString() {

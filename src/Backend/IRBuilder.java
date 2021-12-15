@@ -1,5 +1,7 @@
 package Backend;
 
+import java.util.ArrayList;
+
 import AST.*;
 import AST.primaryNode.primaryType;
 import MIR.*;
@@ -20,19 +22,19 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
-    private boolean copyVariable ;
-    private int functionIDNumber ;
+    private boolean copyVariable, isFunctionID, isGlobalDef ;
+    private functioncall curFuncCall ;
 
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
-        functionIDNumber = 0 ;
-        copyVariable = true ;
+        copyVariable = true; isFunctionID = false; isGlobalDef = false ;
     }
 
     private IRType toIRType (Type type) {
         IRType varIRType ;
         if (type.type == Type.basicType.Int) varIRType = new IRIntType(32) ;
         else if (type.type == Type.basicType.Bool) varIRType = new IRIntType(8) ;
+        else if (type.type == Type.basicType.Void) varIRType = new IRVoidType() ;
         else varIRType = new IRIntType(32) ;
         return varIRType ;
     }
@@ -103,7 +105,9 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (bracketExprNode it) {}
+    public void visit (bracketExprNode it) {
+        it.expression.accept(this) ;
+    }
 
     @Override
     public void visit (breakStmtNode it) {}
@@ -121,12 +125,17 @@ public class IRBuilder implements ASTVisitor{
     public void visit (continueStmtNode it) {}
 
     @Override
-    public void visit (expressionListNode it) {}
+    public void visit (expressionListNode it) {
+        it.expressions.forEach(x -> {
+            x.accept(this) ;
+            curFuncCall.parameters.add(returnEntity) ;
+        }) ;
+    }
 
     @Override
     public void visit (forConditionNode it) {
         it.expression.accept(this) ;
-        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+        if (returnEntity instanceof register && ((IRIntType)returnEntity.type).width != 1) {
             register i1Reg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
             alignWidth((register) returnEntity, i1Reg) ;
             returnEntity = i1Reg ;
@@ -191,12 +200,20 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (functionCallExprNode it) {}
+    public void visit (functionCallExprNode it) {
+        isFunctionID = true ;
+        it.functionIdentifier.accept(this) ;
+        isFunctionID = false ;
+        it.expressionList.accept(this) ;
+        register destReg = new register(curFunction.curRegisterID ++, curFuncCall.returnType) ;
+        curFuncCall.destReg = destReg ;
+        currentBlock.push_back(curFuncCall) ;
+        returnEntity = destReg ;
+    }
 
     @Override
     public void visit (functionDefNode it) {
         function newFunc = new function(it.name) ;
-        newFunc.functionIDNumber = functionIDNumber ++ ;
         if (it.functionType.isVoid == true) newFunc.returnType = new IRVoidType() ;
         else newFunc.returnType = toIRType(it.functionType.type.type) ;
         curFunction = newFunc ;
@@ -231,7 +248,9 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (globalVarDefNode it) {
+        isGlobalDef = true ;
         it.varDef.accept(this) ;
+        isGlobalDef = false ;
     }
 
     @Override
@@ -299,7 +318,7 @@ public class IRBuilder implements ASTVisitor{
         register varCopy = new register(curFunction.curRegisterID ++, ((register) returnEntity).type) ;
         currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
         register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
-        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1), resReg)) ;
+        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1, new IRIntType(32)), resReg)) ;
         currentBlock.push_back(new store(varCopy.type, resReg, returnEntity)) ;
         returnEntity = varCopy ;
     }
@@ -310,7 +329,7 @@ public class IRBuilder implements ASTVisitor{
         register varCopy = new register(curFunction.curRegisterID ++, ((register) returnEntity).type) ;
         currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
         register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
-        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1), resReg)) ;
+        currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1, new IRIntType(32)), resReg)) ;
         currentBlock.push_back(new store(varCopy.type, resReg, returnEntity)) ;
         returnEntity = resReg ;
     }
@@ -318,23 +337,36 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (primaryNode it) {
         if (it.type == primaryType.Int) {
-            returnEntity = new constant(Integer.parseInt(it.identifier)) ;
+            returnEntity = new constant(Integer.parseInt(it.identifier), new IRIntType(32)) ;
         } else if (it.type == primaryType.Bool) {
             if (it.identifier == "true") {
-                returnEntity = new constant(1) ;
+                returnEntity = new constant(1, new IRIntType(8)) ;
             } else {
-                returnEntity = new constant(0) ;
+                returnEntity = new constant(0, new IRIntType(8)) ;
             }
         } else {
             if (it.type == primaryType.Identifier) {
-                entity variableEntity = curScope.getEntity(it.identifier, true) ;
-                IRType type = ((register) variableEntity).type ;
-                if (copyVariable) {
-                    returnEntity = new register(curFunction.curRegisterID, type) ;
-                    currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
-                    curFunction.curRegisterID ++ ;
+                if (isFunctionID) {
+                    Type functionReturnType = gScope.getReturnTypeFromFunctionName(it.pos, it.identifier) ;
+                    IRType functionReturnIRType = toIRType(functionReturnType) ;
+                    functioncall fcall ;
+                    if (functionReturnType.type == Type.basicType.Void) {
+                        fcall = new functioncall(it.identifier, functionReturnIRType) ;
+                    } else {
+                        // register returnReg = new register(curFunction.curRegisterID ++, toIRType(functionReturnType)) ;
+                        fcall = new functioncall(it.identifier, functionReturnIRType, null) ;
+                    }
+                    curFuncCall = fcall ;
                 } else {
-                    returnEntity = variableEntity ;
+                    entity variableEntity = curScope.getEntity(it.identifier, true) ;
+                    IRType type = variableEntity.type ;
+                    if (copyVariable) {
+                        returnEntity = new register(curFunction.curRegisterID, type) ;
+                        currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
+                        curFunction.curRegisterID ++ ;
+                    } else {
+                        returnEntity = variableEntity ;
+                    }
                 }
             }
         }
@@ -392,16 +424,28 @@ public class IRBuilder implements ASTVisitor{
         Type varType = it.type ;
         IRType varIRType = toIRType(varType) ;
         it.varDeclarations.forEach(x -> {
-            int varRegID = curFunction.curRegisterID ;
-            register varReg = new register(varRegID, varIRType) ;
-            curScope.entities.put(x.name, varReg) ;
-            currentBlock.push_back (new alloca(varReg, varIRType));
-            curFunction.curRegisterID ++ ;
-            if (x.isInitialized) {
-                x.expression.accept(this) ;
-                if (returnEntity instanceof register)
-                    alignWidth((register) returnEntity, varReg);
-                currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
+            if (!isGlobalDef) {
+                int varRegID = curFunction.curRegisterID ;
+                register varReg = new register(varRegID, varIRType) ;
+                curScope.entities.put(x.name, varReg) ;
+                currentBlock.push_back (new alloca(varReg, varIRType));
+                curFunction.curRegisterID ++ ;
+                if (x.isInitialized) {
+                    x.expression.accept(this) ;
+                    if (returnEntity instanceof register)
+                        alignWidth((register) returnEntity, varReg);
+                    currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
+                }
+            } else {
+                globalRegister reg = new globalRegister(x.name, varIRType) ;
+                curScope.entities.put(x.name, reg) ;
+                if (x.isInitialized) {
+                    x.expression.accept(this) ;
+                    if (returnEntity instanceof constant)
+                        globalDef.globalDefStmt.add(new globalDefineStmt(reg, (constant) returnEntity)) ;
+                } else {
+                    globalDef.globalDefStmt.add(new globalDefineStmt(reg)) ;
+                }
             }
         });
     }
@@ -419,7 +463,7 @@ public class IRBuilder implements ASTVisitor{
         
         currentBlock = conditionBlock ;
         it.expression.accept(this) ;
-        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+        if (returnEntity instanceof register && (((IRIntType)(returnEntity.type)).width != 1)) {
             register i1Reg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
             alignWidth((register) returnEntity, i1Reg) ;
             returnEntity = i1Reg ;
