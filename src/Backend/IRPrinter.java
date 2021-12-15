@@ -1,15 +1,17 @@
 package Backend;
 
+import java.io.PrintStream;
+
 import MIR.globalDefine;
 
 public class IRPrinter {
-    public void visitGlobalDef (globalDefine globalDef) {
+    public void visitGlobalDef (PrintStream out, globalDefine globalDef) {
         globalDef.globalDefStmt.forEach(x -> {
-            System.out.println(x) ;
+            out.println(x) ;
         });
-        System.out.println();
+        out.println();
         globalDef.functions.forEach(x -> {
-            x.print() ;
+            x.print(out) ;
         });
     }
 }

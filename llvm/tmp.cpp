@@ -1,8 +1,8 @@
 // #include <cstdio>
 // #include <string>
-void f (int a, int b) {
+int f (int a, int b) {
     int sum = a + b ;
-    // return sum ;
+    return sum ;
 }
 int main() { 
     int a = 1, b = 2 ;

@@ -4,7 +4,7 @@ target datalayout = "e-m:o-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16
 target triple = "x86_64-apple-macosx11.0.0"
 
 ; Function Attrs: mustprogress noinline nounwind optnone ssp uwtable
-define void @_Z1fii(i32 %0, i32 %1) #0 {
+define i32 @_Z1fii(i32 %0, i32 %1) #0 {
   %3 = alloca i32, align 4
   %4 = alloca i32, align 4
   %5 = alloca i32, align 4
@@ -14,7 +14,8 @@ define void @_Z1fii(i32 %0, i32 %1) #0 {
   %7 = load i32, i32* %4, align 4
   %8 = add nsw i32 %6, %7
   store i32 %8, i32* %5, align 4
-  ret void
+  %9 = load i32, i32* %5, align 4
+  ret i32 %9
 }
 
 ; Function Attrs: mustprogress noinline norecurse nounwind optnone ssp uwtable

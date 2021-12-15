@@ -1,5 +1,6 @@
 package MIR;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class block {
@@ -11,11 +12,11 @@ public class block {
     public void push_back (statement stmt) {
         statements.add(stmt) ;
     }
-    public void print(boolean printIdentifier) {
-        if (printIdentifier) System.out.println(identifier + ": ");
+    public void print(PrintStream out, boolean printIdentifier) {
+        if (printIdentifier) out.println(identifier + ": ");
         statements.forEach(x -> {
-            System.out.print ("  ") ;
-            System.out.println(x) ;
+            out.print ("  ") ;
+            out.println(x) ;
         });
         // System.out.println() ;
     }

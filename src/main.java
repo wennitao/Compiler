@@ -17,12 +17,17 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 public class main {
     public static void main(String[] args) throws Exception{
         String name = "e1.mx";
         InputStream raw = System.in;
+        // PrintStream out = new PrintStream(System.out) ;
+        PrintStream out = new PrintStream("llvm-test.ll") ;
         // InputStream raw = new FileInputStream(name);
         try {
             CharStream input = CharStreams.fromStream(raw);
@@ -46,7 +51,7 @@ public class main {
             globalDefine globalDef = new globalDefine() ;
             // function mainFn = new function("main") ;
             new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
-            new IRPrinter().visitGlobalDef(globalDef);
+            new IRPrinter().visitGlobalDef(out, globalDef);
         } catch(error er) {
             System.err.println(er.toString());
             throw new RuntimeException();

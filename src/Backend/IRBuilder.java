@@ -196,7 +196,16 @@ public class IRBuilder implements ASTVisitor{
         currentBlock = newFunc.rootBlock ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
         it.parameters.accept(this) ;
-        it.suite.accept(this) ;
+        label functionEntryLabel = new label(curFunction.curRegisterID ++) ;
+        for (int i = 0; i < curFunction.parameters.size(); i ++) {
+            register parameterReg = curFunction.parameters.get(i) ;
+            register copyReg = new register(curFunction.curRegisterID ++, parameterReg.type) ;
+            currentBlock.push_back(new alloca(copyReg, copyReg.type)) ;
+            currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
+            curScope.entities.put(curFunction.parameterId.get(i), copyReg) ;
+        }
+        it.suite.accept(this) ; 
+        if (curFunction.returnType instanceof IRVoidType) currentBlock.push_back(new returnStmt(new register (0, new IRVoidType()))) ;
         curScope = curScope.parentScope() ;
     }
 
@@ -264,7 +273,8 @@ public class IRBuilder implements ASTVisitor{
     public void visit (parameterNode it) {
         IRType curIRType = toIRType(it.type.type) ;
         register curParameter = new register(curFunction.curRegisterID ++, curIRType) ;
-        curScope.entities.put(it.name, curParameter) ;
+        // curScope.entities.put(it.name, curParameter) ;
+        curFunction.parameterId.add(it.name) ;
         returnEntity = curParameter ;
     }
 
@@ -316,7 +326,10 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (returnStmtNode it) {}
+    public void visit (returnStmtNode it) {
+        if (it.expression != null) it.expression.accept(this) ;
+        currentBlock.push_back(new returnStmt(returnEntity)) ;
+    }
 
     @Override
     public void visit (RootNode it) {

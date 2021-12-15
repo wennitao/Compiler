@@ -3,7 +3,7 @@ package MIR;
 import MIR.IRType.IRType;
 
 public class register extends entity {
-    int registerID ;
+    public int registerID ;
     public IRType type ;
     public register (int _registerID, IRType _type) {
         super () ;
