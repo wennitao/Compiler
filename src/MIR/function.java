@@ -17,7 +17,7 @@ public class function {
         identifier = _identifier ;
         rootBlock = new block(identifier) ;
         blocks = new ArrayList<>() ;
-        // blocks.add(rootBlock) ;
+        blocks.add(rootBlock) ;
         curRegisterID = 0 ;
         parameters = new ArrayList<>() ;
         parameterId = new ArrayList<>() ;
@@ -33,9 +33,8 @@ public class function {
             out.print (curParameter.type + " " + curParameter) ;
         }
         out.println (") #" + functionIDNumber + " {") ;
-        rootBlock.print(out, false) ;
         blocks.forEach(x -> {
-            x.print(out, true) ;
+            x.print(out) ;
             out.println();
         });
         out.println ("}") ;

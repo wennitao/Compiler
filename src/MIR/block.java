@@ -12,8 +12,8 @@ public class block {
     public void push_back (statement stmt) {
         statements.add(stmt) ;
     }
-    public void print(PrintStream out, boolean printIdentifier) {
-        if (printIdentifier) out.println(identifier + ": ");
+    public void print(PrintStream out) {
+        out.println(identifier + ": ");
         statements.forEach(x -> {
             out.print ("  ") ;
             out.println(x) ;

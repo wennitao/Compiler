@@ -1,8 +1,8 @@
 package MIR;
 
 public class label extends entity {
-    int labelID ;
-    public label (int _labelID) {
+    public String labelID ;
+    public label (String _labelID) {
         labelID = _labelID ;
     }
 

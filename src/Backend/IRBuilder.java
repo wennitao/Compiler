@@ -149,14 +149,22 @@ public class IRBuilder implements ASTVisitor{
         curScope = new Scope (curScope) ;
         if (it.forInit != null) it.forInit.accept(this) ;
         
-        label conditionLabel = new label(curFunction.curRegisterID) ;
-        block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        label suiteLabel = new label(curFunction.curRegisterID) ;
-        block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        label incrLabel = new label(curFunction.curRegisterID) ;
-        block incrBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        label forOutLabel = new label(curFunction.curRegisterID) ;
-        block forOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label conditionLabel = new label("ID" + curFunction.curRegisterID + "_for_condition") ;
+        // label conditionLabel = new label(curFunction.curRegisterID) ;
+        // block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block conditionBlock = new block(conditionLabel.labelID) ;
+        // label suiteLabel = new label(curFunction.curRegisterID) ;
+        label suiteLabel = new label("ID" + curFunction.curRegisterID + "_for_suite") ;
+        // block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block suiteBlock = new block (suiteLabel.labelID) ;
+        // label incrLabel = new label(curFunction.curRegisterID) ;
+        label incrLabel = new label ("ID" + curFunction.curRegisterID + "_for_incr") ;
+        // block incrBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block incrBlock = new block (incrLabel.labelID) ;
+        // label forOutLabel = new label(curFunction.curRegisterID) ;
+        label forOutLabel = new label("ID" + curFunction.curRegisterID + "_for_out") ;
+        // block forOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block forOutBlock = new block(forOutLabel.labelID) ;
 
         currentBlock.push_back(new branch(conditionLabel)) ;
         currentBlock = conditionBlock ;
@@ -196,7 +204,8 @@ public class IRBuilder implements ASTVisitor{
         currentBlock = newFunc.rootBlock ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
         it.parameters.accept(this) ;
-        label functionEntryLabel = new label(curFunction.curRegisterID ++) ;
+        label functionEntryLabel = new label(it.name + "_entry") ;
+        currentBlock.identifier = functionEntryLabel.labelID ;
         for (int i = 0; i < curFunction.parameters.size(); i ++) {
             register parameterReg = curFunction.parameters.get(i) ;
             register copyReg = new register(curFunction.curRegisterID ++, parameterReg.type) ;
@@ -233,14 +242,20 @@ public class IRBuilder implements ASTVisitor{
             alignWidth((register) returnEntity, i1Reg) ;
             returnEntity = i1Reg ;
         }
-        label trueLabel = new label(curFunction.curRegisterID) ;
-        block trueBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        label falseLabel = new label(curFunction.curRegisterID) ;
-        block falseBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        // label trueLabel = new label(curFunction.curRegisterID) ;
+        label trueLabel = new label ("ID" + curFunction.curRegisterID + "_if_true") ;
+        // block trueBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block trueBranch = new block (trueLabel.labelID) ;
+        // label falseLabel = new label(curFunction.curRegisterID) ;
+        label falseLabel = new label("ID" + curFunction.curRegisterID + "_if_false") ;
+        // block falseBranch = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block falseBranch = new block(falseLabel.labelID) ;
         currentBlock.push_back(new branch(returnEntity, trueLabel, falseLabel));
         
-        label ifOutLabel = new label (curFunction.curRegisterID) ;
-        block ifOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        // label ifOutLabel = new label (curFunction.curRegisterID) ;
+        label ifOutLabel = new label("ID" + curFunction.curRegisterID + "_if_out") ;
+        // block ifOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block ifOutBlock = new block(ifOutLabel.labelID) ;
         currentBlock = trueBranch ;
         curScope = new Scope (curScope) ;
         it.trueStatement.accept(this) ;
@@ -396,8 +411,10 @@ public class IRBuilder implements ASTVisitor{
     
     @Override
     public void visit (whileStmtNode it) {
-        label conditionLabel = new label(curFunction.curRegisterID) ;
-        block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        // label conditionLabel = new label(curFunction.curRegisterID) ;
+        label conditionLabel = new label("ID" + curFunction.curRegisterID + "_while_condition") ;
+        // block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        block conditionBlock = new block(conditionLabel.labelID) ;
         currentBlock.push_back(new branch(conditionLabel));
         
         currentBlock = conditionBlock ;
@@ -408,10 +425,14 @@ public class IRBuilder implements ASTVisitor{
             returnEntity = i1Reg ;
         }
 
-        label suiteLabel = new label(curFunction.curRegisterID) ;
-        block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        label whileOutLabel = new label(curFunction.curRegisterID) ;
-        block whileOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        // label suiteLabel = new label(curFunction.curRegisterID) ;
+        // block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        // label whileOutLabel = new label(curFunction.curRegisterID) ;
+        // block whileOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
+        label suiteLabel = new label("ID" + curFunction.curRegisterID + "_while_suite") ;
+        block suiteBlock = new block(suiteLabel.labelID) ;
+        label whileOutLabel = new label("ID" + curFunction.curRegisterID + "_while_out") ;
+        block whileOutBlock = new block(whileOutLabel.labelID) ;
         currentBlock.push_back(new branch(returnEntity, suiteLabel, whileOutLabel));
         curFunction.blocks.add(conditionBlock) ;
         

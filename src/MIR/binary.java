@@ -16,8 +16,13 @@ public class binary extends statement {
         op = _op; type = _type ;
         left = _left; right = _right; dest = _dest ;
     }
+    private boolean isCompareOperator (IROperator op) {
+        return op == IROperator.slt || op == IROperator.sle || op == IROperator.sgt || op == IROperator.sge
+        || op == IROperator.eq || op == IROperator.ne ;
+    }
     @Override
     public String toString() {
-        return dest + " = " + op.name() + " " + type + " " + left + ", " + right ;
+        if (isCompareOperator(op)) return dest + " = icmp " + op.name() + " " + type + " " + left + ", " + right ;
+        else return dest + " = " + op.name() + " " + type + " " + left + ", " + right ;
     }
 }
