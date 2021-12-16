@@ -1,5 +1,6 @@
 package MIR;
 
+import MIR.IRType.IRNullType;
 import MIR.IRType.IRType;
 
 public class register extends entity {
@@ -10,6 +11,7 @@ public class register extends entity {
     }
     @Override
     public String toString() {
+        if (this.type instanceof IRNullType) return "null" ;
         return "%" + registerID ;
     }
 }
