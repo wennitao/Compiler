@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import AST.*;
 import AST.primaryNode.primaryType;
+import AST.unaryExprNode.unaryOperator;
 import MIR.*;
 import MIR.IRType.IRArrayType;
 import MIR.IRType.IRIntType;
@@ -172,7 +173,7 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (forConditionNode it) {
         it.expression.accept(this) ;
-        if (returnEntity instanceof register && ((IRIntType)returnEntity.type).width != 1) {
+        if (returnEntity instanceof register) {
             register i1Reg = new register(0, new IRIntType(1)) ;
             typeCasting((register) returnEntity, i1Reg) ;
             // returnEntity = i1Reg ;
@@ -293,7 +294,7 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (ifStmtNode it) {
         it.expression.accept(this) ;
-        if (returnEntity instanceof register && ((IRIntType)((register) returnEntity).type).width != 1) {
+        if (returnEntity instanceof register) {
             register i1Reg = new register(0, new IRIntType(1)) ;
             typeCasting((register) returnEntity, i1Reg) ;
             // returnEntity = i1Reg ;
@@ -466,7 +467,26 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (unaryExprNode it) {}
+    public void visit (unaryExprNode it) {
+        it.expression.accept(this) ;
+        if (it.unaryOp == unaryOperator.Not) {
+            if (returnEntity instanceof register) {
+                register i1reg = new register(0, new IRIntType(1)) ;
+                typeCasting((register) returnEntity, i1reg) ;
+            }
+            register returnReg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+            currentBlock.push_back(new binary(IROperator.xor, new IRIntType(1), returnEntity, new constant(1, new IRIntType(1)), returnReg)) ;
+            returnEntity = returnReg ;
+        } else if (it.unaryOp == unaryOperator.Tilde) {
+            register returnReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
+            currentBlock.push_back(new binary(IROperator.xor, new IRIntType(32), returnEntity, new constant(-1, new IRIntType(32)), returnReg));
+            returnEntity = returnReg ;
+        } else {
+            register returnReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
+            currentBlock.push_back(new binary(IROperator.sub, new IRIntType(32), new constant(0, new IRIntType(32)), returnEntity, returnReg));
+            returnEntity = returnReg ;
+        }
+    }
 
     @Override
     public void visit (varDeclarationNode it) {}
@@ -540,7 +560,7 @@ public class IRBuilder implements ASTVisitor{
         
         currentBlock = conditionBlock ;
         it.expression.accept(this) ;
-        if (returnEntity instanceof register && (((IRIntType)(returnEntity.type)).width != 1)) {
+        if (returnEntity instanceof register) {
             register i1Reg = new register(0, new IRIntType(1)) ;
             typeCasting((register) returnEntity, i1Reg) ;
             // returnEntity = i1Reg ;

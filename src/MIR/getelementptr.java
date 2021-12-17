@@ -1,7 +1,5 @@
 package MIR;
 
-import MIR.IRType.IRType;
-
 public class getelementptr extends statement {
     public register from, to ;
     public constant value ;

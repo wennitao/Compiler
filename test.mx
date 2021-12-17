@@ -1,9 +1,8 @@
 int main() {
-    int a = 1, b = 2 ;
-    bool c = a < b ;
-    int[][] graph = new int[3][] ;
-    graph[0] = null ;
-    graph[1] = new int[10] ;
-    graph[2] = new int[30] ;
+    bool a = true ;
+    bool b = !a ;
+    int c = 123 ;
+    int d = ~c ;
+    int e = -c ;
     return 0 ;
 }
