@@ -1,5 +1,7 @@
 #include <cstdio>
 #include <string>
+int b ;
+int **c ;
 int main() {
     // int a = 1, b = 2, c = 3 ;
     // bool flag = (a < b) && (c < b) && (b < c) ;

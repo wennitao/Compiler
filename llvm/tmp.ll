@@ -3,6 +3,9 @@ source_filename = "tmp.cpp"
 target datalayout = "e-m:o-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx11.0.0"
 
+@b = global i32 0, align 4
+@c = global i32** null, align 8
+
 ; Function Attrs: mustprogress noinline norecurse nounwind optnone ssp uwtable
 define i32 @main() #0 {
   %1 = alloca i32, align 4

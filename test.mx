@@ -1,7 +1,11 @@
+int b = 1 + 2 ;
+int[] c = new int [10] ;
 int main(){
     int a = 1 ;
-    if (a == 1 && a == 2) {
+    if (a == 1 && a == 2 && a == 3 || a == 4) {
         a ++ ;
+    } else {
+        ++ a ;
     }
     return 0 ;
 }

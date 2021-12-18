@@ -26,13 +26,13 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
-    private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr ;
+    private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, mainFuncIsDefined ;
     private functioncall curFuncCall ;
-    private int returnArraySize ;
+    private function mainFunc ;
 
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
-        copyVariable = true; isFunctionID = false; isGlobalDef = false; isArrayExpr = false ;
+        copyVariable = true; isFunctionID = false; isGlobalDef = false; isArrayExpr = false; mainFuncIsDefined = false ;
     }
 
     private IRType toIRType (Type type) {
@@ -285,16 +285,21 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (functionDefNode it) {
-        function newFunc = new function(it.name) ;
-        if (it.functionType.isVoid == true) newFunc.returnType = new IRVoidType() ;
-        else newFunc.returnType = toIRType(it.functionType.type.type) ;
-        curFunction = newFunc ;
-        globalDef.functions.add(newFunc) ;
-        currentBlock = newFunc.rootBlock ;
+        if (it.name.equals(new String("main")) && mainFuncIsDefined) {
+            curFunction = mainFunc ;
+            currentBlock = mainFunc.rootBlock ;
+        } else {
+            function newFunc = new function(it.name) ;
+            currentBlock = newFunc.rootBlock ;
+            if (it.functionType.isVoid == true) newFunc.returnType = new IRVoidType() ;
+            else newFunc.returnType = toIRType(it.functionType.type.type) ;
+            label functionEntryLabel = new label(it.name + "_entry") ;
+            currentBlock.identifier = functionEntryLabel.labelID ;
+            curFunction = newFunc ;
+            globalDef.functions.add(newFunc) ;
+        }
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
         it.parameters.accept(this) ;
-        label functionEntryLabel = new label(it.name + "_entry") ;
-        currentBlock.identifier = functionEntryLabel.labelID ;
         for (int i = 0; i < curFunction.parameters.size(); i ++) {
             register parameterReg = curFunction.parameters.get(i) ;
             register copyReg = new register(curFunction.curRegisterID ++, parameterReg.type) ;
@@ -572,9 +577,26 @@ public class IRBuilder implements ASTVisitor{
                 globalRegister reg = new globalRegister(x.name, varIRType) ;
                 curScope.entities.put(x.name, reg) ;
                 if (x.isInitialized) {
+                    if (!mainFuncIsDefined) {
+                        function newFunc = new function("main") ;
+                        newFunc.returnType = new IRIntType(32) ;
+                        label functionEntryLabel = new label("main" + "_entry") ;
+                        newFunc.rootBlock.identifier = functionEntryLabel.labelID ;
+                        globalDef.functions.add(newFunc) ;
+                        mainFunc = newFunc; mainFuncIsDefined = true ;
+                    }
+                    curFunction = mainFunc ;
+                    currentBlock = curFunction.rootBlock ;
                     x.expression.accept(this) ;
                     if (returnEntity instanceof constant)
                         globalDef.globalDefStmt.add(new globalDefineStmt(reg, (constant) returnEntity)) ;
+                    else {
+                        if (reg.type instanceof IRIntType) globalDef.globalDefStmt.add(new globalDefineStmt(reg, new constant(0, reg.type))) ;
+                        else globalDef.globalDefStmt.add(new globalDefineStmt(reg, new constant(0, new IRNullType()))) ;
+                        typeCasting((register) returnEntity, new register(0, reg.type)) ;
+                        currentBlock.push_back(new store(reg.type, returnEntity, reg));
+                    }
+                    curFunction = null; currentBlock = null ;
                 } else {
                     globalDef.globalDefStmt.add(new globalDefineStmt(reg)) ;
                 }
