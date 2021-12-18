@@ -6,25 +6,25 @@ target triple = "x86_64-apple-macosx11.0.0"
 ; Function Attrs: mustprogress noinline norecurse nounwind optnone ssp uwtable
 define i32 @main() #0 {
   %1 = alloca i32, align 4
-  %2 = alloca i8, align 1
-  %3 = alloca i8, align 1
-  %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
-  %6 = alloca i32, align 4
+  %2 = alloca i32, align 4
   store i32 0, i32* %1, align 4
-  store i8 1, i8* %2, align 1
-  %7 = load i8, i8* %2, align 1
-  %8 = trunc i8 %7 to i1
-  %9 = xor i1 %8, true
-  %10 = zext i1 %9 to i8
-  store i8 %10, i8* %3, align 1
-  store i32 123, i32* %4, align 4
-  %11 = load i32, i32* %4, align 4
-  %12 = xor i32 %11, -1
-  store i32 %12, i32* %5, align 4
-  %13 = load i32, i32* %4, align 4
-  %14 = sub nsw i32 0, %13
-  store i32 %14, i32* %6, align 4
+  store i32 1, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = icmp eq i32 %3, 1
+  br i1 %4, label %8, label %5
+
+5:                                                ; preds = %0
+  %6 = load i32, i32* %2, align 4
+  %7 = icmp eq i32 %6, 2
+  br i1 %7, label %8, label %11
+
+8:                                                ; preds = %5, %0
+  %9 = load i32, i32* %2, align 4
+  %10 = add nsw i32 %9, 1
+  store i32 %10, i32* %2, align 4
+  br label %11
+
+11:                                               ; preds = %8, %5
   ret i32 0
 }
 

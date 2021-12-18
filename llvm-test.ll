@@ -1,24 +1,28 @@
 
 define i32 @main() {
 main_entry: 
-  %0 = alloca i8
-  store i8 0, i8* %0
-  %1 = alloca i8
-  %2 = load i8, i8* %0
-  %3 = trunc i8 %2 to i1
-  %4 = xor i1 %3, 1
-  %5 = zext i1 %4 to i8
-  store i8 %5, i8* %1
-  %6 = alloca i32
-  store i32 123, i32* %6
-  %7 = alloca i32
-  %8 = load i32, i32* %6
-  %9 = xor i32 %8, -1
-  store i32 %9, i32* %7
-  %10 = alloca i32
-  %11 = load i32, i32* %6
-  %12 = sub i32 0, %11
-  store i32 %12, i32* %10
+  %0 = alloca i32
+  store i32 1, i32* %0
+  %1 = load i32, i32* %0
+  %2 = icmp eq i32 %1, 1
+  br i1 %2, label %ID2_AndAnd_true, label %ID2_AndAnd_out
+
+ID2_AndAnd_true: 
+  %3 = load i32, i32* %0
+  %4 = icmp eq i32 %3, 2
+  br label %ID2_AndAnd_out
+
+ID2_AndAnd_out: 
+  %5 = phi i1 [ false, %main_entry ], [ %4, %ID2_AndAnd_true ]
+  br i1 %5, label %ID5_if_true, label %ID5_if_out
+
+ID5_if_true: 
+  %6 = load i32, i32* %0
+  %7 = add i32 %6, 1
+  store i32 %7, i32* %0
+  br label %ID5_if_out
+
+ID5_if_out: 
   ret i32 0
 
 }

@@ -1,5 +1,6 @@
 package MIR;
 
+import MIR.IRType.IRIntType;
 import MIR.IRType.IRType;
 
 public class constant extends entity {
@@ -10,6 +11,7 @@ public class constant extends entity {
     }
     @Override
     public String toString () {
-        return Integer.toString(value) ;
+        if (type instanceof IRIntType && ((IRIntType) type).width == 32) return Integer.toString(value) ;
+        return value == 1 ? "true" : "false" ;
     }
 }

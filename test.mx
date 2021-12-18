@@ -1,8 +1,7 @@
-int main() {
-    bool a = true ;
-    bool b = !a ;
-    int c = 123 ;
-    int d = ~c ;
-    int e = -c ;
+int main(){
+    int a = 1 ;
+    if (a == 1 && a == 2) {
+        a ++ ;
+    }
     return 0 ;
 }
