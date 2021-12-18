@@ -13,6 +13,7 @@ import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
 import MIR.binary.IROperator;
+import Util.FlowController;
 import Util.Scope;
 import Util.Type;
 import Util.globalScope;
@@ -29,6 +30,7 @@ public class IRBuilder implements ASTVisitor{
     private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, mainFuncIsDefined ;
     private functioncall curFuncCall ;
     private function mainFunc ;
+    private FlowController flowController ;
 
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
@@ -182,7 +184,9 @@ public class IRBuilder implements ASTVisitor{
     }
 
     @Override
-    public void visit (breakStmtNode it) {}
+    public void visit (breakStmtNode it) {
+        currentBlock.push_back(new branch(flowController.loopOutLabel.peek()));
+    }
 
     @Override
     public void visit (builtinTypeNode it) {}
@@ -194,7 +198,10 @@ public class IRBuilder implements ASTVisitor{
     public void visit (classDefNode it) {}
 
     @Override
-    public void visit (continueStmtNode it) {}
+    public void visit (continueStmtNode it) {
+        if (flowController.loopIncrLabel.peek() != null) currentBlock.push_back(new branch(flowController.loopIncrLabel.peek()));
+        else currentBlock.push_back(new branch(flowController.loopConditionLabel.peek()));
+    }
 
     @Override
     public void visit (expressionListNode it) {
@@ -247,6 +254,8 @@ public class IRBuilder implements ASTVisitor{
         // block forOutBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
         block forOutBlock = new block(forOutLabel.labelID) ;
 
+        flowController.inLoop(incrLabel, conditionLabel, forOutLabel);
+
         currentBlock.push_back(new branch(conditionLabel)) ;
         currentBlock = conditionBlock ;
         it.forCondition.accept(this) ;
@@ -298,6 +307,7 @@ public class IRBuilder implements ASTVisitor{
             curFunction = newFunc ;
             globalDef.functions.add(newFunc) ;
         }
+        flowController = new FlowController(it.name) ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
         it.parameters.accept(this) ;
         for (int i = 0; i < curFunction.parameters.size(); i ++) {
@@ -633,6 +643,8 @@ public class IRBuilder implements ASTVisitor{
         block whileOutBlock = new block(whileOutLabel.labelID) ;
         currentBlock.push_back(new branch(returnEntity, suiteLabel, whileOutLabel));
         curFunction.blocks.add(conditionBlock) ;
+
+        flowController.inLoop(null, conditionLabel, whileOutLabel);
         
         currentBlock = suiteBlock ;
         curScope = new Scope(curScope) ;

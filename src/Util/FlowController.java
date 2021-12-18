@@ -1,5 +1,8 @@
 package Util;
 
+import java.util.Stack;
+
+import MIR.label;
 import Util.Type.basicType;
 import Util.error.semanticError;
 
@@ -8,11 +11,17 @@ public class FlowController {
     public Type returnType ;
     public boolean isReturned ;
     public String functionName ;
+    public Stack<label> loopIncrLabel ;
+    public Stack<label> loopConditionLabel ;
+    public Stack<label> loopOutLabel ;
 
     public FlowController (String _functionName) {
         functionName = _functionName ;
         isReturned = false ;
         loopCount = 0 ;
+        loopIncrLabel = new Stack<>() ;
+        loopConditionLabel = new Stack<>() ;
+        loopOutLabel = new Stack<>() ;
     }
 
     public void checkAssign (position pos, globalScope gScope, Type leftType, Type rightType) {
@@ -34,10 +43,20 @@ public class FlowController {
             if (leftType.dim != rightType.dim)
                 throw new semanticError("dimension not match", pos) ;
         }
-    }    
+    }
+    
+    public void inLoop (label incrLabel, label conditionLabel, label outLabel) {
+        loopIncrLabel.push(incrLabel) ;
+        loopConditionLabel.push(conditionLabel) ;
+        loopOutLabel.push(outLabel) ;
+    }
 
     public void inLoop () {
         loopCount ++ ;
+    }
+
+    public void outLoop (boolean flag) {
+        loopIncrLabel.pop(); loopConditionLabel.pop(); loopOutLabel.pop() ;
     }
 
     public void outLoop () {
