@@ -3,11 +3,13 @@ package Util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import MIR.IRType.IRType;
 import Util.error.semanticError;
 
 public class globalScope extends Scope {
     public String Identifier ;
     private HashMap<String, globalScope> classScope = new HashMap<>() ;
+    public HashMap<String, IRType> classType = new HashMap<>() ;
     private HashMap<String, Scope> functionScope = new HashMap<>() ;
     private HashMap<String, Type> functionRetType = new HashMap<>() ;
     private HashMap<String, ArrayList<Type> > functionParameters = new HashMap<>() ;
@@ -60,6 +62,11 @@ public class globalScope extends Scope {
         if (functionParameters.containsKey(name)) return functionParameters.get (name) ;
         else if (this.parentScope() != null) return ((globalScope) this.parentScope()).getParametersFromFunctionName(pos, name) ;
         else throw new semanticError("function " + name + " not found", pos) ;
+    }
+
+    public IRType getIRTypeFromClassName (String name) {
+        if (classType.containsKey(name)) return classType.get (name) ;
+        else return ((globalScope) this.parentScope()).getIRTypeFromClassName(name) ;
     }
 
     public boolean findClass (String name, boolean lookUpon) {

@@ -3,6 +3,7 @@ package MIR;
 import java.util.ArrayList;
 
 import MIR.IRType.IRType;
+import MIR.IRType.IRVoidType;
 
 public class functioncall extends statement {
     public String functionName ;
@@ -10,10 +11,15 @@ public class functioncall extends statement {
     public boolean isVoid ;
     public register destReg ;
     public ArrayList<entity> parameters ;
-    public functioncall (String _functionName, IRType _returnType) {
+    public functioncall () {
+        super () ;
+        parameters = new ArrayList<>() ;
+        functionName = new String() ;
+    }
+    public functioncall (String _functionName) {
         super () ;
         functionName = _functionName; isVoid = true ;
-        returnType = _returnType ;
+        returnType = new IRVoidType() ;
         parameters = new ArrayList<>() ;
     }
     public functioncall (String _functionName, IRType _returnType, register _destReg) {

@@ -8,18 +8,24 @@ import Util.error.semanticError;
 public class Scope {
     private HashMap<String, Type> members ;
     public HashMap<String, entity> entities ;
+    public HashMap<String, Integer> memberID ;
     private Scope parentScope ;
+    Integer curNum ;
 
     public Scope () {
         members = new HashMap<>() ;
         entities = new HashMap<>() ;
+        memberID = new HashMap<>() ;
         parentScope = null ;
+        curNum = 0 ;
     }
 
     public Scope (Scope _parentScope) {
         members = new HashMap<>() ;
         entities = new HashMap<>() ;
+        memberID = new HashMap<>() ;
         parentScope = _parentScope ;
+        curNum = 0 ;
     }
 
     public Scope parentScope () {
@@ -29,6 +35,7 @@ public class Scope {
     public void defineVariable (String name, Type type, position pos) {
         if (members.containsKey(name)) throw new semanticError("redefined variable " + name, pos) ;
         members.put(name, type) ;
+        memberID.put (name, curNum ++) ;
     }
 
     public boolean containsVariable (String name, boolean lookUpon) {

@@ -12,7 +12,7 @@
             "name": "Debug ANTLR4 grammar",
             "type": "antlr-debug",
             "request": "launch",
-            "input": "src/Parser/testg4.mx",
+            "input": "test.mx",
             "grammar": "src/Parser/MxLite.g4",
             "startRule": "program",
             "printParseTree": true,

@@ -41,7 +41,7 @@ public class Type {
         dim = _type.dim ;
         isLeftValue = _type.isLeftValue ;
         if (_type.functionReturnType != null)
-            functionReturnType = new Type (functionReturnType) ;
+            functionReturnType = new Type (_type.functionReturnType) ;
         else
             functionReturnType = null ;
         if (_type.functionParameters != null)

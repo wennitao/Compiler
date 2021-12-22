@@ -127,6 +127,7 @@ public class SymbolCollector implements ASTVisitor {
             if (gScope.findClass(x.name, true)) throw new semanticError("variable has the same name with a class", x.pos) ;
             curScope.defineVariable(x.name, varType, x.pos) ;
         });
+        it.type = varType ;
     }
 
     @Override
