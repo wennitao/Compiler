@@ -10,9 +10,13 @@ public class constant extends entity {
         super (_type) ;
         value = _value ;
     }
+    public constant (constant _c) {
+        super (_c.type) ;
+        value = _c.value ;
+    }
     @Override
     public String toString () {
-        if (type instanceof IRIntType && ((IRIntType) type).width == 32) return Integer.toString(value) ;
+        if (type instanceof IRIntType && ((IRIntType) type).width != 1) return Integer.toString(value) ;
         else if (type instanceof IRNullType) return "null" ;
         return value == 1 ? "true" : "false" ;
     }

@@ -1,15 +1,15 @@
 package MIR;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class globalDefine {
+    // public int stringConstantID ;
     public ArrayList<statement> globalDefStmt ;
-    public Set<function> functions ;
+    public ArrayList<function> functions ;
 
     public globalDefine() {
+        // stringConstantID = 0 ;
         globalDefStmt = new ArrayList<>() ;
-        functions = new HashSet<>() ;
+        functions = new ArrayList<>() ;
     }
 }

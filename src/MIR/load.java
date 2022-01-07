@@ -1,5 +1,6 @@
 package MIR;
 
+import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 
 public class load extends statement {
@@ -10,6 +11,6 @@ public class load extends statement {
     }
     @Override
     public String toString() {
-        return to + " = load " + type + ", " + type + "* " + from ; 
+        return to + " = load " + to.type + ", " + from.type + " " + from ; 
     }
 }

@@ -13,6 +13,6 @@ public class store extends statement {
 
     @Override
     public String toString () {
-        return "store " + type + " " + from + ", " + type + "* " + dest ;
+        return "store " + from.type + " " + from + ", " + dest.type + " " + dest ;
     }
 }
