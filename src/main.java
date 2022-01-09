@@ -24,12 +24,12 @@ import java.io.PrintStream;
 
 public class main {
     public static void main(String[] args) throws Exception{
-        String name = "test.mx";
+        // String name = "test.mx";
         // String name = args[0] ;
-        // InputStream raw = System.in;
+        InputStream raw = System.in;
         // PrintStream out = new PrintStream(System.out) ;
         PrintStream out = new PrintStream("llvm-test.ll") ;
-        InputStream raw = new FileInputStream(name);
+        // InputStream raw = new FileInputStream(name);
         try {
             CharStream input = CharStreams.fromStream(raw);
             MxLiteLexer lexer = new MxLiteLexer(input);

@@ -13,6 +13,7 @@ public class globalScope extends Scope {
     private HashMap<String, Scope> functionScope = new HashMap<>() ;
     private HashMap<String, Type> functionRetType = new HashMap<>() ;
     private HashMap<String, ArrayList<Type> > functionParameters = new HashMap<>() ;
+    public HashMap<String, ArrayList<IRType> > functionIRParameters = new HashMap<>() ;
 
     public globalScope() {
         Identifier = "Global" ;
@@ -61,6 +62,12 @@ public class globalScope extends Scope {
     public ArrayList<Type> getParametersFromFunctionName (position pos, String name) {
         if (functionParameters.containsKey(name)) return functionParameters.get (name) ;
         else if (this.parentScope() != null) return ((globalScope) this.parentScope()).getParametersFromFunctionName(pos, name) ;
+        else throw new semanticError("function " + name + " not found", pos) ;
+    }
+
+    public ArrayList<IRType> getIRParametersFromFunctionName (position pos, String name) {
+        if (functionIRParameters.containsKey(name)) return functionIRParameters.get (name) ;
+        else if (this.parentScope() != null) return ((globalScope) this.parentScope()).getIRParametersFromFunctionName(pos, name) ;
         else throw new semanticError("function " + name + " not found", pos) ;
     }
 

@@ -9,7 +9,7 @@ public class IRPrinter {
         globalDef.globalDefStmt.forEach(x -> {
             out.println(x) ;
         });
-        out.println();
+        if (!globalDef.globalDefStmt.isEmpty()) out.println();
         globalDef.functions.forEach(x -> {
             x.print(out) ;
         });

@@ -17,7 +17,7 @@ public class constant extends entity {
     @Override
     public String toString () {
         if (type instanceof IRIntType && ((IRIntType) type).width != 1) return Integer.toString(value) ;
-        else if (type instanceof IRNullType) return "null" ;
-        return value == 1 ? "true" : "false" ;
+        else if (type instanceof IRIntType && ((IRIntType) type).width == 1) return value == 1 ? "true" : "false" ;
+        else return "null" ;
     }
 }

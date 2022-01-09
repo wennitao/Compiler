@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define BUFFER_LENGTH 1024
+
 void print(char *str) {
     printf("%s", str) ;
 }
@@ -16,21 +18,8 @@ void printlnInt (int n) {
     printf("%d\n", n) ;
 }
 char* getString() {
-    char *str = (char*) malloc (sizeof (char)) ;
-    *str = '\0' ;
-    int len = 0 ;
-    char c ;
-    c = getchar() ;
-    while (c != '\n') {
-        len ++ ;
-        char *cur = (char*) malloc (sizeof (char) * (len + 1)) ;
-        cur[0] = '\0' ;
-        strcpy (cur, str) ;
-        cur[len - 1] = c; cur[len] = '\0' ;
-        free (str) ;
-        str = cur ;
-        c = getchar() ;
-    }
+    char *str = (char*) malloc(sizeof(char) * BUFFER_LENGTH);
+    scanf("%s", str);
     return str ;
 }
 int getInt () {
@@ -39,52 +28,26 @@ int getInt () {
     return n ;
 }
 char* toString(int n) {
-    bool flag = 0 ;
-    if (n < 0) flag = 1, n = -n ;
-    char *str ;
-    if (n == 0) {
-        str = (char*) malloc (sizeof (char) * 2) ;
-        str[0] = '0'; str[1] = '\0' ;
-    } else {
-        int len = 0 ;
-        while (n) {
-            len ++ ;
-            char *cur = (char*) malloc (sizeof (char) * (len + 1)) ;
-            cur[0] = '\0' ;
-            strcpy (cur + 1, str) ;
-            cur[0] = n % 10 + '0' ;
-            free (str) ;
-            str = cur ;
-            n /= 10 ;
-        }
-        if (flag) {
-            len ++ ;
-            char *cur = (char*) malloc (sizeof (char) * (len + 1)) ;
-            cur[0] = '\0' ;
-            strcpy (cur + 1, str) ;
-            cur[0] = '-';
-            free (str) ;
-            str = cur ;
-        }
-    }
-    return str ;
+    char *s = (char*) malloc (sizeof (char) * 15) ;
+    sprintf(s, "%d", n) ;
+    return s ;
 }
-int array_size (char *arr) {
+int size (char *arr) {
     return *((int*)(arr - 4)) ;
 }
-int string_length (char *str) {
+int length (char *str) {
     int len = 0 ;
     for (; *str != '\0'; str ++) len ++ ;
     return len ;
 }
-char* string_substring (char *str, int left, int right) {
+char* substring (char *str, int left, int right) {
     char *substr = (char*) malloc (sizeof (char) * (right - left + 1)) ;
     for (int i = left; i < right; i ++)
         substr[i - left] = str[i] ;
     substr[right - left] = '\0' ;
     return substr ;
 } 
-int string_parseInt (char *str) {
+int parseInt (char *str) {
     int res = 0 ;
     bool flag = 0 ;
     if (str[0] == '-') flag = 1 ;
@@ -93,7 +56,7 @@ int string_parseInt (char *str) {
     } 
     return flag ? -res : res ;
 }
-char string_ord (char *str, int pos) {
+char ord (char *str, int pos) {
     return str[pos] ; 
 }
 char *string_add (char *s1, char *s2) {
@@ -120,3 +83,7 @@ bool string_greater (char *s1, char *s2) {
 bool string_greaterEqual (char *s1, char *s2) {
     return strcmp (s1, s2) >= 0 ;
 }
+// int main() {
+//     println (toString (2)) ;
+//     return 0 ;
+// }

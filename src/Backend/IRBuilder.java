@@ -18,6 +18,7 @@ import Util.FlowController;
 import Util.Scope;
 import Util.Type;
 import Util.globalScope;
+import Util.position;
 import Util.Type.basicType;
 import AST.binaryExprNode.binaryOperator;
 
@@ -30,6 +31,7 @@ public class IRBuilder implements ASTVisitor{
     private entity returnEntity ;
     private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, mainFuncIsDefined, isClassDefine ;
     private functioncall curFuncCall ;
+    private ArrayList<IRType> curFuncCallParameters ;
     private function mainFunc ;
     private FlowController flowController ;
     private IRClassType curClassType ;
@@ -44,125 +46,195 @@ public class IRBuilder implements ASTVisitor{
 
     private void addBuiltinFunction () {
         function newFunc = new function("print") ;
+        ArrayList<IRType> parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRVoidType() ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType(new IRIntType(8)))) ;
+        parameters.add(new IRPointerType(new IRIntType(8))) ;
+        gScope.functionIRParameters.put("print", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("println") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRVoidType() ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType(new IRIntType(8)))) ;
+        parameters.add (new IRPointerType(new IRIntType(8))) ;
+        gScope.functionIRParameters.put("println", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("printInt") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRVoidType() ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType(32))) ;
+        parameters.add (new IRIntType(32)) ;
+        gScope.functionIRParameters.put("printInt", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("printlnInt") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRVoidType() ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType(32))) ;
+        parameters.add (new IRIntType(32)) ;
+        gScope.functionIRParameters.put("printlnInt", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("getString") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRPointerType(new IRIntType(8)) ;
+        gScope.functionIRParameters.put("getString", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("getInt") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.returnType = new IRIntType(32) ;
+        gScope.functionIRParameters.put("getInt", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("toString") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType(32))) ;
+        parameters.add(new IRIntType(32)) ;
         newFunc.returnType = new IRPointerType(new IRIntType(8)) ;
+        gScope.functionIRParameters.put("toString", parameters) ;
         globalDef.functions.add(newFunc) ;
 
-        newFunc = new function ("array_size") ;
+        gScope = (globalScope) gScope.getScopeFromClassName(new position(0, 0), "__Array") ;
+        newFunc = new function ("size") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add(new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(32) ;
+        gScope.functionIRParameters.put("size", parameters) ;
         globalDef.functions.add(newFunc) ;
+        gScope = (globalScope) gScope.parentScope() ;
 
-        newFunc = new function ("string_length") ;
+        gScope = (globalScope) gScope.getScopeFromClassName(new position(0, 0), "string") ;
+        newFunc = new function ("length") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(32) ;
+        gScope.functionIRParameters.put("length", parameters) ;
         globalDef.functions.add(newFunc) ;
 
-        newFunc = new function ("string_substring") ;
+        newFunc = new function ("substring") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType (32))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType (32))) ;
-        newFunc.returnType = new IRIntType(32) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRIntType (32)) ;
+        parameters.add (new IRIntType (32)) ;
+        newFunc.returnType = new IRPointerType(new IRIntType(8)) ;
+        gScope.functionIRParameters.put("substring", parameters) ;
         globalDef.functions.add(newFunc) ;
 
-        newFunc = new function ("string_parseInt") ;
+        newFunc = new function ("parseInt") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(32) ;
+        gScope.functionIRParameters.put("parseInt", parameters) ;
         globalDef.functions.add(newFunc) ;
 
-        newFunc = new function ("string_ord") ;
+        newFunc = new function ("ord") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType (32))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRIntType(32)) ;
         newFunc.returnType = new IRIntType(8) ;
+        gScope.functionIRParameters.put("ord", parameters) ;
         globalDef.functions.add(newFunc) ;
+        
+        gScope = (globalScope) gScope.parentScope() ;
 
         newFunc = new function ("string_add") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRPointerType(new IRIntType(8)) ;
+        gScope.functionIRParameters.put("string_add", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_equal") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_equal", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_notEqual") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_notEqual", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_less") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_less", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_lessEqual") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_lessEqual", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_greater") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_greater", parameters) ;
         globalDef.functions.add(newFunc) ;
 
         newFunc = new function ("string_greaterEqual") ;
+        parameters = new ArrayList<>() ;
         newFunc.isBuiltin = true ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
         newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
+        parameters.add (new IRPointerType (new IRIntType (8))) ;
         newFunc.returnType = new IRIntType(1) ;
+        gScope.functionIRParameters.put("string_greaterEqual", parameters) ;
         globalDef.functions.add(newFunc) ;
     }
 
@@ -246,7 +318,11 @@ public class IRBuilder implements ASTVisitor{
                 currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
                 curFunction.curRegisterID ++ ;
             } else if (leftType.type == basicType.String && it.binaryOp == binaryOperator.Plus) {
-                
+                register res = new register(curFunction.curRegisterID ++, new IRPointerType(new IRIntType(8))) ;
+                functioncall stringAdd = new functioncall("string_add", res.type, res) ;
+                stringAdd.parameters.add(left); stringAdd.parameters.add(right) ;
+                currentBlock.push_back(stringAdd) ;
+                returnEntity = res ;
             }
         } else if (isCompareOperator(it.binaryOp)) {
             it.leftExpression.accept(this) ;
@@ -266,17 +342,41 @@ public class IRBuilder implements ASTVisitor{
                 // curFunction.curRegisterID ++ ;
             } else if (leftType.type == basicType.String) {
                 if (it.binaryOp == binaryOperator.Equal) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_equal", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.NotEqual) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_notEqual", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.Less) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_less", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.Greater) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_greater", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.LessEqual) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_lessEqual", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.GreaterEqual) {
-
+                    register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
+                    functioncall func = new functioncall("string_greaterEqual", res.type, res) ;
+                    func.parameters.add(left); func.parameters.add(right) ;
+                    currentBlock.push_back(func) ;
+                    returnEntity = res ;
                 }
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
@@ -292,7 +392,8 @@ public class IRBuilder implements ASTVisitor{
         } else if (it.binaryOp == binaryOperator.Dot) {
             boolean isFunctionIDBackup = isFunctionID ;
             isFunctionID = false ;
-            copyVariable = false; it.leftExpression.accept(this); copyVariable = true ;
+            boolean copyVariableBackup = copyVariable ;
+            copyVariable = false; it.leftExpression.accept(this); copyVariable = copyVariableBackup ;
             isFunctionID = isFunctionIDBackup ;
             Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
@@ -311,15 +412,27 @@ public class IRBuilder implements ASTVisitor{
                 gScope = gScopeBackup; curScope = curScopeBackup ;
                 curClass = null; curClassType = null ;
             } else if (leftType.dim > 0) {
+                if (curFuncCall != null) {
+                    curFuncCall.parameters.add(left) ;
+                }
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
                 gScope = (globalScope)gScope.getScopeFromClassName(it.pos, "__Array") ;
                 curScope = gScope ;
+                it.rightExpression.accept(this) ;
+                gScope = gScopeBackup; curScope = curScopeBackup ;
             } else if (leftType.type == basicType.String) {
+                if (curFuncCall != null) {
+                    register leftValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
+                    currentBlock.push_back(new load(leftValue.type, left, leftValue));
+                    curFuncCall.parameters.add(leftValue) ;
+                }
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
                 gScope = (globalScope)gScope.getScopeFromClassName(it.pos, "string") ;
                 curScope = gScope ;
+                it.rightExpression.accept(this) ;
+                gScope = gScopeBackup; curScope = curScopeBackup ;
             }
         } else if (it.binaryOp == binaryOperator.AndAnd) {
             it.leftExpression.accept(this) ;
@@ -419,10 +532,12 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (expressionListNode it) {
         if (it.expressions.isEmpty()) return ;
-        it.expressions.forEach(x -> {
-            x.accept(this) ;
+        int offset = curFuncCallParameters.size() - it.expressions.size() ;
+        for (int i = 0; i < it.expressions.size(); i ++) {
+            it.expressions.get(i).accept(this) ;
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, curFuncCallParameters.get(i + offset));
             curFuncCall.parameters.add(returnEntity) ;
-        }) ;
+        }
     }
 
     @Override
@@ -496,17 +611,21 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (functionCallExprNode it) {
+        boolean isFunctionIDBackup = isFunctionID ;
         isFunctionID = true;
         functioncall funcCallBackup = curFuncCall ;
+        ArrayList<IRType> parametersBackup = curFuncCallParameters ;
         curFuncCall = new functioncall() ;
         it.functionIdentifier.accept(this) ;
-        isFunctionID = false ;
+        isFunctionID = isFunctionIDBackup ;
+        // curFuncCallParameters = gScope.getIRParametersFromFunctionName(it.pos, curFuncCall.functionName) ;
         it.expressionList.accept(this) ;
         register destReg = new register(curFunction.curRegisterID ++, curFuncCall.returnType) ;
         curFuncCall.destReg = destReg ;
         currentBlock.push_back(curFuncCall) ;
         returnEntity = destReg ;
         curFuncCall = funcCallBackup ;
+        curFuncCallParameters = parametersBackup ;
     }
 
     @Override
@@ -529,24 +648,29 @@ public class IRBuilder implements ASTVisitor{
         }
         flowController = new FlowController(it.name) ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
+        ArrayList<IRType> IRparameters = new ArrayList<>() ;
         if (isClassDefine) {
             register parameterReg = new register(curFunction.curRegisterID ++, new IRPointerType(curClassType)) ;
             curFunction.parameterId.add("__class_ptr") ;
             curFunction.parameters.add (parameterReg) ;
+            IRparameters.add(parameterReg.type) ;
         }
         it.parameters.accept(this) ;
         for (int i = 0; i < curFunction.parameters.size(); i ++) {
             register parameterReg = curFunction.parameters.get(i) ;
+            IRparameters.add (parameterReg.type) ;
             register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType (parameterReg.type)) ;
             currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
             currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
             curScope.entities.put(curFunction.parameterId.get(i), copyReg) ;
             if (isClassDefine && i == 0) curClass = copyReg ;
         }
+        gScope.functionIRParameters.put (curFunction.identifier, IRparameters) ;
         register returnReg = new register(curFunction.curRegisterID ++, new IRPointerType (curFunction.returnType)) ;
         curFunction.returnReg = returnReg ;
-        currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
+        if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
         it.suite.accept(this) ;
+        currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier))) ;
         curFunction.blocks.add(curFunction.returnBlock) ;
         currentBlock = curFunction.returnBlock ;
         if (curFunction.returnType instanceof IRVoidType) currentBlock.push_back(new returnStmt(new register (0, new IRVoidType()))) ;
@@ -689,7 +813,7 @@ public class IRBuilder implements ASTVisitor{
         if (it.type == primaryType.Int) {
             returnEntity = new constant(Integer.parseInt(it.identifier), new IRIntType(32)) ;
         } else if (it.type == primaryType.Bool) {
-            if (it.identifier == "true") {
+            if (it.identifier.equals(new String("true"))) {
                 returnEntity = new constant(1, new IRIntType(8)) ;
             } else {
                 returnEntity = new constant(0, new IRIntType(8)) ;
@@ -718,6 +842,7 @@ public class IRBuilder implements ASTVisitor{
                         curFuncCall.functionName += it.identifier ;
                         curFuncCall.returnType = functionReturnIRType ;
                     }
+                    curFuncCallParameters = gScope.getIRParametersFromFunctionName(it.pos, curFuncCall.functionName) ;
                     // curFuncCall = fcall ;
                 } else {
                     Integer regID = gScope.memberID.get (it.identifier) ;
@@ -747,7 +872,7 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (returnStmtNode it) {
         if (it.expression != null) it.expression.accept(this) ;
-        if (returnEntity.type instanceof IRVoidType) currentBlock.push_back(new returnStmt(returnEntity)) ;
+        if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new returnStmt(returnEntity)) ;
         else currentBlock.push_back(new store(returnEntity.type, returnEntity, curFunction.returnReg));
         label returnLabel = new label(curFunction.identifier + "_return") ;
         currentBlock.push_back(new branch(returnLabel)) ;

@@ -49,81 +49,18 @@ define void @printlnInt(i32 %0) #0 {
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define i8* @getString() #0 {
   %1 = alloca i8*, align 8
-  %2 = alloca i32, align 4
-  %3 = alloca i8, align 1
-  %4 = alloca i8*, align 8
-  %5 = call align 16 i8* @malloc(i64 1) #5
-  store i8* %5, i8** %1, align 8
-  %6 = load i8*, i8** %1, align 8
-  store i8 0, i8* %6, align 1
-  store i32 0, i32* %2, align 4
-  %7 = call i32 @getchar()
-  %8 = trunc i32 %7 to i8
-  store i8 %8, i8* %3, align 1
-  br label %9
-
-9:                                                ; preds = %13, %0
-  %10 = load i8, i8* %3, align 1
-  %11 = sext i8 %10 to i32
-  %12 = icmp ne i32 %11, 10
-  br i1 %12, label %13, label %42
-
-13:                                               ; preds = %9
-  %14 = load i32, i32* %2, align 4
-  %15 = add nsw i32 %14, 1
-  store i32 %15, i32* %2, align 4
-  %16 = load i32, i32* %2, align 4
-  %17 = add nsw i32 %16, 1
-  %18 = sext i32 %17 to i64
-  %19 = mul i64 1, %18
-  %20 = call align 16 i8* @malloc(i64 %19) #5
-  store i8* %20, i8** %4, align 8
-  %21 = load i8*, i8** %4, align 8
-  %22 = getelementptr inbounds i8, i8* %21, i64 0
-  store i8 0, i8* %22, align 1
-  %23 = load i8*, i8** %4, align 8
-  %24 = load i8*, i8** %1, align 8
-  %25 = load i8*, i8** %4, align 8
-  %26 = call i64 @llvm.objectsize.i64.p0i8(i8* %25, i1 false, i1 true, i1 false)
-  %27 = call i8* @__strcpy_chk(i8* %23, i8* %24, i64 %26) #6
-  %28 = load i8, i8* %3, align 1
-  %29 = load i8*, i8** %4, align 8
-  %30 = load i32, i32* %2, align 4
-  %31 = sub nsw i32 %30, 1
-  %32 = sext i32 %31 to i64
-  %33 = getelementptr inbounds i8, i8* %29, i64 %32
-  store i8 %28, i8* %33, align 1
-  %34 = load i8*, i8** %4, align 8
-  %35 = load i32, i32* %2, align 4
-  %36 = sext i32 %35 to i64
-  %37 = getelementptr inbounds i8, i8* %34, i64 %36
-  store i8 0, i8* %37, align 1
-  %38 = load i8*, i8** %1, align 8
-  call void @free(i8* %38)
-  %39 = load i8*, i8** %4, align 8
-  store i8* %39, i8** %1, align 8
-  %40 = call i32 @getchar()
-  %41 = trunc i32 %40 to i8
-  store i8 %41, i8* %3, align 1
-  br label %9, !llvm.loop !5
-
-42:                                               ; preds = %9
-  %43 = load i8*, i8** %1, align 8
-  ret i8* %43
+  %2 = call align 16 i8* @malloc(i64 1024) #5
+  store i8* %2, i8** %1, align 8
+  %3 = load i8*, i8** %1, align 8
+  %4 = call i32 (i8*, ...) @scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i8* %3)
+  %5 = load i8*, i8** %1, align 8
+  ret i8* %5
 }
 
 ; Function Attrs: allocsize(0)
 declare align 16 i8* @malloc(i64) #2
 
-declare i32 @getchar() #1
-
-; Function Attrs: nounwind
-declare i8* @__strcpy_chk(i8*, i8*, i64) #3
-
-; Function Attrs: nofree nosync nounwind readnone speculatable willreturn
-declare i64 @llvm.objectsize.i64.p0i8(i8*, i1 immarg, i1 immarg, i1 immarg) #4
-
-declare void @free(i8*) #1
+declare i32 @scanf(i8*, ...) #1
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define i32 @getInt() #0 {
@@ -133,134 +70,29 @@ define i32 @getInt() #0 {
   ret i32 %3
 }
 
-declare i32 @scanf(i8*, ...) #1
-
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define i8* @toString(i32 %0) #0 {
   %2 = alloca i32, align 4
-  %3 = alloca i8, align 1
-  %4 = alloca i8*, align 8
-  %5 = alloca i32, align 4
-  %6 = alloca i8*, align 8
-  %7 = alloca i8*, align 8
+  %3 = alloca i8*, align 8
   store i32 %0, i32* %2, align 4
-  store i8 0, i8* %3, align 1
+  %4 = call align 16 i8* @malloc(i64 15) #5
+  store i8* %4, i8** %3, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i8*, i8** %3, align 8
+  %7 = call i64 @llvm.objectsize.i64.p0i8(i8* %6, i1 false, i1 true, i1 false)
   %8 = load i32, i32* %2, align 4
-  %9 = icmp slt i32 %8, 0
-  br i1 %9, label %10, label %13
-
-10:                                               ; preds = %1
-  store i8 1, i8* %3, align 1
-  %11 = load i32, i32* %2, align 4
-  %12 = sub nsw i32 0, %11
-  store i32 %12, i32* %2, align 4
-  br label %13
-
-13:                                               ; preds = %10, %1
-  %14 = load i32, i32* %2, align 4
-  %15 = icmp eq i32 %14, 0
-  br i1 %15, label %16, label %22
-
-16:                                               ; preds = %13
-  %17 = call align 16 i8* @malloc(i64 2) #5
-  store i8* %17, i8** %4, align 8
-  %18 = load i8*, i8** %4, align 8
-  %19 = getelementptr inbounds i8, i8* %18, i64 0
-  store i8 48, i8* %19, align 1
-  %20 = load i8*, i8** %4, align 8
-  %21 = getelementptr inbounds i8, i8* %20, i64 1
-  store i8 0, i8* %21, align 1
-  br label %78
-
-22:                                               ; preds = %13
-  store i32 0, i32* %5, align 4
-  br label %23
-
-23:                                               ; preds = %26, %22
-  %24 = load i32, i32* %2, align 4
-  %25 = icmp ne i32 %24, 0
-  br i1 %25, label %26, label %53
-
-26:                                               ; preds = %23
-  %27 = load i32, i32* %5, align 4
-  %28 = add nsw i32 %27, 1
-  store i32 %28, i32* %5, align 4
-  %29 = load i32, i32* %5, align 4
-  %30 = add nsw i32 %29, 1
-  %31 = sext i32 %30 to i64
-  %32 = mul i64 1, %31
-  %33 = call align 16 i8* @malloc(i64 %32) #5
-  store i8* %33, i8** %6, align 8
-  %34 = load i8*, i8** %6, align 8
-  %35 = getelementptr inbounds i8, i8* %34, i64 0
-  store i8 0, i8* %35, align 1
-  %36 = load i8*, i8** %6, align 8
-  %37 = getelementptr inbounds i8, i8* %36, i64 1
-  %38 = load i8*, i8** %4, align 8
-  %39 = load i8*, i8** %6, align 8
-  %40 = getelementptr inbounds i8, i8* %39, i64 1
-  %41 = call i64 @llvm.objectsize.i64.p0i8(i8* %40, i1 false, i1 true, i1 false)
-  %42 = call i8* @__strcpy_chk(i8* %37, i8* %38, i64 %41) #6
-  %43 = load i32, i32* %2, align 4
-  %44 = srem i32 %43, 10
-  %45 = add nsw i32 %44, 48
-  %46 = trunc i32 %45 to i8
-  %47 = load i8*, i8** %6, align 8
-  %48 = getelementptr inbounds i8, i8* %47, i64 0
-  store i8 %46, i8* %48, align 1
-  %49 = load i8*, i8** %4, align 8
-  call void @free(i8* %49)
-  %50 = load i8*, i8** %6, align 8
-  store i8* %50, i8** %4, align 8
-  %51 = load i32, i32* %2, align 4
-  %52 = sdiv i32 %51, 10
-  store i32 %52, i32* %2, align 4
-  br label %23, !llvm.loop !7
-
-53:                                               ; preds = %23
-  %54 = load i8, i8* %3, align 1
-  %55 = trunc i8 %54 to i1
-  br i1 %55, label %56, label %77
-
-56:                                               ; preds = %53
-  %57 = load i32, i32* %5, align 4
-  %58 = add nsw i32 %57, 1
-  store i32 %58, i32* %5, align 4
-  %59 = load i32, i32* %5, align 4
-  %60 = add nsw i32 %59, 1
-  %61 = sext i32 %60 to i64
-  %62 = mul i64 1, %61
-  %63 = call align 16 i8* @malloc(i64 %62) #5
-  store i8* %63, i8** %7, align 8
-  %64 = load i8*, i8** %7, align 8
-  %65 = getelementptr inbounds i8, i8* %64, i64 0
-  store i8 0, i8* %65, align 1
-  %66 = load i8*, i8** %7, align 8
-  %67 = getelementptr inbounds i8, i8* %66, i64 1
-  %68 = load i8*, i8** %4, align 8
-  %69 = load i8*, i8** %7, align 8
-  %70 = getelementptr inbounds i8, i8* %69, i64 1
-  %71 = call i64 @llvm.objectsize.i64.p0i8(i8* %70, i1 false, i1 true, i1 false)
-  %72 = call i8* @__strcpy_chk(i8* %67, i8* %68, i64 %71) #6
-  %73 = load i8*, i8** %7, align 8
-  %74 = getelementptr inbounds i8, i8* %73, i64 0
-  store i8 45, i8* %74, align 1
-  %75 = load i8*, i8** %4, align 8
-  call void @free(i8* %75)
-  %76 = load i8*, i8** %7, align 8
-  store i8* %76, i8** %4, align 8
-  br label %77
-
-77:                                               ; preds = %56, %53
-  br label %78
-
-78:                                               ; preds = %77, %16
-  %79 = load i8*, i8** %4, align 8
-  ret i8* %79
+  %9 = call i32 (i8*, i32, i64, i8*, ...) @__sprintf_chk(i8* %5, i32 0, i64 %7, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.2, i64 0, i64 0), i32 %8)
+  %10 = load i8*, i8** %3, align 8
+  ret i8* %10
 }
 
+declare i32 @__sprintf_chk(i8*, i32, i64, i8*, ...) #1
+
+; Function Attrs: nofree nosync nounwind readnone speculatable willreturn
+declare i64 @llvm.objectsize.i64.p0i8(i8*, i1 immarg, i1 immarg, i1 immarg) #3
+
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define i32 @array_size(i8* %0) #0 {
+define i32 @size(i8* %0) #0 {
   %2 = alloca i8*, align 8
   store i8* %0, i8** %2, align 8
   %3 = load i8*, i8** %2, align 8
@@ -271,7 +103,7 @@ define i32 @array_size(i8* %0) #0 {
 }
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define i32 @string_length(i8* %0) #0 {
+define i32 @length(i8* %0) #0 {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   store i8* %0, i8** %2, align 8
@@ -295,7 +127,7 @@ define i32 @string_length(i8* %0) #0 {
   %13 = load i8*, i8** %2, align 8
   %14 = getelementptr inbounds i8, i8* %13, i32 1
   store i8* %14, i8** %2, align 8
-  br label %4, !llvm.loop !8
+  br label %4, !llvm.loop !5
 
 15:                                               ; preds = %4
   %16 = load i32, i32* %3, align 4
@@ -303,7 +135,7 @@ define i32 @string_length(i8* %0) #0 {
 }
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define i8* @string_substring(i8* %0, i32 %1, i32 %2) #0 {
+define i8* @substring(i8* %0, i32 %1, i32 %2) #0 {
   %4 = alloca i8*, align 8
   %5 = alloca i32, align 4
   %6 = alloca i32, align 4
@@ -349,7 +181,7 @@ define i8* @string_substring(i8* %0, i32 %1, i32 %2) #0 {
   %34 = load i32, i32* %8, align 4
   %35 = add nsw i32 %34, 1
   store i32 %35, i32* %8, align 4
-  br label %17, !llvm.loop !9
+  br label %17, !llvm.loop !7
 
 36:                                               ; preds = %17
   %37 = load i8*, i8** %7, align 8
@@ -364,7 +196,7 @@ define i8* @string_substring(i8* %0, i32 %1, i32 %2) #0 {
 }
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define i32 @string_parseInt(i8* %0) #0 {
+define i32 @parseInt(i8* %0) #0 {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
   %4 = alloca i8, align 1
@@ -407,7 +239,7 @@ define i32 @string_parseInt(i8* %0) #0 {
   %26 = load i8*, i8** %2, align 8
   %27 = getelementptr inbounds i8, i8* %26, i32 1
   store i8* %27, i8** %2, align 8
-  br label %12, !llvm.loop !10
+  br label %12, !llvm.loop !8
 
 28:                                               ; preds = %12
   %29 = load i8, i8* %4, align 1
@@ -429,7 +261,7 @@ define i32 @string_parseInt(i8* %0) #0 {
 }
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define signext i8 @string_ord(i8* %0, i32 %1) #0 {
+define signext i8 @ord(i8* %0, i32 %1) #0 {
   %3 = alloca i8*, align 8
   %4 = alloca i32, align 4
   store i8* %0, i8** %3, align 8
@@ -477,7 +309,7 @@ define i8* @string_add(i8* %0, i8* %1) #0 {
 declare i64 @strlen(i8*) #1
 
 ; Function Attrs: nounwind
-declare i8* @__strcat_chk(i8*, i8*, i64) #3
+declare i8* @__strcat_chk(i8*, i8*, i64) #4
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define zeroext i1 @string_equal(i8* %0, i8* %1) #0 {
@@ -562,8 +394,8 @@ define zeroext i1 @string_greaterEqual(i8* %0, i8* %1) #0 {
 attributes #0 = { noinline nounwind optnone ssp uwtable "frame-pointer"="all" "min-legal-vector-width"="0" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="penryn" "target-features"="+cx16,+cx8,+fxsr,+mmx,+sahf,+sse,+sse2,+sse3,+sse4.1,+ssse3,+x87" "tune-cpu"="generic" }
 attributes #1 = { "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="penryn" "target-features"="+cx16,+cx8,+fxsr,+mmx,+sahf,+sse,+sse2,+sse3,+sse4.1,+ssse3,+x87" "tune-cpu"="generic" }
 attributes #2 = { allocsize(0) "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="penryn" "target-features"="+cx16,+cx8,+fxsr,+mmx,+sahf,+sse,+sse2,+sse3,+sse4.1,+ssse3,+x87" "tune-cpu"="generic" }
-attributes #3 = { nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="penryn" "target-features"="+cx16,+cx8,+fxsr,+mmx,+sahf,+sse,+sse2,+sse3,+sse4.1,+ssse3,+x87" "tune-cpu"="generic" }
-attributes #4 = { nofree nosync nounwind readnone speculatable willreturn }
+attributes #3 = { nofree nosync nounwind readnone speculatable willreturn }
+attributes #4 = { nounwind "frame-pointer"="all" "no-trapping-math"="true" "stack-protector-buffer-size"="8" "target-cpu"="penryn" "target-features"="+cx16,+cx8,+fxsr,+mmx,+sahf,+sse,+sse2,+sse3,+sse4.1,+ssse3,+x87" "tune-cpu"="generic" }
 attributes #5 = { allocsize(0) }
 attributes #6 = { nounwind }
 
@@ -579,5 +411,3 @@ attributes #6 = { nounwind }
 !6 = !{!"llvm.loop.mustprogress"}
 !7 = distinct !{!7, !6}
 !8 = distinct !{!8, !6}
-!9 = distinct !{!9, !6}
-!10 = distinct !{!10, !6}
