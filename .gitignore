@@ -1,3 +1,5 @@
 codegen/*
 *.class
 .VSCodeCounter
+*.mx
+*.ll

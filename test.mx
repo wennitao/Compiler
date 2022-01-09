@@ -1,6 +1,15 @@
-int main() {
-	int n = 10 ;
-	int[] a ;
-	a = new int [n] ;
-	return 0 ;
+
+class A{
+    int a;
+    A(){a = 1;}
+
+    int geta(){return a;}
+};
+int main(){
+int b = 0;
+A tmp = new A();
+b = tmp.geta();
+
+return 0;
 }
+
