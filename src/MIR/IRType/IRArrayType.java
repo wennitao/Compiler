@@ -1,14 +1,15 @@
 package MIR.IRType;
 
 public class IRArrayType extends IRType {
-    public int size ;
+    public int arraySize ;
     public IRType type ;
     public IRArrayType (int _size, IRType _type) {
-        size = _size ;
+        this.size = _size * _type.size ;
+        arraySize = _size ;
         type = _type ;
     }
     @Override
     public String toString () {
-        return "[" + size + " x " + type + "]" ;
+        return "[" + arraySize + " x " + type + "]" ;
     }
 }

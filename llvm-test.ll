@@ -1,5 +1,3 @@
-%class.A = type { i32 }
-
 declare void @print(i8* %fuckLLVM_0)
 declare void @println(i8* %fuckLLVM_0)
 declare void @printInt(i32 %fuckLLVM_0)
@@ -19,48 +17,44 @@ declare i1 @string_less(i8* %fuckLLVM_0, i8* %fuckLLVM_1)
 declare i1 @string_lessEqual(i8* %fuckLLVM_0, i8* %fuckLLVM_1)
 declare i1 @string_greater(i8* %fuckLLVM_0, i8* %fuckLLVM_1)
 declare i1 @string_greaterEqual(i8* %fuckLLVM_0, i8* %fuckLLVM_1)
-define void @A(%class.A* %fuckLLVM_0) {
-A: 
-  %fuckLLVM_1 = alloca %class.A*
-  store %class.A* %fuckLLVM_0, %class.A** %fuckLLVM_1
-  %fuckLLVM_2 = load %class.A*, %class.A** %fuckLLVM_1
-  %fuckLLVM_3 = getelementptr inbounds %class.A, %class.A* %fuckLLVM_2, i32 0, i32 0
-  store i32 1, i32* %fuckLLVM_3
-  br label %A_return
-
-A_return: 
-  ret void
-}
-define i32 @classA_geta(%class.A* %fuckLLVM_0) {
-geta_entry: 
-  %fuckLLVM_1 = alloca %class.A*
-  store %class.A* %fuckLLVM_0, %class.A** %fuckLLVM_1
-  %fuckLLVM_2 = alloca i32
-  %fuckLLVM_3 = load %class.A*, %class.A** %fuckLLVM_1
-  %fuckLLVM_4 = getelementptr inbounds %class.A, %class.A* %fuckLLVM_3, i32 0, i32 0
-  %fuckLLVM_5 = load i32, i32* %fuckLLVM_4
-  store i32 %fuckLLVM_5, i32* %fuckLLVM_2
-  br label %classA_geta_return
-  br label %classA_geta_return
-
-classA_geta_return: 
-  %fuckLLVM_6 = load i32, i32* %fuckLLVM_2
-  ret i32 %fuckLLVM_6
-}
+declare i8* @malloc(i64 %fuckLLVM_0)
 define i32 @main() {
 main_entry: 
   %fuckLLVM_0 = alloca i32
-  %fuckLLVM_1 = alloca i32
-  store i32 0, i32* %fuckLLVM_1
-  %fuckLLVM_2 = alloca %class.A
-  call void @A(%class.A* %fuckLLVM_2)
-  %fuckLLVM_3 = call i32 @classA_geta(%class.A* %fuckLLVM_2)
-  store i32 %fuckLLVM_3, i32* %fuckLLVM_1
+  %fuckLLVM_1 = alloca i32**
+  %fuckLLVM_2 = mul i64 10, 8
+  %fuckLLVM_3 = call i8* @malloc(i64 %fuckLLVM_2)
+  %fuckLLVM_4 = bitcast i8* %fuckLLVM_3 to i32**
+  %fuckLLVM_5 = alloca i32
+  br label %ID5_for_condition
+
+ID5_for_condition: 
+  %fuckLLVM_6 = load i32, i32* %fuckLLVM_5
+  %fuckLLVM_7 = icmp slt i32 %fuckLLVM_6, 10
+  br i1 %fuckLLVM_7, label %ID5_for_suite, label %ID5_for_out
+
+ID5_for_suite: 
+  %fuckLLVM_8 = load i32, i32* %fuckLLVM_5
+  %fuckLLVM_9 = getelementptr inbounds i32*, i32** %fuckLLVM_4, i32 %fuckLLVM_8
+  %fuckLLVM_10 = mul i64 10, 4
+  %fuckLLVM_11 = call i8* @malloc(i64 %fuckLLVM_10)
+  %fuckLLVM_12 = bitcast i8* %fuckLLVM_11 to i32*
+  store i32* %fuckLLVM_12, i32** %fuckLLVM_9
+  br label %ID5_for_incr
+
+ID5_for_incr: 
+  %fuckLLVM_13 = load i32, i32* %fuckLLVM_5
+  %fuckLLVM_14 = add i32 %fuckLLVM_13, 1
+  store i32 %fuckLLVM_13, i32* %fuckLLVM_5
+  br label %ID5_for_condition
+
+ID5_for_out: 
+  store i32** %fuckLLVM_4, i32*** %fuckLLVM_1
   store i32 0, i32* %fuckLLVM_0
   br label %main_return
   br label %main_return
 
 main_return: 
-  %fuckLLVM_4 = load i32, i32* %fuckLLVM_0
-  ret i32 %fuckLLVM_4
+  %fuckLLVM_15 = load i32, i32* %fuckLLVM_0
+  ret i32 %fuckLLVM_15
 }

@@ -1,20 +1,8 @@
 #include <iostream>
-class A {
-public:
-	int a ;
-	A () {
-		a = 1 ;
-	}
-	int geta() {
-		return a ;
-	}
-} ;
-int f (int a, int b) {
-	return a ;
-}
 int main() {
-	int b = 0 ;
-	A tmp ;
-	b = tmp.geta() ;
+	int a[10] ;
+	for (int i = 0; i < 10; i ++) {
+		a[i] = 1 ;
+	}
 	return 0 ;
 }

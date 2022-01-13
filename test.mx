@@ -1,15 +1,4 @@
-
-class A{
-    int a;
-    A(){a = 1;}
-
-    int geta(){return a;}
-};
 int main(){
-int b = 0;
-A tmp = new A();
-b = tmp.geta();
-
-return 0;
+	int[][] graph = new int[10][10] ;
+	return 0;
 }
-

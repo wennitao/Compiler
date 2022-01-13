@@ -29,7 +29,7 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
-    private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, mainFuncIsDefined, isClassDefine, varDefNeedToStore ;
+    private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, mainFuncIsDefined, isClassDefine ;
     private functioncall curFuncCall ;
     private ArrayList<IRType> curFuncCallParameters ;
     private function mainFunc ;
@@ -40,7 +40,7 @@ public class IRBuilder implements ASTVisitor{
     public IRBuilder(globalDefine _globalDef, globalScope _gScope) {
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
         copyVariable = true; isFunctionID = false; isGlobalDef = false; isArrayExpr = false; mainFuncIsDefined = false ;
-        isClassDefine = false; varDefNeedToStore = true ;
+        isClassDefine = false ;
         addBuiltinFunction() ;
     }
 
@@ -236,6 +236,15 @@ public class IRBuilder implements ASTVisitor{
         newFunc.returnType = new IRIntType(1) ;
         gScope.functionIRParameters.put("string_greaterEqual", parameters) ;
         globalDef.functions.add(newFunc) ;
+
+        newFunc = new function ("malloc") ;
+        parameters = new ArrayList<>() ;
+        newFunc.isBuiltin = true ;
+        newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRIntType (64))) ;
+        parameters.add (new IRIntType (64)) ;
+        newFunc.returnType = new IRPointerType (new IRIntType (8)) ;
+        gScope.functionIRParameters.put("malloc", parameters) ;
+        globalDef.functions.add(newFunc) ;
     }
 
     private IRType toIRArrayType (IRType baseType, int dim) {
@@ -257,7 +266,7 @@ public class IRBuilder implements ASTVisitor{
         else if (type.type == Type.basicType.Void) varIRType = new IRVoidType() ;
         else if (type.type == Type.basicType.Null) varIRType = new IRNullType() ;
         else if (type.type == Type.basicType.Class) {
-            IRType baseType = gScope.getIRTypeFromClassName(type.Identifier) ; 
+            IRType baseType = new IRPointerType (gScope.getIRTypeFromClassName(type.Identifier)) ; 
             varIRType = toIRArrayType(baseType, type.dim) ;
         }
         else if (type.type == Type.basicType.String) {
@@ -400,7 +409,7 @@ public class IRBuilder implements ASTVisitor{
             if (leftType.type == basicType.Class) {
                 curClass = (register) left ;
                 curClassType = (IRClassType) gScope.getIRTypeFromClassName(leftType.Identifier) ;
-                if (curFuncCall != null) {
+                if (curFuncCall != null & isFunctionID) {
                     curFuncCall.functionName += "class" + curClassType.className + "_" ;
                     curFuncCall.parameters.add(curClass) ;
                 } 
@@ -502,6 +511,7 @@ public class IRBuilder implements ASTVisitor{
         currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
         curClass = copyReg ;
         it.suite.accept(this) ;
+        curClass = null ;
         currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier)));
         currentBlock = curFunction.returnBlock ;
         currentBlock.push_back(new returnStmt(new register(0, new IRVoidType())));
@@ -753,36 +763,112 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (newSizeNode it) {}
 
+    private entity mallocArray (ArrayList<entity> newEntities, int cur, IRType baseType) {
+        int dim = newEntities.size() - cur ;
+        IRType curIRType = baseType ;
+        for (int i = 0; i < dim; i ++)
+            curIRType = new IRPointerType (curIRType) ;
+        entity arraySize = newEntities.get(cur) ;
+        int singleSize = ((IRPointerType) curIRType).type.size ;
+        register mallocSize = new register (curFunction.curRegisterID ++, new IRIntType (64)) ;
+        currentBlock.push_back(new binary(IROperator.mul, mallocSize.type, arraySize, new constant(singleSize, new IRIntType(64)), mallocSize)) ;
+        register mallocPtr = new register (curFunction.curRegisterID ++, new IRPointerType(new IRIntType (8))) ;
+        functioncall mallocFuncCall = new functioncall("malloc", mallocPtr.type, mallocPtr) ;
+        mallocFuncCall.parameters.add(mallocSize) ;
+        currentBlock.push_back(mallocFuncCall) ;
+        // register arrayPtr = new register (curFunction.curRegisterID ++, ((IRPointerType)curIRType).type) ;
+        // currentBlock.push_back(new bitcast(mallocPtr, arrayPtr, arrayPtr.type)) ;
+        register curArrayPtr = new register (curFunction.curRegisterID ++, curIRType) ;
+        currentBlock.push_back(new bitcast(mallocPtr, curArrayPtr, curArrayPtr.type)) ;
+        // register curArrayPtr = new register(curFunction.curRegisterID ++, curIRType) ;
+        // currentBlock.push_back(new store(arrayPtr.type, arrayPtr, curArrayPtr)) ;
+
+        if (dim == 1) return curArrayPtr ;
+
+        register loopVar = new register(curFunction.curRegisterID ++, new IRPointerType (new IRIntType (32))) ;
+        currentBlock.push_back(new alloca(loopVar, new IRIntType (32)));
+        label conditionLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_for_condition") ;
+        block conditionBlock = new block(conditionLabel.labelID) ;
+        label suiteLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_for_suite") ;
+        block suiteBlock = new block (suiteLabel.labelID) ;
+        label incrLabel = new label ("ID" + (curFunction.curRegisterID - 1) + "_for_incr") ;
+        block incrBlock = new block (incrLabel.labelID) ;
+        label forOutLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_for_out") ;
+        block forOutBlock = new block(forOutLabel.labelID) ;
+        currentBlock.push_back(new branch (conditionLabel)) ;
+
+        curFunction.blocks.add(conditionBlock) ;
+        // condition block
+        currentBlock = conditionBlock ;
+        register loopVarValue = new register (curFunction.curRegisterID ++, new IRIntType (32)) ;
+        currentBlock.push_back(new load(loopVarValue.type, loopVar, loopVarValue)) ;
+        entity curLimit = newEntities.get(cur) ;
+        register cmpResValue = new register (curFunction.curRegisterID ++, new IRIntType(1)) ;
+        currentBlock.push_back(new binary(IROperator.slt, loopVarValue.type, loopVarValue, curLimit, cmpResValue)) ;
+        currentBlock.push_back(new branch(cmpResValue, suiteLabel, forOutLabel)) ;
+        
+        curFunction.blocks.add (suiteBlock) ;
+        // suite block
+        currentBlock = suiteBlock ;
+        loopVarValue = new register (curFunction.curRegisterID ++, new IRIntType (32)) ;
+        currentBlock.push_back(new load(loopVarValue.type, loopVar, loopVarValue)) ;
+        register nxtArrayPtr = new register (curFunction.curRegisterID ++, curIRType) ;
+        getelementptr getPtr = new getelementptr (curArrayPtr, nxtArrayPtr) ;
+        getPtr.value.add(loopVarValue) ;
+        currentBlock.push_back(getPtr) ;
+        entity nxtArray = mallocArray(newEntities, cur + 1, baseType) ;
+        currentBlock.push_back(new store(nxtArray.type, nxtArray, nxtArrayPtr)) ;
+        currentBlock.push_back(new branch (incrLabel)) ;
+
+        curFunction.blocks.add (incrBlock) ;
+        // incr block
+        currentBlock = incrBlock ;
+        loopVarValue = new register (curFunction.curRegisterID ++, new IRIntType (32)) ;
+        currentBlock.push_back(new load(loopVarValue.type, loopVar, loopVarValue)) ;
+        register nxtLoopVarValue = new register (curFunction.curRegisterID ++, new IRIntType (32)) ;
+        currentBlock.push_back(new binary(IROperator.add, loopVarValue.type, loopVarValue, new constant (1, new IRIntType (32)), nxtLoopVarValue)) ;
+        currentBlock.push_back(new store(loopVar.type, loopVarValue, loopVar)) ;
+        currentBlock.push_back(new branch (conditionLabel)) ;
+
+        curFunction.blocks.add (forOutBlock) ;
+        currentBlock = forOutBlock ;
+
+        return curArrayPtr ;
+    }
+
     @Override
     public void visit (newVarNode it) {
+        Type curType = it.type ;
+        IRType curIRType = toIRType(curType) ;
         if (it.newSize.size() == 0) {
-            varDefNeedToStore = false ;
-            return ;
+            curIRType = ((IRPointerType)curIRType).type ;
+            register mallocReg = new register(curFunction.curRegisterID ++, new IRPointerType(new IRIntType(8))) ;
+            functioncall mallocFuncCall = new functioncall("malloc", mallocReg.type, mallocReg) ;
+            mallocFuncCall.parameters.add(new constant(curIRType.size, new IRIntType(64))) ;
+            currentBlock.push_back(mallocFuncCall) ;
+            register returnReg = new register(curFunction.curRegisterID ++, new IRPointerType(curIRType)) ;
+            currentBlock.push_back(new bitcast(mallocReg, returnReg, returnReg.type)) ;
+            functioncall classConstructFunc = new functioncall (it.type.Identifier) ;
+            classConstructFunc.parameters.add (returnReg) ;
+            currentBlock.push_back(classConstructFunc) ;
+            returnEntity = returnReg ;
+        } else {
+            ArrayList<entity> newEntities = new ArrayList<>() ;
+            it.newSize.forEach(x -> {
+                if (x.expression == null) return ;
+                boolean copyVariableBackup = copyVariable ;
+                copyVariable = true ;
+                x.expression.accept(this) ;
+                copyVariable = copyVariableBackup ;
+                newEntities.add(returnEntity) ;
+            });
+            Type baseType = new Type (curType) ;
+            baseType.dim = 0 ;
+            IRType baseIRType = toIRType(baseType) ;
+            for (int i = newEntities.size(); i < it.newSize.size(); i ++)
+                baseIRType = new IRPointerType(baseIRType) ;
+            returnEntity = mallocArray (newEntities, 0, baseIRType) ;
         }
-        int pos = it.newSize.size() - 1;
-        for (int i = 0; i < it.newSize.size(); i ++)
-            if (it.newSize.get(i).expression == null) {
-                pos = i - 1; break ;
-            }
-        Type baseType = new Type (it.type) ;
-        baseType.dim = 0 ;
-        IRType baseIRType = toIRType(baseType) ;
-        IRType curType = baseIRType ;
-        for (int i = pos + 1; i < it.newSize.size(); i ++) {
-            IRType nxtType = new IRPointerType(curType) ;
-            curType = nxtType ;
-        }
-        for (int i = pos; i >= 0; i --) {
-            it.newSize.get(i).expression.accept(this) ;
-            IRType nxtType = new IRArrayType(((constant) returnEntity).value, curType) ;
-            curType = nxtType ;
-        }
-        register reg = new register(curFunction.curRegisterID ++, new IRPointerType (curType)) ;
-        currentBlock.push_back(new alloca(reg, curType)) ;
-        // curType = new IRPointerType(curType) ;
-        // reg.type = curType ;
-        curType = reg.type ;
-        returnEntity = reg ;
     }
 
     @Override
@@ -854,7 +940,7 @@ public class IRBuilder implements ASTVisitor{
                     curFuncCallParameters = gScope.getIRParametersFromFunctionName(it.pos, curFuncCall.functionName) ;
                     // curFuncCall = fcall ;
                 } else {
-                    Integer regID = gScope.memberID.get (it.identifier) ;
+                    Integer regID = curScope.memberID.get (it.identifier) ;
                     if (curClass == null) {
                         entity variableEntity = curScope.getEntity(it.identifier, true) ;
                         IRType type = ((IRPointerType) variableEntity.type).type ;
@@ -868,7 +954,7 @@ public class IRBuilder implements ASTVisitor{
                     } else {
                         register classReg = new register (curFunction.curRegisterID ++, ((IRPointerType)curClass.type).type) ;
                         currentBlock.push_back(new load(classReg.type, curClass, classReg));
-                        register returnRegPointer = new register(curFunction.curRegisterID ++, new IRPointerType(toIRType(gScope.getType(it.pos, it.identifier, true)))) ; 
+                        register returnRegPointer = new register(curFunction.curRegisterID ++, new IRPointerType(toIRType(curScope.getType(it.pos, it.identifier, true)))) ; 
                         getelementptr curInst = new getelementptr(classReg, returnRegPointer) ;
                         curInst.value.add(new constant(0, new IRIntType(32))) ;
                         curInst.value.add(new constant(regID.intValue(), new IRIntType(32))) ;
@@ -958,13 +1044,14 @@ public class IRBuilder implements ASTVisitor{
             }
             returnEntity = returnReg ;
         } else {
-            if (from.type instanceof IRNullType || from.type.equals(toType)) {
-                returnEntity = from ;
-            } else {
-                register returnReg = new register(curFunction.curRegisterID ++, toType) ;
-                currentBlock.push_back(new bitcast(from, returnReg, toType));
-                returnEntity = returnReg ;
-            }
+            // if (from.type instanceof IRNullType || from.type.equals(toType)) {
+            //     returnEntity = from ;
+            // }
+            // } else {
+            //     register returnReg = new register(curFunction.curRegisterID ++, toType) ;
+            //     currentBlock.push_back(new bitcast(from, returnReg, toType));
+            //     returnEntity = returnReg ;
+            // }
         }
     }
 
@@ -976,6 +1063,7 @@ public class IRBuilder implements ASTVisitor{
         it.varDeclarations.forEach(x -> {
             if (isClassDefine) {
                 curClassType.classTypes.add(varIRType) ;
+                curClassType.size += varIRType.size ;
             }
             else if (!isGlobalDef) {
                 int varRegID = curFunction.curRegisterID ;
@@ -984,19 +1072,16 @@ public class IRBuilder implements ASTVisitor{
                 currentBlock.push_back (new alloca(varReg, varIRType));
                 curFunction.curRegisterID ++ ;
                 if (x.isInitialized) {
-                    varDefNeedToStore = true ;
                     x.expression.accept(this) ;
-                    if (varDefNeedToStore) {
-                        if (returnEntity instanceof register)
-                            typeCasting((register) returnEntity, varIRType);
-                        currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
-                    }
+                    if (returnEntity instanceof register)
+                        typeCasting((register) returnEntity, varIRType);
+                    currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
                 }
-                if (varType.type == Type.basicType.Class) {
-                    functioncall curFuncCall = new functioncall(it.type.Identifier) ;
-                    curFuncCall.parameters.add(varReg) ;
-                    currentBlock.push_back(curFuncCall) ;
-                } 
+                // if (varType.type == Type.basicType.Class) {
+                //     functioncall curFuncCall = new functioncall(it.type.Identifier) ;
+                //     curFuncCall.parameters.add(varReg) ;
+                //     currentBlock.push_back(curFuncCall) ;
+                // }
             } else {
                 register reg = new register(x.name, new IRPointerType (varIRType), true) ;
                 curScope.entities.put(x.name, reg) ;

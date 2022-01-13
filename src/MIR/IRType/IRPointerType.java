@@ -5,6 +5,7 @@ public class IRPointerType extends IRType {
     public IRPointerType (IRType _type) {
         super () ;
         type = _type ;
+        this.size = 8 ;
     }
     @Override
     public String toString () {
