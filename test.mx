@@ -1,4 +1,6 @@
 int main(){
 	int[][] graph = new int[10][10] ;
+	graph[0][0] = 2 ;
+	printlnInt (graph[0][0]) ;
 	return 0;
 }

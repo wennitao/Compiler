@@ -26,6 +26,7 @@ main_entry:
   %fuckLLVM_3 = call i8* @malloc(i64 %fuckLLVM_2)
   %fuckLLVM_4 = bitcast i8* %fuckLLVM_3 to i32**
   %fuckLLVM_5 = alloca i32
+  store i32 0, i32* %fuckLLVM_5
   br label %ID5_for_condition
 
 ID5_for_condition: 
@@ -45,16 +46,27 @@ ID5_for_suite:
 ID5_for_incr: 
   %fuckLLVM_13 = load i32, i32* %fuckLLVM_5
   %fuckLLVM_14 = add i32 %fuckLLVM_13, 1
-  store i32 %fuckLLVM_13, i32* %fuckLLVM_5
+  store i32 %fuckLLVM_14, i32* %fuckLLVM_5
   br label %ID5_for_condition
 
 ID5_for_out: 
   store i32** %fuckLLVM_4, i32*** %fuckLLVM_1
+  %fuckLLVM_15 = load i32**, i32*** %fuckLLVM_1
+  %fuckLLVM_16 = getelementptr inbounds i32*, i32** %fuckLLVM_15, i32 0
+  %fuckLLVM_17 = load i32*, i32** %fuckLLVM_16
+  %fuckLLVM_18 = getelementptr inbounds i32, i32* %fuckLLVM_17, i32 0
+  store i32 2, i32* %fuckLLVM_18
+  %fuckLLVM_19 = load i32**, i32*** %fuckLLVM_1
+  %fuckLLVM_20 = getelementptr inbounds i32*, i32** %fuckLLVM_19, i32 0
+  %fuckLLVM_21 = load i32*, i32** %fuckLLVM_20
+  %fuckLLVM_22 = getelementptr inbounds i32, i32* %fuckLLVM_21, i32 0
+  %fuckLLVM_23 = load i32, i32* %fuckLLVM_22
+  call void @printlnInt(i32 %fuckLLVM_23)
   store i32 0, i32* %fuckLLVM_0
   br label %main_return
   br label %main_return
 
 main_return: 
-  %fuckLLVM_15 = load i32, i32* %fuckLLVM_0
-  ret i32 %fuckLLVM_15
+  %fuckLLVM_25 = load i32, i32* %fuckLLVM_0
+  ret i32 %fuckLLVM_25
 }

@@ -1,8 +1,10 @@
 #include <iostream>
 int main() {
-	int a[10] ;
+	int** a ;
+	a = new int* [10] ;
+	a[0] = new int [10] ;
 	for (int i = 0; i < 10; i ++) {
-		a[i] = 1 ;
+		a[0][i] = 1 ;
 	}
 	return 0 ;
 }

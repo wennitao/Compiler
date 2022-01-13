@@ -787,6 +787,7 @@ public class IRBuilder implements ASTVisitor{
 
         register loopVar = new register(curFunction.curRegisterID ++, new IRPointerType (new IRIntType (32))) ;
         currentBlock.push_back(new alloca(loopVar, new IRIntType (32)));
+        currentBlock.push_back(new store(new IRIntType(32), new constant (0, new IRIntType(32)), loopVar));
         label conditionLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_for_condition") ;
         block conditionBlock = new block(conditionLabel.labelID) ;
         label suiteLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_for_suite") ;
@@ -827,7 +828,7 @@ public class IRBuilder implements ASTVisitor{
         currentBlock.push_back(new load(loopVarValue.type, loopVar, loopVarValue)) ;
         register nxtLoopVarValue = new register (curFunction.curRegisterID ++, new IRIntType (32)) ;
         currentBlock.push_back(new binary(IROperator.add, loopVarValue.type, loopVarValue, new constant (1, new IRIntType (32)), nxtLoopVarValue)) ;
-        currentBlock.push_back(new store(loopVar.type, loopVarValue, loopVar)) ;
+        currentBlock.push_back(new store(loopVar.type, nxtLoopVarValue, loopVar)) ;
         currentBlock.push_back(new branch (conditionLabel)) ;
 
         curFunction.blocks.add (forOutBlock) ;
