@@ -53,7 +53,7 @@ int parseInt (char *str) {
     } 
     return flag ? -res : res ;
 }
-char ord (char *str, int pos) {
+int ord (char *str, int pos) {
     return str[pos] ; 
 }
 char *string_add (char *s1, char *s2) {

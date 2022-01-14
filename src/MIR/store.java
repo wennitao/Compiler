@@ -1,6 +1,9 @@
 package MIR;
 
+import MIR.IRType.IRNullType;
+import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
+import MIR.IRType.IRVoidType;
 
 public class store extends statement {
     IRType type ;
@@ -13,6 +16,7 @@ public class store extends statement {
 
     @Override
     public String toString () {
-        return "store " + from.type + " " + from + ", " + dest.type + " " + dest ;
+        // if (from.type instanceof IRNullType) return "store " + from + ", " + dest.type + " " + dest ;
+        return "store " + ((IRPointerType) dest.type).type + " " + from + ", " + dest.type + " " + dest ;
     }
 }
