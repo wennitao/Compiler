@@ -1,5 +1,7 @@
 package MIR.IRType;
 
+import MIR.entity;
+
 public class IRPointerType extends IRType {
     public IRType type ;
     public IRPointerType (IRType _type) {

@@ -92,17 +92,6 @@ declare i32 @__sprintf_chk(i8*, i32, i64, i8*, ...) #1
 declare i64 @llvm.objectsize.i64.p0i8(i8*, i1 immarg, i1 immarg, i1 immarg) #3
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
-define i32 @size(i8* %0) #0 {
-  %2 = alloca i8*, align 8
-  store i8* %0, i8** %2, align 8
-  %3 = load i8*, i8** %2, align 8
-  %4 = getelementptr inbounds i8, i8* %3, i64 -4
-  %5 = bitcast i8* %4 to i32*
-  %6 = load i32, i32* %5, align 4
-  ret i32 %6
-}
-
-; Function Attrs: noinline nounwind optnone ssp uwtable
 define i32 @length(i8* %0) #0 {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4

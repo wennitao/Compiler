@@ -327,9 +327,13 @@ public class IRBuilder implements ASTVisitor{
                 currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
                 curFunction.curRegisterID ++ ;
             } else if (leftType.type == basicType.String && it.binaryOp == binaryOperator.Plus) {
+                typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
+                register leftString = (register) returnEntity ;
+                typeCasting((register) right, new IRPointerType(new IRIntType(8))) ;
+                register rightString = (register) returnEntity ;
                 register res = new register(curFunction.curRegisterID ++, new IRPointerType(new IRIntType(8))) ;
                 functioncall stringAdd = new functioncall("string_add", res.type, res) ;
-                stringAdd.parameters.add(left); stringAdd.parameters.add(right) ;
+                stringAdd.parameters.add(leftString); stringAdd.parameters.add(rightString) ;
                 currentBlock.push_back(stringAdd) ;
                 returnEntity = res ;
             }
@@ -350,40 +354,44 @@ public class IRBuilder implements ASTVisitor{
                 // returnEntity = i8Res ;
                 // curFunction.curRegisterID ++ ;
             } else if (leftType.type == basicType.String) {
+                typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
+                register leftString = (register) returnEntity ;
+                typeCasting((register) right, new IRPointerType(new IRIntType(8))) ;
+                register rightString = (register) returnEntity ;
                 if (it.binaryOp == binaryOperator.Equal) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_equal", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.NotEqual) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_notEqual", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.Less) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_less", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.Greater) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_greater", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.LessEqual) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_lessEqual", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 } else if (it.binaryOp == binaryOperator.GreaterEqual) {
                     register res = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
                     functioncall func = new functioncall("string_greaterEqual", res.type, res) ;
-                    func.parameters.add(left); func.parameters.add(right) ;
+                    func.parameters.add(leftString); func.parameters.add(rightString) ;
                     currentBlock.push_back(func) ;
                     returnEntity = res ;
                 }
@@ -395,6 +403,7 @@ public class IRBuilder implements ASTVisitor{
             copyVariable = true; it.rightExpression.accept(this) ;
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
+            if (leftType.dim > 0) left.type = new IRPointerType(right.type) ;
             if (right instanceof register) typeCasting((register) right, ((IRPointerType) left.type).type) ;
             currentBlock.push_back(new store(((IRPointerType) left.type).type, returnEntity, left));
             returnEntity = right ;
@@ -409,9 +418,11 @@ public class IRBuilder implements ASTVisitor{
             if (leftType.type == basicType.Class) {
                 curClass = (register) left ;
                 curClassType = (IRClassType) gScope.getIRTypeFromClassName(leftType.Identifier) ;
-                if (curFuncCall != null & isFunctionID) {
+                if (curFuncCall != null && isFunctionID) {
                     curFuncCall.functionName += "class" + curClassType.className + "_" ;
-                    curFuncCall.parameters.add(curClass) ;
+                    register classValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
+                    currentBlock.push_back(new load(classValue.type, left, classValue)); 
+                    curFuncCall.parameters.add(classValue) ;
                 } 
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
@@ -422,7 +433,9 @@ public class IRBuilder implements ASTVisitor{
                 curClass = null; curClassType = null ;
             } else if (leftType.dim > 0) {
                 if (curFuncCall != null) {
-                    curFuncCall.parameters.add(left) ;
+                    register leftValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
+                    currentBlock.push_back(new load(leftValue.type, left, leftValue));
+                    curFuncCall.parameters.add(leftValue) ;
                 }
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
@@ -432,9 +445,9 @@ public class IRBuilder implements ASTVisitor{
                 gScope = gScopeBackup; curScope = curScopeBackup ;
             } else if (leftType.type == basicType.String) {
                 if (curFuncCall != null) {
-                    register leftValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
-                    currentBlock.push_back(new load(leftValue.type, left, leftValue));
-                    curFuncCall.parameters.add(leftValue) ;
+                    // register leftValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
+                    // currentBlock.push_back(new load(leftValue.type, left, leftValue));
+                    curFuncCall.parameters.add(left) ;
                 }
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
@@ -450,9 +463,11 @@ public class IRBuilder implements ASTVisitor{
             block trueBlock = new block(trueLabel.labelID) ;
             label outLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_AndAnd_out") ;
             block outBlock = new block(outLabel.labelID) ;
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1));
             currentBlock.push_back(new branch(returnEntity, trueLabel, outLabel)) ;
             currentBlock = trueBlock ;
             it.rightExpression.accept(this) ;
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1)) ;
             currentBlock.push_back(new branch(outLabel)) ;
             currentBlock = outBlock ;
             register returnReg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
@@ -469,9 +484,11 @@ public class IRBuilder implements ASTVisitor{
             block outBlock = new block(outLabel.labelID) ;
             label falseLabel = new label("ID" + (curFunction.curRegisterID - 1) + "_OrOr_false") ;
             block falseBlock = new block(falseLabel.labelID) ;
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1));
             currentBlock.push_back(new branch(returnEntity, outLabel, falseLabel)) ;
             currentBlock = falseBlock ;
             it.rightExpression.accept(this) ;
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1));
             currentBlock.push_back(new branch(outLabel)) ;
             currentBlock = outBlock ;
             register returnReg = new register(curFunction.curRegisterID ++, new IRIntType(1)) ;
@@ -634,10 +651,23 @@ public class IRBuilder implements ASTVisitor{
         isFunctionID = isFunctionIDBackup ;
         // curFuncCallParameters = gScope.getIRParametersFromFunctionName(it.pos, curFuncCall.functionName) ;
         it.expressionList.accept(this) ;
-        register destReg = new register(curFunction.curRegisterID ++, curFuncCall.returnType) ;
-        curFuncCall.destReg = destReg ;
-        currentBlock.push_back(curFuncCall) ;
-        returnEntity = destReg ;
+        if (curFuncCall.functionName.equals("size")) {
+            register arrayReg = (register) curFuncCall.parameters.get(0) ;
+            register headPtr = new register(curFunction.curRegisterID ++, new IRPointerType(new IRIntType(32))) ;
+            currentBlock.push_back(new bitcast(arrayReg, headPtr, headPtr.type)) ;
+            register sizePtr = new register(curFunction.curRegisterID ++, new IRPointerType(new IRIntType(32))) ;
+            getelementptr offset = new getelementptr(headPtr, sizePtr) ;
+            offset.value.add(new constant(-1, new IRIntType(8))) ;
+            currentBlock.push_back(offset);
+            register sizeValue = new register (curFunction.curRegisterID ++, new IRIntType(32)) ;
+            currentBlock.push_back(new load(sizeValue.type, sizePtr, sizeValue)) ;
+            returnEntity = sizeValue ;
+        } else {
+            register destReg = new register(curFunction.curRegisterID ++, curFuncCall.returnType) ;
+            curFuncCall.destReg = destReg ;
+            currentBlock.push_back(curFuncCall) ;
+            returnEntity = destReg ;
+        }
         curFuncCall = funcCallBackup ;
         curFuncCallParameters = parametersBackup ;
     }
@@ -768,20 +798,30 @@ public class IRBuilder implements ASTVisitor{
         IRType curIRType = baseType ;
         for (int i = 0; i < dim; i ++)
             curIRType = new IRPointerType (curIRType) ;
-        entity arraySize = newEntities.get(cur) ;
+        entity arraySizeEntity = newEntities.get (cur) ;
+        entity arraySize = arraySizeEntity ;
+        if (!(arraySizeEntity instanceof constant)) {
+            arraySize = new register (curFunction.curRegisterID ++, new IRIntType (64)) ;
+            currentBlock.push_back(new zext ((register) arraySizeEntity, (register) arraySize, arraySizeEntity.type, arraySize.type));
+        }
         int singleSize = ((IRPointerType) curIRType).type.size ;
         register mallocSize = new register (curFunction.curRegisterID ++, new IRIntType (64)) ;
         currentBlock.push_back(new binary(IROperator.mul, mallocSize.type, arraySize, new constant(singleSize, new IRIntType(64)), mallocSize)) ;
+        register mallocSizePlus4 = new register (curFunction.curRegisterID ++, new IRIntType (64)) ;
+        currentBlock.push_back(new binary(IROperator.add, mallocSizePlus4.type, mallocSize, new constant (4, new IRIntType(64)), mallocSizePlus4)) ;
         register mallocPtr = new register (curFunction.curRegisterID ++, new IRPointerType(new IRIntType (8))) ;
         functioncall mallocFuncCall = new functioncall("malloc", mallocPtr.type, mallocPtr) ;
-        mallocFuncCall.parameters.add(mallocSize) ;
+        mallocFuncCall.parameters.add(mallocSizePlus4) ;
         currentBlock.push_back(mallocFuncCall) ;
-        // register arrayPtr = new register (curFunction.curRegisterID ++, ((IRPointerType)curIRType).type) ;
-        // currentBlock.push_back(new bitcast(mallocPtr, arrayPtr, arrayPtr.type)) ;
+        register mallocPtr32 = new register (curFunction.curRegisterID ++, new IRPointerType(new IRIntType (32))) ;
+        currentBlock.push_back(new bitcast (mallocPtr, mallocPtr32, mallocPtr32.type));
+        currentBlock.push_back(new store(arraySizeEntity.type, arraySizeEntity, mallocPtr32)) ;
+        register arrayHeadPtr = new register(curFunction.curRegisterID ++, mallocPtr32.type) ;
+        getelementptr offset = new getelementptr(mallocPtr32, arrayHeadPtr) ;
+        offset.value.add(new constant (1, new IRIntType (32))) ;
+        currentBlock.push_back(offset) ;
         register curArrayPtr = new register (curFunction.curRegisterID ++, curIRType) ;
-        currentBlock.push_back(new bitcast(mallocPtr, curArrayPtr, curArrayPtr.type)) ;
-        // register curArrayPtr = new register(curFunction.curRegisterID ++, curIRType) ;
-        // currentBlock.push_back(new store(arrayPtr.type, arrayPtr, curArrayPtr)) ;
+        currentBlock.push_back(new bitcast(arrayHeadPtr, curArrayPtr, curArrayPtr.type)) ;
 
         if (dim == 1) return curArrayPtr ;
 
@@ -919,7 +959,12 @@ public class IRBuilder implements ASTVisitor{
         } else if (it.type == primaryType.This) {
             returnEntity = curClass ;
         } else if (it.type == primaryType.String) {
-            globalStringConstantStmt curStmt = new globalStringConstantStmt(it.identifier.substring(1, it.identifier.length() - 1)) ;
+            String str = it.identifier.substring(1, it.identifier.length() - 1) ;
+            str = str.replace("\\\\", "\\") ;
+            str = str.replace("\\n", "\n") ;
+            str = str.replace("\\\"", "\"") ;
+            str = str + "\0" ;
+            globalStringConstantStmt curStmt = new globalStringConstantStmt(str) ;
             globalDef.globalDefStmt.add(curStmt) ;
             returnEntity = curStmt.reg ;
         } else {
@@ -941,7 +986,7 @@ public class IRBuilder implements ASTVisitor{
                     curFuncCallParameters = gScope.getIRParametersFromFunctionName(it.pos, curFuncCall.functionName) ;
                     // curFuncCall = fcall ;
                 } else {
-                    Integer regID = curScope.memberID.get (it.identifier) ;
+                    Integer regID = gScope.memberID.get (it.identifier) ;
                     if (curClass == null) {
                         entity variableEntity = curScope.getEntity(it.identifier, true) ;
                         IRType type = ((IRPointerType) variableEntity.type).type ;
@@ -977,7 +1022,10 @@ public class IRBuilder implements ASTVisitor{
     public void visit (returnStmtNode it) {
         if (it.expression != null) it.expression.accept(this) ;
         // if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new returnStmt(returnEntity)) ;
-        if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new store(returnEntity.type, returnEntity, curFunction.returnReg));
+        if (!(curFunction.returnType instanceof IRVoidType)) {
+            if (returnEntity instanceof register) typeCasting((register) returnEntity, curFunction.returnType) ;
+            currentBlock.push_back(new store(returnEntity.type, returnEntity, curFunction.returnReg));
+        }
         label returnLabel = new label(curFunction.identifier + "_return") ;
         currentBlock.push_back(new branch(returnLabel)) ;
     }
@@ -1045,14 +1093,13 @@ public class IRBuilder implements ASTVisitor{
             }
             returnEntity = returnReg ;
         } else {
-            // if (from.type instanceof IRNullType || from.type.equals(toType)) {
-            //     returnEntity = from ;
-            // }
-            // } else {
-            //     register returnReg = new register(curFunction.curRegisterID ++, toType) ;
-            //     currentBlock.push_back(new bitcast(from, returnReg, toType));
-            //     returnEntity = returnReg ;
-            // }
+            if (from.type instanceof IRNullType || from.type.equals(toType)) {
+                returnEntity = from ;
+            } else {
+                register returnReg = new register(curFunction.curRegisterID ++, toType) ;
+                currentBlock.push_back(new bitcast(from, returnReg, toType));
+                returnEntity = returnReg ;
+            }
         }
     }
 
@@ -1074,6 +1121,7 @@ public class IRBuilder implements ASTVisitor{
                 curFunction.curRegisterID ++ ;
                 if (x.isInitialized) {
                     x.expression.accept(this) ;
+                    if (varType.dim > 0) varReg.type = new IRPointerType(returnEntity.type) ;
                     if (returnEntity instanceof register)
                         typeCasting((register) returnEntity, varIRType);
                     currentBlock.push_back(new store(varIRType, returnEntity, varReg)) ;
@@ -1098,6 +1146,7 @@ public class IRBuilder implements ASTVisitor{
                     curFunction = mainFunc ;
                     currentBlock = curFunction.rootBlock ;
                     x.expression.accept(this) ;
+                    if (varType.dim > 0) reg.type = new IRPointerType(returnEntity.type) ;
                     if (returnEntity instanceof constant)
                         globalDef.globalDefStmt.add(new globalDefineStmt(reg, (constant) returnEntity)) ;
                     else {

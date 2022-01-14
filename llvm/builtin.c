@@ -32,9 +32,6 @@ char* toString(int n) {
     sprintf(s, "%d", n) ;
     return s ;
 }
-int size (char *arr) {
-    return *((int*)(arr - 4)) ;
-}
 int length (char *str) {
     int len = 0 ;
     for (; *str != '\0'; str ++) len ++ ;
