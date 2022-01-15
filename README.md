@@ -1,4 +1,4 @@
 ## Mx Compiler
-LLVM IR ing
+codegen ing
 
-still lots of bug
+still don't know how to gen

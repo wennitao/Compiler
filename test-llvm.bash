@@ -1,3 +1,6 @@
+# /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
+# llc llvm-test.ll --march=riscv32 --mattr=+m -o test.s
+
 read file_name
 /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main < ./codegen/${file_name}.mx
 # /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
@@ -11,3 +14,4 @@ echo running test
 # clang -o std ./codegen/${file_name}.c
 # ./std > test.ans
 # diff test.out test.ans
+# llc llvm-test.ll --march=riscv32 --mattr=+m -o test.s

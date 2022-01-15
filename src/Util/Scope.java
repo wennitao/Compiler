@@ -6,7 +6,7 @@ import MIR.entity;
 import Util.error.semanticError;
 
 public class Scope {
-    private HashMap<String, Type> members ;
+    public HashMap<String, Type> members ;
     public HashMap<String, entity> entities ;
     public HashMap<String, Integer> memberID ;
     private Scope parentScope ;

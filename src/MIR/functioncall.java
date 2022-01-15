@@ -6,7 +6,7 @@ import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
 
 public class functioncall extends statement {
-    public String functionName ;
+    public String functionName, realFunctionName ;
     public IRType returnType ;
     public boolean isVoid ;
     public register destReg ;
@@ -21,6 +21,7 @@ public class functioncall extends statement {
         functionName = _functionName; isVoid = true ;
         returnType = new IRVoidType() ;
         parameters = new ArrayList<>() ;
+        realFunctionName = new String() ;
     }
     public functioncall (String _functionName, IRType _returnType, register _destReg) {
         super () ;

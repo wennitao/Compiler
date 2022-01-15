@@ -52,6 +52,11 @@ public class globalScope extends Scope {
         else throw new semanticError("function " + name + " not found", pos) ;
     }
 
+    public boolean getFunctionInClass (position pos, String name) {
+        if (functionRetType.containsKey(name)) return true ;
+        return false ;
+    }
+
     public Type getReturnTypeFromFunctionName (position pos, String name) {
         if (functionRetType.containsKey(name)) return functionRetType.get (name) ;
         else if (this.parentScope() != null) return ((globalScope) this.parentScope()).getReturnTypeFromFunctionName(pos, name) ;

@@ -56,7 +56,7 @@ int parseInt (char *str) {
 int ord (char *str, int pos) {
     return str[pos] ; 
 }
-char *string_add (char *s1, char *s2) {
+char* string_add (char *s1, char *s2) {
     char *str = (char*) malloc (sizeof (char) * (strlen (s1) + strlen (s2) + 1)) ;
     *str = '\0' ;
     strcat (str, s1); strcat (str, s2) ;
@@ -81,6 +81,6 @@ bool string_greaterEqual (char *s1, char *s2) {
     return strcmp (s1, s2) >= 0 ;
 }
 // int main() {
-//     println (toString (2)) ;
+//     println (*toString (2)) ;
 //     return 0 ;
 // }
