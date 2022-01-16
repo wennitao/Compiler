@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class block {
     public String identifier ;
-    private ArrayList<statement> statements = new ArrayList<>();
+    public ArrayList<statement> statements = new ArrayList<>();
     public block (String _identifier) {
         identifier = _identifier ;
     }

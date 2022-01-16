@@ -1,12 +1,12 @@
-# /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
-# llc llvm-test.ll --march=riscv32 --mattr=+m -o test.s
+/usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
+llc llvm-test.ll --march=riscv32 --mattr=+m -o test.s
 
-read file_name
-/usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main < ./codegen/${file_name}.mx
-# /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
-clang llvm-test.ll ./llvm/builtin.ll -o test
-echo running test
-./test
+# read file_name
+# /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main < ./codegen/${file_name}.mx
+# # /usr/bin/env /Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home/bin/java -XX:+ShowCodeDetailsInExceptionMessages @/var/folders/c_/dfjbftln1bsf6mvs_xn0jjch0000gn/T/cp_3dujel278ptpgsahsriyrht7u.argfile main
+# clang llvm-test.ll ./llvm/builtin.ll -o test
+# echo running test
+# ./test
 # llvm-as llvm-test.ll -o llvm-test.bc
 # llvm-link llvm-test.bc ./llvm/builtin.bc -o test.bc
 # clang test.bc -o test

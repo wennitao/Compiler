@@ -6,9 +6,9 @@ import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
 
 public class store extends statement {
-    IRType type ;
+    public IRType type ;
     int value ;
-    entity from, dest ;
+    public entity from, dest ;
 
     public store (IRType _type, entity _from, entity _dest) {
         type = _type; from = _from; dest = _dest ;

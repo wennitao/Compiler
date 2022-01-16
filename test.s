@@ -25,22 +25,13 @@ main:                                   # @main
 	.cfi_offset ra, -4
 	call	__init@plt
 	addi	a0, zero, 2
-	sw	a0, 20(sp)
-	addi	a0, zero, 3
 	sw	a0, 16(sp)
+	addi	a0, zero, 3
+	sw	a0, 20(sp)
 	addi	a0, zero, 4
 	sw	a0, 12(sp)
-	addi	a0, zero, 5
-	sw	a0, 8(sp)
-	addi	a0, zero, 6
-	sw	a0, 4(sp)
-	addi	a0, zero, 44
-	mv	a1, zero
-	call	malloc@plt
-	addi	a1, zero, 10
-	sw	a1, 0(a0)
-	addi	a0, a0, 4
-	sw	a0, 0(sp)
+	addi	a0, zero, 4
+	call	printlnInt@plt
 	sw	zero, 24(sp)
 	lw	a0, 24(sp)
 	lw	ra, 28(sp)                      # 4-byte Folded Reload
