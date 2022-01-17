@@ -9,6 +9,7 @@ import Assembly.Inst.ImmInst.immInstOp ;
 import Assembly.Inst.binaryInst.binaryInstOp ;
 import Assembly.Operand.* ;
 import MIR.* ;
+import MIR.IRType.IRNullType;
 import MIR.IRType.IRVoidType;
 
 public class AssemblyBuilder {
@@ -177,6 +178,7 @@ public class AssemblyBuilder {
         } else if (curIRStmt instanceof store) {
             store curStore = (store) curIRStmt ;
             entity from = curStore.from, to = curStore.dest ;
+            if (from == null || to == null) return ;
             VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
             if (curFunction.regOffset.containsKey(rd)) {
                 int imm = -curFunction.regOffset.get(rd) ;

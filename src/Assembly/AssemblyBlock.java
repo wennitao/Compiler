@@ -19,11 +19,17 @@ public class AssemblyBlock {
         }
     }
     public void insert_before (Inst inst, Inst insertInst) {
+        if (head == null && tail == null) {
+            this.push_back(insertInst); return ;
+        }
         if (inst.prev == null) head = insertInst ;
         else inst.prev.next = insertInst ;
         insertInst.prev = inst.prev; insertInst.next = inst; inst.prev = insertInst ;
     }
     public void insert_after (Inst inst, Inst insertInst) {
+        if (head == null && tail == null) {
+            this.push_back(insertInst); return ;
+        }
         if (inst.next == null) tail = insertInst ;
         else inst.next.prev = insertInst ;
         insertInst.next = inst.next; insertInst.prev = inst; inst.next = insertInst ;
