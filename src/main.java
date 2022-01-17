@@ -30,9 +30,9 @@ public class main {
         String name = "test.mx";
         // String name = args[0] ;
         // InputStream raw = System.in;
-        PrintStream out = new PrintStream(System.out) ;
-        // PrintStream out = new PrintStream("llvm-test.ll") ;
-        // PrintStream out2 = new PrintStream("test.s") ;
+        // PrintStream out = new PrintStream(System.out) ;
+        PrintStream out = new PrintStream("llvm-test.ll") ;
+        PrintStream out2 = new PrintStream("test.s") ;
         InputStream raw = new FileInputStream(name);
         try {
             CharStream input = CharStreams.fromStream(raw);
@@ -56,11 +56,11 @@ public class main {
             globalDefine globalDef = new globalDefine() ;
             // function mainFn = new function("main") ;
             new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
-            // new IRPrinter().visitGlobalDef(out, globalDef);
+            new IRPrinter().visitGlobalDef(out, globalDef);
 
             AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
             new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
-            new AssemblyPrinter(out, assemblyGlobalDefine) ;
+            new AssemblyPrinter(out2, assemblyGlobalDefine) ;
         } catch(error er) {
             System.err.println(er.toString());
             throw new RuntimeException();

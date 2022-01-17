@@ -261,7 +261,8 @@ public class AssemblyBuilder {
         }
         // int offset = function.offset ;
         AssemblyBlock headBlock = function.blocks.get(0) ;
-        headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-function.offset), sp));
+        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(-function.offset), sp));
+        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-function.offset), sp));
         headBlock.insert_after(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(function.offset), s0));
         headBlock.push_back(new storeInst(4, ra, new Imm(-4), s0));
         headBlock.push_back(new storeInst(4, s0, new Imm(-8), s0));
