@@ -19,7 +19,7 @@ public class AssemblyFunction {
     public void print(PrintStream out) {
         out.println("\t.globl\t" + identifier);
         out.println("\t.p2align\t2");
-        // out.println("\t.type\t" + identifier + ",@function") ;
+        out.println("\t.type\t" + identifier + ",@function") ;
         out.println(identifier + ":") ;
         for (AssemblyBlock block : blocks) {
             block.print (out) ;

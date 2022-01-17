@@ -1,6 +1,5 @@
 int main() {
     int a = 1, b = 2 ;
-    int c = (a ++) + (++ a) ;
-    printlnInt (c) ;
+    printInt (123) ;
     return 0 ;
 }

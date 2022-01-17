@@ -29,11 +29,12 @@ public class main {
     public static void main(String[] args) throws Exception{
         String name = "test.mx";
         // String name = args[0] ;
-        // InputStream raw = System.in;
+        InputStream raw = System.in;
+        // InputStream raw = new FileInputStream(name);
         // PrintStream out = new PrintStream(System.out) ;
-        PrintStream out = new PrintStream("llvm-test.ll") ;
-        PrintStream out2 = new PrintStream("test.s") ;
-        InputStream raw = new FileInputStream(name);
+        PrintStream out2 = new PrintStream(System.out) ;
+        // PrintStream out = new PrintStream("llvm-test.ll") ;
+        // PrintStream out2 = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
             MxLiteLexer lexer = new MxLiteLexer(input);
@@ -56,7 +57,7 @@ public class main {
             globalDefine globalDef = new globalDefine() ;
             // function mainFn = new function("main") ;
             new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
-            new IRPrinter().visitGlobalDef(out, globalDef);
+            // new IRPrinter().visitGlobalDef(out, globalDef);
 
             AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
             new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;

@@ -9,6 +9,6 @@ public class jumpInst extends Inst{
     }
     @Override
     public String toString () {
-        return "j\t" + toLabel.labelID ;
+        return "j\t." + toLabel.labelID ;
     }
 }
