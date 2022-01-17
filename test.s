@@ -1,44 +1,89 @@
 	.text
-	.attribute	4, 16
-	.attribute	5, "rv32i2p0_m2p0"
-	.file	"llvm-test.ll"
-	.globl	__init                          # -- Begin function __init
+	.globl	__init
 	.p2align	2
-	.type	__init,@function
-__init:                                 # @__init
-	.cfi_startproc
-# %bb.0:                                # %__init_entry
+__init:
+.__init_assemblyInit:
+	addi	sp, sp, -8
+	addi	s0, sp, 8
+	sw	ra, -4(s0)
+	sw	s0, -8(s0)
+.__init_entry:
+	j	__init_return
+.__init_return:
+	lw	ra, 4(sp)
+	lw	s0, 0(sp)
+	addi	sp, sp, 8
 	ret
-.Lfunc_end0:
-	.size	__init, .Lfunc_end0-__init
-	.cfi_endproc
-                                        # -- End function
-	.globl	main                            # -- Begin function main
+
+	.globl	main
 	.p2align	2
-	.type	main,@function
-main:                                   # @main
-	.cfi_startproc
-# %bb.0:                                # %main_entry
-	addi	sp, sp, -32
-	.cfi_def_cfa_offset 32
-	sw	ra, 28(sp)                      # 4-byte Folded Spill
-	.cfi_offset ra, -4
-	call	__init@plt
-	addi	a0, zero, 2
-	sw	a0, 16(sp)
-	addi	a0, zero, 3
-	sw	a0, 20(sp)
-	addi	a0, zero, 4
-	sw	a0, 12(sp)
-	addi	a0, zero, 4
-	call	printlnInt@plt
-	sw	zero, 24(sp)
-	lw	a0, 24(sp)
-	lw	ra, 28(sp)                      # 4-byte Folded Reload
-	addi	sp, sp, 32
+main:
+.main_assemblyInit:
+	addi	sp, sp, -76
+	addi	s0, sp, 76
+	sw	ra, -4(s0)
+	sw	s0, -8(s0)
+.main_entry:
+	call	__init
+	lw	t0, -28(s0)
+	addi	t1, t0, 1
+	sw	t1, -28(s0)
+	lw	t0, -28(s0)
+	sw	t0, -16(s0)
+	lw	t0, -32(s0)
+	addi	t1, t0, 2
+	sw	t1, -32(s0)
+	lw	t0, -32(s0)
+	sw	t0, -20(s0)
+	lw	t0, -36(s0)
+	lw	t0, -16(s0)
+	lw	t0, -40(s0)
+	addi	t1, t0, 1
+	sw	t1, -40(s0)
+	lw	t0, -36(s0)
+	lw	t1, -40(s0)
+	add	t2, t0, t1
+	sw	t2, -44(s0)
+	lw	t0, -44(s0)
+	sw	t0, -16(s0)
+	lw	t0, -48(s0)
+	lw	t0, -16(s0)
+	lw	t0, -52(s0)
+	addi	t1, t0, 1
+	sw	t1, -52(s0)
+	lw	t0, -48(s0)
+	lw	t1, -52(s0)
+	add	t2, t0, t1
+	sw	t2, -56(s0)
+	lw	t0, -56(s0)
+	sw	t0, -16(s0)
+	lw	t0, -60(s0)
+	lw	t0, -16(s0)
+	lw	t0, -36(s0)
+	lw	t1, -60(s0)
+	add	t2, t0, t1
+	sw	t2, -64(s0)
+	lw	t0, -64(s0)
+	sw	t0, -24(s0)
+	lw	t0, -68(s0)
+	lw	t0, -24(s0)
+	lw	t0, -68(s0)
+	mv	a0, t0
+	call	printlnInt
+	lw	t0, -72(s0)
+	addi	t1, t0, 0
+	sw	t1, -72(s0)
+	lw	t0, -72(s0)
+	sw	t0, -12(s0)
+	j	main_return
+	j	main_return
+.main_return:
+	lw	t0, -76(s0)
+	lw	t0, -12(s0)
+	lw	t0, -76(s0)
+	mv	a0, t0
+	lw	ra, 72(sp)
+	lw	s0, 68(sp)
+	addi	sp, sp, 76
 	ret
-.Lfunc_end1:
-	.size	main, .Lfunc_end1-main
-	.cfi_endproc
-                                        # -- End function
-	.section	".note.GNU-stack","",@progbits
+

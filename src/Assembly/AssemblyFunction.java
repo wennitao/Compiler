@@ -1,5 +1,6 @@
 package Assembly;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,5 +15,14 @@ public class AssemblyFunction {
     public AssemblyFunction (String _identifier) {
         identifier = _identifier ;
         curRegID = offset = 0 ;
+    }
+    public void print(PrintStream out) {
+        out.println("\t.globl\t" + identifier);
+        out.println("\t.p2align\t2");
+        // out.println("\t.type\t" + identifier + ",@function") ;
+        out.println(identifier + ":") ;
+        for (AssemblyBlock block : blocks) {
+            block.print (out) ;
+        }
     }
 }

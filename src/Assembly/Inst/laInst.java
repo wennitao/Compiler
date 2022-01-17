@@ -7,4 +7,8 @@ public class laInst extends Inst {
     public laInst (Reg _rd, String _symbol) {
         rd = _rd; symbol = _symbol ;
     }
+    @Override
+    public String toString () {
+        return "la\t" + rd + ", " + symbol ;
+    }
 }

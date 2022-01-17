@@ -1,5 +1,7 @@
 package Assembly;
 
+import java.io.PrintStream;
+
 import Assembly.Inst.Inst;
 
 public class AssemblyBlock {
@@ -17,6 +19,10 @@ public class AssemblyBlock {
         }
     }
     public void insert_before (Inst inst, Inst insertInst) {
+        if (inst == null) {
+            this.push_back(insertInst) ;
+            return ;
+        }
         if (head == inst) head = insertInst ;
         else inst.prev.next = insertInst ;
         insertInst.prev = inst.prev; insertInst.next = inst; inst.prev = insertInst ;
@@ -25,5 +31,12 @@ public class AssemblyBlock {
         if (inst.next == null) tail = insertInst ;
         else inst.next.prev = insertInst ;
         insertInst.next = inst.next; insertInst.prev = inst; inst.next = insertInst ;
+    }
+    
+    public void print (PrintStream out) {
+        out.println("." + identifier + ":") ;
+        for (Inst inst = head; inst != null; inst = inst.next) {
+            out.println ("\t" + inst) ;
+        }
     }
 }

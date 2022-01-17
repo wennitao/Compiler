@@ -8,4 +8,8 @@ public class bnezInst extends Inst {
     public bnezInst (Reg rs, label _toLabel) {
         rs1 = rs; toLabel = _toLabel ;
     }
+    @Override
+    public String toString() {
+        return "bnez\t" + rs1 + ", ." + toLabel.labelID ;
+    }
 }

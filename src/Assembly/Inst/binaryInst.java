@@ -12,6 +12,6 @@ public class binaryInst extends Inst {
     }
     @Override
     public String toString() {
-        return op.name() + " " + rd + ", " + rs1 + ", " + rs2 ;
+        return op.name() + "\t" + rd + ", " + rs1 + ", " + rs2 ;
     }
 }

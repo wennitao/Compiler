@@ -14,6 +14,6 @@ public class ImmInst extends Inst {
     }
     @Override
     public String toString() {
-        return op.name() + " " + rd + ", " + rs1 + ", " + imm ;
+        return op.name() + "\t" + rd + ", " + rs1 + ", " + imm ;
     }
 }

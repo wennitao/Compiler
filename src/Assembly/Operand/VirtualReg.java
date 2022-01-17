@@ -10,4 +10,8 @@ public class VirtualReg extends Reg {
         super (Integer.toString(id)) ;
         size = _size ;
     }
+    @Override
+    public String toString () {
+        return identifier ;
+    }
 }

@@ -9,7 +9,7 @@ public class functioncall extends statement {
     public String functionName, realFunctionName ;
     public IRType returnType ;
     public boolean isVoid ;
-    public register destReg ;
+    public register destReg = null ;
     public ArrayList<entity> parameters ;
     public functioncall () {
         super () ;

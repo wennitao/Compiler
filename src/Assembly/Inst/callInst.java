@@ -5,4 +5,8 @@ public class callInst extends Inst {
     public callInst (String _symbol) {
         symbol = _symbol ;
     }
+    @Override
+    public String toString () {
+        return "call\t" + symbol ;
+    }
 }
