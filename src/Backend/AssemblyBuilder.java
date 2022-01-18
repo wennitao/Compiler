@@ -60,7 +60,7 @@ public class AssemblyBuilder {
                 AssemblyGlobalDef.globalDefine.add(new globalReg(globalReg.reg.registerID, globalReg.initConstant.value, globalReg.reg.type.size)) ;            
             } else if (stmt instanceof globalStringConstantStmt) {
                 globalStringConstantStmt globalStr = (globalStringConstantStmt) stmt ;
-                AssemblyGlobalDef.globalDefine.add(new globalStringConstant(globalStr.reg.registerID, globalStr.initStr, globalStr.initStr.length())) ;
+                AssemblyGlobalDef.globalDefine.add(new globalStringConstant(globalStr.reg.registerID, globalStr.stringConstant)) ;
             }
         }
     }
@@ -102,41 +102,52 @@ public class AssemblyBuilder {
             genInst(curStmt) ;    
         }
     }
-
+    
+    private boolean immInRange (int val) {
+        return val >= -2048 && val < 2048 ;
+    }
     private VirtualReg entityToReg (entity x) {
         VirtualReg rs = null ;
         if (x instanceof constant) {
             rs = new VirtualReg(curFunction.curRegID ++, 4) ;
             constant c = (constant) x ;
             int value = ((constant) c).value ;
-            int absvalue = Math.abs (value) ;
-            if (absvalue < 2048) {
-                curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(value), rs));
-            } else {
-                curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(absvalue >> 22), rs)) ;
-                absvalue %= (1 << 22) ;
-                curBlock.push_back(new ImmInst(immInstOp.slli, rs, new Imm(11), rs));
-                curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue >> 11), rs)) ;
-                absvalue %= (1 << 11) ;
-                curBlock.push_back(new ImmInst(immInstOp.slli, rs, new Imm(11), rs)) ;
-                curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue), rs)) ;
-                if (value < 0) curBlock.push_back(new binaryInst(binaryInstOp.sub, zero, rs, rs));
-            }
+            // int absvalue = Math.abs (value) ;
+            curBlock.push_back(new liInst(rs, new Imm(value)));
+            // if (absvalue < 2048) {
+            //     curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(value), rs));
+            // } else {
+            //     curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(absvalue >> 22), rs)) ;
+            //     absvalue %= (1 << 22) ;
+            //     curBlock.push_back(new ImmInst(immInstOp.slli, rs, new Imm(11), rs));
+            //     curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue >> 11), rs)) ;
+            //     absvalue %= (1 << 11) ;
+            //     curBlock.push_back(new ImmInst(immInstOp.slli, rs, new Imm(11), rs)) ;
+            //     curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue), rs)) ;
+            //     if (value < 0) curBlock.push_back(new binaryInst(binaryInstOp.sub, zero, rs, rs));
+            // }
         } else {
             register reg = (register) x ;
             if (reg.isGlobal) {
                 rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
                 curBlock.push_back(new laInst(rs, reg.registerID)) ;
             } else {
-                rs = toRegMap.get(reg.registerID) ;
+                if (!toRegMap.containsKey(reg.registerID)) {
+                    rs = new VirtualReg(curFunction.curRegID ++, x.type.size) ;
+                    toRegMap.put(reg.registerID, rs) ;
+                    curFunction.offset += 4 ;
+                    curFunction.regOffset.put(rs, curFunction.offset) ;
+                } else {
+                    rs = toRegMap.get(reg.registerID) ;
+                }
             }
         }
         return rs ;
     }
-
     private void genInst (statement curIRStmt) {
         if (curIRStmt instanceof alloca) {
             alloca curIRInst = (alloca) curIRStmt ;
+            if (toRegMap.containsKey(curIRInst.reg.registerID)) return ;
             VirtualReg cur = new VirtualReg(curFunction.curRegID ++, curIRInst.type.size) ;
             toRegMap.put(curIRInst.reg.registerID, cur) ;
             curFunction.offset += 4 ;
@@ -216,7 +227,15 @@ public class AssemblyBuilder {
                 VirtualReg rs = entityToReg(from) ;
                 if (curFunction.regOffset.containsKey(rs)) {
                     int imm = -curFunction.regOffset.get(rs) ;
-                    curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+                    if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
+                    else {
+                        VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                        curBlock.push_back(new liInst(t, new Imm(imm)));
+                        curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
+                        curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
+                    }
+                    // loadFromImm(to.type.size, rd, imm, s0) ;
+                    // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
                 } else {
                     curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
                 }
@@ -234,7 +253,15 @@ public class AssemblyBuilder {
                 VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
                 if (curFunction.regOffset.containsKey(rd)) {
                     int imm = -curFunction.regOffset.get(rd) ;
-                    curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
+                    if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
+                    else {
+                        VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                        curBlock.push_back(new liInst(t, new Imm(imm)));
+                        curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
+                        curBlock.push_back(new storeInst(from.type.size, rs, new Imm(0), t));
+                    }
+                    // loadFromImm(from.type.size, rs, imm, s0);
+                    // curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
                 } else {
                     curBlock.push_back(new storeInst(from.type.size, rs, new Imm (0), rd));
                 }
@@ -288,16 +315,19 @@ public class AssemblyBuilder {
             int size = ((IRPointerType) from.type).type.size ;
             VirtualReg rs = entityToReg(from) ;
             VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
-            entity value = curIRGetelementptr.value.get(0) ;
-            if (value instanceof constant) {
-                constant c = (constant) value ;
-                if (c.value == 0) curBlock.push_back(new mvInst(rs, rd));
-                else curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(c.value * size), rd));
-            } else {
+            // entity value = curIRGetelementptr.value.get(0) ;
+            entity value ;
+            if (curIRGetelementptr.value.size() == 1) value = curIRGetelementptr.value.get(0) ;
+            else value = curIRGetelementptr.value.get(1) ;
+            // if (value instanceof constant) {
+            //     constant c = (constant) value ;
+            //     if (c.value == 0) curBlock.push_back(new mvInst(rs, rd));
+            //     else curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(c.value * size), rd));
+            // } else {
                 VirtualReg mulRes = new VirtualReg(curFunction.curRegID ++, value.type.size) ;
                 curBlock.push_back(new binaryInst(binaryInstOp.mul, entityToReg(value), entityToReg(new constant(size, value.type)), mulRes));
                 curBlock.push_back(new binaryInst(binaryInstOp.add, rs, mulRes, rd)) ;
-            }
+            // }
             toRegMap.put(to.registerID, rd) ;
         } else if (curIRStmt instanceof phi) {
             phi curIRPhi = (phi) curIRStmt ;
@@ -412,6 +442,9 @@ public class AssemblyBuilder {
                 storeInst curInst = (storeInst) inst ;
                 curInst.rs1 = loadVirtualReg(inst, curInst.rs1, t0) ;
                 curInst.rs2 = loadVirtualReg(inst, curInst.rs2, t1) ;
+            } else if (inst instanceof liInst) {
+                liInst curInst = (liInst) inst ;
+                curInst.rd = storeVirtualReg(inst, curInst.rd, t0) ;
             }
         }
     }
