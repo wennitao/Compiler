@@ -6,7 +6,6 @@ import Backend.IRBuilder;
 import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
-import MIR.function;
 import MIR.globalDefine;
 import Frontend.SemanticChecker;
 import Parser.MxLiteLexer;

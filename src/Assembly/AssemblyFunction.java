@@ -7,6 +7,7 @@ import java.util.Map;
 
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
+import MIR.entity;
 
 public class AssemblyFunction {
     public String identifier ;
@@ -14,9 +15,9 @@ public class AssemblyFunction {
     public ArrayList<AssemblyBlock> blocks = new ArrayList<>() ;
     public Map<String, VirtualReg> toRegMap = new HashMap<>() ;
     public Map<Reg, Integer> regOffset = new HashMap<>() ;
-    public Map<String, VirtualReg> phiRd, phiValue ;
+    public Map<String, VirtualReg> phiRd = new HashMap<>() ;
+    public Map<String, entity> phiValue = new HashMap<>() ;
     public AssemblyFunction (String _identifier) {
-        phiRd = new HashMap<>(); phiValue = new HashMap<>() ;
         identifier = _identifier ;
         curRegID = offset = 0 ;
     }

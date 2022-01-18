@@ -159,6 +159,31 @@ public class AssemblyBuilder {
         }
         return rs ;
     }
+    private VirtualReg entityToReg (entity x, Inst inst) {
+        VirtualReg rs = null ;
+        if (x instanceof constant) {
+            rs = new VirtualReg(curFunction.curRegID ++, 4) ;
+            constant c = (constant) x ;
+            int value = ((constant) c).value ;
+            curBlock.insert_before(inst, new liInst(rs, new Imm(value)));
+        } else {
+            register reg = (register) x ;
+            if (reg.isGlobal) {
+                rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
+                curBlock.insert_before(inst, new laInst(rs, reg.registerID)) ;
+            } else {
+                if (!curFunction.toRegMap.containsKey(reg.registerID)) {
+                    rs = new VirtualReg(curFunction.curRegID ++, x.type.size) ;
+                    curFunction.toRegMap.put(reg.registerID, rs) ;
+                    curFunction.offset += 4 ;
+                    curFunction.regOffset.put(rs, curFunction.offset) ;
+                } else {
+                    rs = curFunction.toRegMap.get(reg.registerID) ;
+                }
+            }
+        }
+        return rs ;
+    }
     private void genInst (statement curIRStmt) {
         if (curIRStmt instanceof alloca) {
             alloca curIRInst = (alloca) curIRStmt ;
@@ -324,6 +349,7 @@ public class AssemblyBuilder {
         } else if (curIRStmt instanceof trunc) {
             trunc curIRTrunc = (trunc) curIRStmt ;
             curFunction.toRegMap.put(curIRTrunc.to.registerID, entityToReg(curIRTrunc.from)) ;
+            // System.out.println(curIRTrunc.to.registerID + " " + entityToReg(curIRTrunc.from)) ;
         } else if (curIRStmt instanceof zext) {
             zext curIRZext = (zext) curIRStmt ;
             curFunction.toRegMap.put(curIRZext.to.registerID, entityToReg(curIRZext.from)) ;
@@ -360,21 +386,35 @@ public class AssemblyBuilder {
                 label curLabel = curIRPhi.labels.get(i) ;
                 entity value = curIRPhi.value.get(i) ;
                 curFunction.phiRd.put(curLabel.labelID, rd) ;
-                curFunction.phiValue.put(curLabel.labelID, entityToReg(value)) ;
+                curFunction.phiValue.put(curLabel.labelID, value) ;
             }
         }
     }
     private void phi_storeValue () {
         for (AssemblyFunction curFunc : AssemblyGlobalDef.functions) {
             if (curFunc.phiRd.isEmpty()) continue ;
-            for (AssemblyBlock curBlock : curFunc.blocks) {
-                boolean flag = curFunc.phiRd.containsKey(curBlock.identifier) ;
+            curFunction = curFunc ;
+            for (AssemblyBlock block : curFunc.blocks) {
+                boolean flag = curFunc.phiRd.containsKey(block.identifier) ;
                 if (!flag) continue ;
-                VirtualReg value = curFunc.phiValue.get(curBlock.identifier) ;
-                VirtualReg rd = curFunc.phiRd.get(curBlock.identifier) ;
-                for (Inst inst = curBlock.head; inst != null; inst = inst.next) {
+                curBlock = block ;
+                entity value = curFunc.phiValue.get(block.identifier) ;
+                Inst markInst = null ;
+                for (Inst inst = block.head; inst != null; inst = inst.next) {
                     if (inst instanceof bnezInst || inst instanceof jumpInst) {
-                        curBlock.insert_before(inst, new mvInst(value, rd)) ;
+                        if (markInst == null) {
+                            markInst = inst; break ;
+                        }
+                    }
+                }
+                VirtualReg rs = entityToReg(value, markInst) ;
+                // System.out.println(value + " " + rs);
+                // VirtualReg rs = entityToReg(value) ;
+                VirtualReg rd = curFunc.phiRd.get(block.identifier) ;
+                for (Inst inst = block.head; inst != null; inst = inst.next) {
+                    if (inst instanceof bnezInst || inst instanceof jumpInst) {
+                        System.out.println("mv\t" + rd + ", " + rs);
+                        block.insert_before(inst, new mvInst(rs, rd)) ;
                     }
                 }
             }
@@ -423,17 +463,35 @@ public class AssemblyBuilder {
         }
         int offset = function.offset ;
         if (offset % 16 != 0) offset = (offset / 16 + 1) * 16 ;
-        AssemblyBlock headBlock = function.blocks.get(0) ;
-        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
-        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
-        headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(offset - 8), sp));
-        headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(offset - 4), sp));
-        headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
-        AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
-        tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
-        tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));
-        tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), sp));
-        tailBlock.push_back(new retInst());
+        if (immInRange(offset)) {
+            AssemblyBlock headBlock = function.blocks.get(0) ;
+            if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+            else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+            headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(offset - 8), sp));
+            headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(offset - 4), sp));
+            headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
+            AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
+            tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
+            tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));
+            tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), sp));
+            tailBlock.push_back(new retInst());
+        } else {
+            AssemblyBlock headBlock = function.blocks.get(0) ;
+            if (headBlock.head == null) headBlock.push_back(new mvInst(t1, s0)) ;
+            else headBlock.insert_before(headBlock.head, new mvInst(t1, s0));
+            headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(-8), t1));
+            headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(-4), t1));
+            headBlock.insert_before(headBlock.head, new binaryInst(binaryInstOp.add, sp, t0, t1));
+            headBlock.insert_before(headBlock.head, new binaryInst(binaryInstOp.sub, sp, t0, sp));
+            headBlock.insert_before(headBlock.head, new liInst(t0, new Imm(offset)));
+            AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
+            tailBlock.push_back(new liInst(t0, new Imm(offset)));
+            tailBlock.push_back(new binaryInst(binaryInstOp.add, sp, t0, t1));
+            tailBlock.push_back(new loadInst(4, ra, new Imm(-4), t1));
+            tailBlock.push_back(new loadInst(4, s0, new Imm(-8), t1));
+            tailBlock.push_back(new binaryInst(binaryInstOp.add, sp, t0, sp)) ;
+            tailBlock.push_back(new retInst());
+        }
     }
     private void RegAlloc_block (AssemblyBlock block) {
         for (Inst inst = block.head; inst != null; inst = inst.next) {

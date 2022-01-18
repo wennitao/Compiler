@@ -761,7 +761,7 @@ public class IRBuilder implements ASTVisitor{
             // if (it.functionType.type.type.dim > 0 || it.functionType.type.type.type == basicType.Class)
                 // newFunc.returnType = new IRPointerType (newFunc.returnType) ;
         }
-        label functionEntryLabel = new label(it.name + "_entry") ;
+        label functionEntryLabel = new label(newFunc.identifier + "_entry") ;
         currentBlock.identifier = functionEntryLabel.labelID ;
         curFunction = newFunc ;
         globalDef.functions.add(newFunc) ;
