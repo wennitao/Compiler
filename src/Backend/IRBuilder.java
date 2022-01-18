@@ -794,7 +794,10 @@ public class IRBuilder implements ASTVisitor{
         // gScope.functionIRParameters.put (curFunction.identifier, IRparameters) ;
         register returnReg = new register(curFunction.curRegisterID ++, new IRPointerType (curFunction.returnType)) ;
         curFunction.returnReg = returnReg ;
-        if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
+        if (!(curFunction.returnType instanceof IRVoidType)) {
+            currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
+            if (it.name.equals("main")) currentBlock.push_back(new store(curFunction.returnType, new constant (0, new IRIntType(32)), returnReg));
+        }
         it.suite.accept(this) ;
         currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier))) ;
         curFunction.blocks.add(curFunction.returnBlock) ;

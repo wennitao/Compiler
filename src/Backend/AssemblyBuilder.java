@@ -209,24 +209,35 @@ public class AssemblyBuilder {
             load curLoad = (load) curIRStmt ;
             entity from = curLoad.from, to = curLoad.to ;
             VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
-            VirtualReg rs = entityToReg(from) ;
-            if (curFunction.regOffset.containsKey(rs)) {
-                int imm = -curFunction.regOffset.get(rs) ;
-                curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+            if (from instanceof register && ((register) from).isGlobal) {
+                register fromGlobal = (register) from ;
+                curBlock.push_back(new loadInst(fromGlobal.type.size, fromGlobal.registerID, rd));
             } else {
-                curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
+                VirtualReg rs = entityToReg(from) ;
+                if (curFunction.regOffset.containsKey(rs)) {
+                    int imm = -curFunction.regOffset.get(rs) ;
+                    curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+                } else {
+                    curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
+                }
             }
             toRegMap.put (((register) to).registerID, rd) ;
         } else if (curIRStmt instanceof store) {
             store curStore = (store) curIRStmt ;
             entity from = curStore.from, to = curStore.dest ;
             if (from == null || to == null) return ;
-            VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
-            if (curFunction.regOffset.containsKey(rd)) {
-                int imm = -curFunction.regOffset.get(rd) ;
-                curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
+            if (to instanceof register && ((register) to).isGlobal) {
+                register toGlobal = (register) to ;
+                VirtualReg rs = entityToReg(from), t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
             } else {
-                curBlock.push_back(new storeInst(from.type.size, rs, new Imm (0), rd));
+                VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
+                if (curFunction.regOffset.containsKey(rd)) {
+                    int imm = -curFunction.regOffset.get(rd) ;
+                    curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
+                } else {
+                    curBlock.push_back(new storeInst(from.type.size, rs, new Imm (0), rd));
+                }
             }
         } else if (curIRStmt instanceof returnStmt) {
             returnStmt curRet = (returnStmt) curIRStmt ;
@@ -361,11 +372,11 @@ public class AssemblyBuilder {
         int offset = function.offset ;
         if (offset % 16 != 0) offset = (offset / 16 + 1) * 16 ;
         AssemblyBlock headBlock = function.blocks.get(0) ;
-        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
-        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
-        headBlock.insert_after(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
-        headBlock.push_back(new storeInst(4, ra, new Imm(-4), s0));
-        headBlock.push_back(new storeInst(4, s0, new Imm(-8), s0));
+        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+        headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(offset - 8), sp));
+        headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(offset - 4), sp));
+        headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
         AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
         tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
         tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));

@@ -45,7 +45,7 @@ public class main {
         // PrintStream out = new PrintStream(System.out) ;
         // PrintStream out2 = new PrintStream(System.out) ;
         // PrintStream IRout = new PrintStream("llvm-test.ll") ;
-        // PrintStream Assemblyout = new PrintStream("test.s") ;
+        // PrintStream out = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
             MxLiteLexer lexer = new MxLiteLexer(input);

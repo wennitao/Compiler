@@ -10,7 +10,7 @@ import Assembly.Operand.VirtualReg;
 
 public class AssemblyFunction {
     public String identifier ;
-    public int offset, curRegID ;
+    public int offset, functionCallOffset, curRegID ;
     public ArrayList<AssemblyBlock> blocks = new ArrayList<>() ;
     public Map<Reg, Integer> regOffset = new HashMap<>() ;
     public Map<String, VirtualReg> phiRd, phiValue ;
