@@ -14,6 +14,7 @@ import Assembly.Inst.binaryInst.binaryInstOp ;
 import Assembly.Operand.* ;
 import MIR.* ;
 import MIR.IRType.IRClassType;
+import MIR.IRType.IRNullType;
 import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
@@ -124,6 +125,11 @@ public class AssemblyBuilder {
     private VirtualReg entityToReg (entity x) {
         VirtualReg rs = null ;
         if (x instanceof constant) {
+            if (x.type instanceof IRNullType) {
+                rs = new VirtualReg(curFunction.curRegID ++, 4) ;
+                curBlock.push_back(new liInst(rs, new Imm(0)));
+                return rs ;
+            }
             rs = new VirtualReg(curFunction.curRegID ++, 4) ;
             constant c = (constant) x ;
             int value = ((constant) c).value ;
@@ -143,6 +149,11 @@ public class AssemblyBuilder {
             // }
         } else {
             register reg = (register) x ;
+            if (x.type instanceof IRNullType) {
+                rs = new VirtualReg(curFunction.curRegID ++, 4) ;
+                curBlock.push_back(new liInst(rs, new Imm(0)));
+                return rs ;
+            }
             if (reg.isGlobal) {
                 rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
                 curBlock.push_back(new laInst(rs, reg.registerID)) ;
