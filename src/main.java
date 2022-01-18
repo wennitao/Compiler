@@ -30,22 +30,22 @@ public class main {
     private static String Output = "-o";
     public static void main(String[] args) throws Exception{
         boolean SemanticSwitch = false ;
-        // PrintStream out = System.out ;
-        // for (int i = 0; i < args.length; i ++) {
-        //     if (args[i].charAt(0) == '-') {
-        //         if (args[i].equals(Semantic))
-        //             SemanticSwitch = true ;
-        //         else if (args[i].equals(Output))
-        //             out = new PrintStream(new FileOutputStream(args[i+1]));
-        //     }
-        // }
-        String name = "test.mx";
-        // InputStream raw = System.in;
-        InputStream raw = new FileInputStream(name);
+        PrintStream out = System.out ;
+        for (int i = 0; i < args.length; i ++) {
+            if (args[i].charAt(0) == '-') {
+                if (args[i].equals(Semantic))
+                    SemanticSwitch = true ;
+                else if (args[i].equals(Output))
+                    out = new PrintStream(new FileOutputStream(args[i+1]));
+            }
+        }
+        // String name = "test.mx";
+        InputStream raw = System.in;
+        // InputStream raw = new FileInputStream(name);
         // PrintStream out = new PrintStream(System.out) ;
         // PrintStream out2 = new PrintStream(System.out) ;
-        PrintStream IRout = new PrintStream("llvm-test.ll") ;
-        PrintStream Assemblyout = new PrintStream("test.s") ;
+        // PrintStream IRout = new PrintStream("llvm-test.ll") ;
+        // PrintStream Assemblyout = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
             MxLiteLexer lexer = new MxLiteLexer(input);
@@ -68,11 +68,11 @@ public class main {
             if (!SemanticSwitch) {
                 globalDefine globalDef = new globalDefine() ;
                 new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
-                new IRPrinter().visitGlobalDef(IRout, globalDef);
+                // new IRPrinter().visitGlobalDef(IRout, globalDef);
 
                 AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
                 new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
-                new AssemblyPrinter(Assemblyout, assemblyGlobalDefine) ;
+                new AssemblyPrinter(out, assemblyGlobalDefine) ;
             }
         } catch(error er) {
             System.err.println(er.toString());
