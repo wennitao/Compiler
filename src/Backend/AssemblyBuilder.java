@@ -1,6 +1,7 @@
 package Backend;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,9 @@ import Assembly.Inst.ImmInst.immInstOp ;
 import Assembly.Inst.binaryInst.binaryInstOp ;
 import Assembly.Operand.* ;
 import MIR.* ;
+import MIR.IRType.IRClassType;
 import MIR.IRType.IRPointerType;
+import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
 
 public class AssemblyBuilder {
@@ -23,7 +26,8 @@ public class AssemblyBuilder {
     PhysicalReg[] phyRegs = new PhysicalReg [32] ;
     PhysicalReg zero, ra, sp, a0, s0 ;
     PhysicalReg t0, t1, t2, t3 ;
-    Map<String, VirtualReg> toRegMap = new HashMap<>() ;
+    // Map<String, VirtualReg> toRegMap = new HashMap<>() ;
+    Map<String, ArrayList<Integer> > classOffset = new HashMap<>() ;
     public AssemblyBuilder (globalDefine _globalDef, AssemblyGlobalDefine _AssemblyGlobalDefine) {
         globalDef = _globalDef ;
         AssemblyGlobalDef = _AssemblyGlobalDefine ;
@@ -61,6 +65,17 @@ public class AssemblyBuilder {
             } else if (stmt instanceof globalStringConstantStmt) {
                 globalStringConstantStmt globalStr = (globalStringConstantStmt) stmt ;
                 AssemblyGlobalDef.globalDefine.add(new globalStringConstant(globalStr.reg.registerID, globalStr.stringConstant)) ;
+            } else if (stmt instanceof structDefine) {
+                structDefine classDefine = (structDefine) stmt ;
+                IRClassType classType = classDefine.classType ;
+                String className = classDefine.classType.className ;
+                ArrayList<Integer> offset = new ArrayList<>() ;
+                offset.add(0) ;
+                for (int i = 0; i < classType.classTypes.size(); i ++) {
+                    IRType curType = classType.classTypes.get(i) ;
+                    offset.add(offset.get(offset.size() - 1) + curType.size) ;
+                }
+                classOffset.put(className, offset) ;
             }
         }
     }
@@ -83,13 +98,13 @@ public class AssemblyBuilder {
             register curParameter = curIRFunc.parameters.get(i) ;
             VirtualReg parameterReg = new VirtualReg(curFunction.curRegID ++, curParameter.type.size) ;
             initBlock.push_back(new mvInst(phyRegs[10 + i], parameterReg));
-            toRegMap.put(curParameter.registerID, parameterReg) ;
+            curFunction.toRegMap.put(curParameter.registerID, parameterReg) ;
         }
         for (int i = 8; i < curIRFunc.parameters.size(); i ++) {
             register curParameter = curIRFunc.parameters.get(i) ;
             VirtualReg parameterReg = new VirtualReg(curFunction.curRegID ++, curParameter.type.size) ;
             initBlock.push_back(new loadInst(curParameter.type.size, parameterReg, new Imm((i - 8) * 4), s0));
-            toRegMap.put(curParameter.registerID, parameterReg) ;
+            curFunction.toRegMap.put(curParameter.registerID, parameterReg) ;
         }
         for (block curIRBlock : curIRFunc.blocks) {
             build_block(curIRBlock) ;
@@ -132,13 +147,13 @@ public class AssemblyBuilder {
                 rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
                 curBlock.push_back(new laInst(rs, reg.registerID)) ;
             } else {
-                if (!toRegMap.containsKey(reg.registerID)) {
+                if (!curFunction.toRegMap.containsKey(reg.registerID)) {
                     rs = new VirtualReg(curFunction.curRegID ++, x.type.size) ;
-                    toRegMap.put(reg.registerID, rs) ;
+                    curFunction.toRegMap.put(reg.registerID, rs) ;
                     curFunction.offset += 4 ;
                     curFunction.regOffset.put(rs, curFunction.offset) ;
                 } else {
-                    rs = toRegMap.get(reg.registerID) ;
+                    rs = curFunction.toRegMap.get(reg.registerID) ;
                 }
             }
         }
@@ -147,9 +162,10 @@ public class AssemblyBuilder {
     private void genInst (statement curIRStmt) {
         if (curIRStmt instanceof alloca) {
             alloca curIRInst = (alloca) curIRStmt ;
-            if (toRegMap.containsKey(curIRInst.reg.registerID)) return ;
+            if (curFunction.toRegMap.containsKey(curIRInst.reg.registerID)) return ;
             VirtualReg cur = new VirtualReg(curFunction.curRegID ++, curIRInst.type.size) ;
-            toRegMap.put(curIRInst.reg.registerID, cur) ;
+            curFunction.toRegMap.put(curIRInst.reg.registerID, cur) ;
+            // System.out.println("alloc " + curIRInst.reg.registerID + " " + cur);
             curFunction.offset += 4 ;
             curFunction.regOffset.put(cur, curFunction.offset) ;
         } else if (curIRStmt instanceof binary) {
@@ -215,7 +231,7 @@ public class AssemblyBuilder {
                 default:
                     break;
             }
-            toRegMap.put(((register) dest).registerID, rd) ;
+            curFunction.toRegMap.put(((register) dest).registerID, rd) ;
         } else if (curIRStmt instanceof load) {
             load curLoad = (load) curIRStmt ;
             entity from = curLoad.from, to = curLoad.to ;
@@ -240,7 +256,7 @@ public class AssemblyBuilder {
                     curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
                 }
             }
-            toRegMap.put (((register) to).registerID, rd) ;
+            curFunction.toRegMap.put (((register) to).registerID, rd) ;
         } else if (curIRStmt instanceof store) {
             store curStore = (store) curIRStmt ;
             entity from = curStore.from, to = curStore.dest ;
@@ -251,8 +267,10 @@ public class AssemblyBuilder {
                 curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
             } else {
                 VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
+                // System.out.println(rd + " " + curFunction.regOffset.containsKey(rd)) ;
                 if (curFunction.regOffset.containsKey(rd)) {
                     int imm = -curFunction.regOffset.get(rd) ;
+                    // System.out.println(rd + " imm:" + imm);
                     if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
                     else {
                         VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
@@ -290,7 +308,7 @@ public class AssemblyBuilder {
             if (!curFuncCall.isVoid) {
                 VirtualReg rd = new VirtualReg(curFunction.curRegID ++, curFuncCall.destReg.type.size) ;
                 curBlock.push_back(new mvInst(a0, rd)) ;
-                toRegMap.put(curFuncCall.destReg.registerID, rd) ;
+                curFunction.toRegMap.put(curFuncCall.destReg.registerID, rd) ;
             }
         } else if (curIRStmt instanceof branch) {
             branch curIRBranch = (branch) curIRStmt ;
@@ -302,13 +320,13 @@ public class AssemblyBuilder {
             }
         } else if (curIRStmt instanceof bitcast) {
             bitcast curIRBitcast = (bitcast) curIRStmt ;
-            toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
+            curFunction.toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
         } else if (curIRStmt instanceof trunc) {
             trunc curIRTrunc = (trunc) curIRStmt ;
-            toRegMap.put(curIRTrunc.to.registerID, entityToReg(curIRTrunc.from)) ;
+            curFunction.toRegMap.put(curIRTrunc.to.registerID, entityToReg(curIRTrunc.from)) ;
         } else if (curIRStmt instanceof zext) {
             zext curIRZext = (zext) curIRStmt ;
-            toRegMap.put(curIRZext.to.registerID, entityToReg(curIRZext.from)) ;
+            curFunction.toRegMap.put(curIRZext.to.registerID, entityToReg(curIRZext.from)) ;
         } else if (curIRStmt instanceof getelementptr) {
             getelementptr curIRGetelementptr = (getelementptr) curIRStmt ;
             register from = curIRGetelementptr.from, to = curIRGetelementptr.to ;
@@ -317,23 +335,27 @@ public class AssemblyBuilder {
             VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
             // entity value = curIRGetelementptr.value.get(0) ;
             entity value ;
-            if (curIRGetelementptr.value.size() == 1) value = curIRGetelementptr.value.get(0) ;
-            else value = curIRGetelementptr.value.get(1) ;
-            // if (value instanceof constant) {
-            //     constant c = (constant) value ;
-            //     if (c.value == 0) curBlock.push_back(new mvInst(rs, rd));
-            //     else curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(c.value * size), rd));
-            // } else {
+            if (curIRGetelementptr.value.size() == 1) {
+                value = curIRGetelementptr.value.get(0) ;
                 VirtualReg mulRes = new VirtualReg(curFunction.curRegID ++, value.type.size) ;
                 curBlock.push_back(new binaryInst(binaryInstOp.mul, entityToReg(value), entityToReg(new constant(size, value.type)), mulRes));
                 curBlock.push_back(new binaryInst(binaryInstOp.add, rs, mulRes, rd)) ;
-            // }
-            toRegMap.put(to.registerID, rd) ;
+            }
+            else {
+                value = curIRGetelementptr.value.get(1) ;
+                constant c = (constant) value ;
+                int idx = c.value ;
+                String className = ((IRClassType)((IRPointerType) from.type).type).className ;
+                int offset = classOffset.get(className).get(idx) ;
+                curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(offset), rd)) ;
+                // System.out.println("idx:" + idx + " offset:" + offset) ;
+            }
+            curFunction.toRegMap.put(to.registerID, rd) ;
         } else if (curIRStmt instanceof phi) {
             phi curIRPhi = (phi) curIRStmt ;
             register dest = curIRPhi.destReg ;
             VirtualReg rd = new VirtualReg(curFunction.curRegID ++, dest.type.size) ;
-            toRegMap.put (dest.registerID, rd) ;
+            curFunction.toRegMap.put (dest.registerID, rd) ;
             for (int i = 0; i < curIRPhi.labels.size(); i ++) {
                 label curLabel = curIRPhi.labels.get(i) ;
                 entity value = curIRPhi.value.get(i) ;

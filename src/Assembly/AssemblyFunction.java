@@ -12,6 +12,7 @@ public class AssemblyFunction {
     public String identifier ;
     public int offset, functionCallOffset, curRegID ;
     public ArrayList<AssemblyBlock> blocks = new ArrayList<>() ;
+    public Map<String, VirtualReg> toRegMap = new HashMap<>() ;
     public Map<Reg, Integer> regOffset = new HashMap<>() ;
     public Map<String, VirtualReg> phiRd, phiValue ;
     public AssemblyFunction (String _identifier) {
