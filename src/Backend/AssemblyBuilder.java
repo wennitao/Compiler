@@ -268,13 +268,13 @@ public class AssemblyBuilder {
                 VirtualReg rs = entityToReg(from) ;
                 if (curFunction.regOffset.containsKey(rs)) {
                     int imm = -curFunction.regOffset.get(rs) ;
-                    if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
-                    else {
+                    // if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
+                    // else {
                         VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
                         curBlock.push_back(new liInst(t, new Imm(imm)));
                         curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
                         curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
-                    }
+                    // }
                     // loadFromImm(to.type.size, rd, imm, s0) ;
                     // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
                 } else {
@@ -296,13 +296,13 @@ public class AssemblyBuilder {
                 if (curFunction.regOffset.containsKey(rd)) {
                     int imm = -curFunction.regOffset.get(rd) ;
                     // System.out.println(rd + " imm:" + imm);
-                    if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
-                    else {
+                    // if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
+                    // else {
                         VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
                         curBlock.push_back(new liInst(t, new Imm(imm)));
                         curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
                         curBlock.push_back(new storeInst(from.type.size, rs, new Imm(0), t));
-                    }
+                    // }
                     // loadFromImm(from.type.size, rs, imm, s0);
                     // curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
                 } else {
@@ -413,7 +413,7 @@ public class AssemblyBuilder {
                 VirtualReg rd = curFunc.phiRd.get(block.identifier) ;
                 for (Inst inst = block.head; inst != null; inst = inst.next) {
                     if (inst instanceof bnezInst || inst instanceof jumpInst) {
-                        System.out.println("mv\t" + rd + ", " + rs);
+                        // System.out.println("mv\t" + rd + ", " + rs);
                         block.insert_before(inst, new mvInst(rs, rd)) ;
                     }
                 }
@@ -429,7 +429,12 @@ public class AssemblyBuilder {
                 curFunction.regOffset.put(Vreg, curFunction.offset) ;
             }
             int imm = -curFunction.regOffset.get(Vreg) ;
-            curBlock.insert_before(inst, new loadInst(Vreg.size, Preg, new Imm(imm), s0));
+            // if (immInRange(imm)) curBlock.insert_before(inst, new loadInst(Vreg.size, Preg, new Imm(imm), s0));
+            // else {
+                curBlock.insert_before(inst, new liInst(t3, new Imm(imm)));
+                curBlock.insert_before(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
+                curBlock.insert_before(inst, new loadInst(Vreg.size, Preg, new Imm(0), t3));
+            // }
             return Preg ;
         } else {
             return reg ;
@@ -443,7 +448,12 @@ public class AssemblyBuilder {
                 curFunction.regOffset.put(Vreg, curFunction.offset) ;
             }
             int imm = -curFunction.regOffset.get(Vreg) ;
-            curBlock.insert_after(inst, new storeInst(Vreg.size, Preg, new Imm (imm), s0));
+            // if (immInRange(imm)) curBlock.insert_after(inst, new storeInst(Vreg.size, Preg, new Imm (imm), s0));
+            // else {
+                curBlock.insert_after(inst, new storeInst(Vreg.size, Preg, new Imm(0), t3));
+                curBlock.insert_after(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
+                curBlock.insert_after(inst, new liInst(t3, new Imm(imm)));
+            // }
             return Preg ;
         } else {
             return reg ;
@@ -463,19 +473,19 @@ public class AssemblyBuilder {
         }
         int offset = function.offset ;
         if (offset % 16 != 0) offset = (offset / 16 + 1) * 16 ;
-        if (immInRange(offset)) {
-            AssemblyBlock headBlock = function.blocks.get(0) ;
-            if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
-            else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
-            headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(offset - 8), sp));
-            headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(offset - 4), sp));
-            headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
-            AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
-            tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
-            tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));
-            tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), sp));
-            tailBlock.push_back(new retInst());
-        } else {
+        // if (immInRange(offset)) {
+        //     AssemblyBlock headBlock = function.blocks.get(0) ;
+        //     if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+        //     else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
+        //     headBlock.insert_before(headBlock.head, new storeInst(4, s0, new Imm(offset - 8), sp));
+        //     headBlock.insert_before(headBlock.head, new storeInst(4, ra, new Imm(offset - 4), sp));
+        //     headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
+        //     AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
+        //     tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
+        //     tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));
+        //     tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), sp));
+        //     tailBlock.push_back(new retInst());
+        // } else {
             AssemblyBlock headBlock = function.blocks.get(0) ;
             if (headBlock.head == null) headBlock.push_back(new mvInst(t1, s0)) ;
             else headBlock.insert_before(headBlock.head, new mvInst(t1, s0));
@@ -491,7 +501,7 @@ public class AssemblyBuilder {
             tailBlock.push_back(new loadInst(4, s0, new Imm(-8), t1));
             tailBlock.push_back(new binaryInst(binaryInstOp.add, sp, t0, sp)) ;
             tailBlock.push_back(new retInst());
-        }
+        // }
     }
     private void RegAlloc_block (AssemblyBlock block) {
         for (Inst inst = block.head; inst != null; inst = inst.next) {
