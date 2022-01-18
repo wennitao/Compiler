@@ -1,15 +1,18 @@
 package Backend;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import Assembly.* ;
+import Assembly.Global.globalReg;
+import Assembly.Global.globalStringConstant;
 import Assembly.Inst.* ;
 import Assembly.Inst.ImmInst.immInstOp ;
 import Assembly.Inst.binaryInst.binaryInstOp ;
 import Assembly.Operand.* ;
 import MIR.* ;
-import MIR.IRType.IRNullType;
+import MIR.IRType.IRPointerType;
 import MIR.IRType.IRVoidType;
 
 public class AssemblyBuilder {
@@ -25,7 +28,12 @@ public class AssemblyBuilder {
         globalDef = _globalDef ;
         AssemblyGlobalDef = _AssemblyGlobalDefine ;
         init_phyRegs () ;
+        build_globalDef () ;
         build_root() ;
+        phi_storeValue() ;
+        try {
+            new AssemblyPrinter(new PrintStream("debug.s"), AssemblyGlobalDef) ;
+        } catch (Exception ex) {}
         RegAlloc_root() ;
     }
     private void init_phyRegs () {
@@ -45,6 +53,17 @@ public class AssemblyBuilder {
         t2 = phyRegs[7] = new PhysicalReg("t2") ;
         t3 = phyRegs[28] = new PhysicalReg("t3") ;
     }
+    private void build_globalDef () {
+        for (statement stmt : globalDef.globalDefStmt) {
+            if (stmt instanceof globalDefineStmt) {
+                globalDefineStmt globalReg = (globalDefineStmt) stmt ;
+                AssemblyGlobalDef.globalDefine.add(new globalReg(globalReg.reg.registerID, globalReg.initConstant.value, globalReg.reg.type.size)) ;            
+            } else if (stmt instanceof globalStringConstantStmt) {
+                globalStringConstantStmt globalStr = (globalStringConstantStmt) stmt ;
+                AssemblyGlobalDef.globalDefine.add(new globalStringConstant(globalStr.reg.registerID, globalStr.initStr, globalStr.initStr.length())) ;
+            }
+        }
+    }
     private void build_root () {
         for (function curIRFunc : globalDef.functions) {
             if (curIRFunc.isBuiltin) continue ;
@@ -60,6 +79,18 @@ public class AssemblyBuilder {
         curFunction.regOffset.put(ra, curFunction.offset) ;
         curFunction.offset += 4 ;
         curFunction.regOffset.put(s0, curFunction.offset) ;
+        for (int i = 0; i < Integer.min(8, curIRFunc.parameters.size()); i ++) {
+            register curParameter = curIRFunc.parameters.get(i) ;
+            VirtualReg parameterReg = new VirtualReg(curFunction.curRegID ++, curParameter.type.size) ;
+            initBlock.push_back(new mvInst(phyRegs[10 + i], parameterReg));
+            toRegMap.put(curParameter.registerID, parameterReg) ;
+        }
+        for (int i = 8; i < curIRFunc.parameters.size(); i ++) {
+            register curParameter = curIRFunc.parameters.get(i) ;
+            VirtualReg parameterReg = new VirtualReg(curFunction.curRegID ++, curParameter.type.size) ;
+            initBlock.push_back(new loadInst(curParameter.type.size, parameterReg, new Imm((i - 8) * 4), s0));
+            toRegMap.put(curParameter.registerID, parameterReg) ;
+        }
         for (block curIRBlock : curIRFunc.blocks) {
             build_block(curIRBlock) ;
             curFunction.blocks.add(curBlock) ;
@@ -80,9 +111,9 @@ public class AssemblyBuilder {
             int value = ((constant) c).value ;
             int absvalue = Math.abs (value) ;
             if (absvalue < 2048) {
-                curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(value), rs));
+                curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(value), rs));
             } else {
-                curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue >> 22), rs)) ;
+                curBlock.push_back(new ImmInst(immInstOp.addi, zero, new Imm(absvalue >> 22), rs)) ;
                 absvalue %= (1 << 22) ;
                 curBlock.push_back(new ImmInst(immInstOp.slli, rs, new Imm(11), rs));
                 curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(absvalue >> 11), rs)) ;
@@ -127,38 +158,49 @@ public class AssemblyBuilder {
                     curBlock.push_back(new binaryInst(binaryInstOp.mul, rs1, rs2, rd));
                     break ;
                 case sdiv:
-                    curBlock.push_back(new binaryInst(binaryInstOp.mul, rs1, rs2, rd));
+                    curBlock.push_back(new binaryInst(binaryInstOp.div, rs1, rs2, rd));
                     break ;
                 case srem:
                     curBlock.push_back(new binaryInst(binaryInstOp.rem, rs1, rs2, rd));
                     break ;
                 case slt:
-                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd));    
+                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd)); 
+                    break ;   
                 case sle:
                     curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
                     curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
+                    break ;
                 case sgt:
                     curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
+                    break ;
                 case sge:
                     curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd));
-                    curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));    
+                    curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd)); 
+                    break ;   
                 case eq:
                     curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
                     curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
+                    break ;
                 case ne:
                     curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
                     curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
                     curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
+                    break ;
                 case shl:
                     curBlock.push_back(new binaryInst(binaryInstOp.sll, rs1, rs2, rd));    
+                    break ;
                 case ashr:
                     curBlock.push_back(new binaryInst(binaryInstOp.sra, rs1, rs2, rd));
+                    break ;
                 case and:
                     curBlock.push_back(new binaryInst(binaryInstOp.and, rs1, rs2, rd));
+                    break ;
                 case xor:
                     curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
+                    break ;
                 case or:
-                    curBlock.push_back(new binaryInst(binaryInstOp.or, rs1, rs2, rd));    
+                    curBlock.push_back(new binaryInst(binaryInstOp.or, rs1, rs2, rd));
+                    break ;    
                 default:
                     break;
             }
@@ -220,6 +262,59 @@ public class AssemblyBuilder {
             } else {
                 curBlock.push_back(new jumpInst(curIRBranch.trueBranch));
             }
+        } else if (curIRStmt instanceof bitcast) {
+            bitcast curIRBitcast = (bitcast) curIRStmt ;
+            toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
+        } else if (curIRStmt instanceof trunc) {
+            trunc curIRTrunc = (trunc) curIRStmt ;
+            toRegMap.put(curIRTrunc.to.registerID, entityToReg(curIRTrunc.from)) ;
+        } else if (curIRStmt instanceof zext) {
+            zext curIRZext = (zext) curIRStmt ;
+            toRegMap.put(curIRZext.to.registerID, entityToReg(curIRZext.from)) ;
+        } else if (curIRStmt instanceof getelementptr) {
+            getelementptr curIRGetelementptr = (getelementptr) curIRStmt ;
+            register from = curIRGetelementptr.from, to = curIRGetelementptr.to ;
+            int size = ((IRPointerType) from.type).type.size ;
+            VirtualReg rs = entityToReg(from) ;
+            VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
+            entity value = curIRGetelementptr.value.get(0) ;
+            if (value instanceof constant) {
+                constant c = (constant) value ;
+                if (c.value == 0) curBlock.push_back(new mvInst(rs, rd));
+                else curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(c.value * size), rd));
+            } else {
+                VirtualReg mulRes = new VirtualReg(curFunction.curRegID ++, value.type.size) ;
+                curBlock.push_back(new binaryInst(binaryInstOp.mul, entityToReg(value), entityToReg(new constant(size, value.type)), mulRes));
+                curBlock.push_back(new binaryInst(binaryInstOp.add, rs, mulRes, rd)) ;
+            }
+            toRegMap.put(to.registerID, rd) ;
+        } else if (curIRStmt instanceof phi) {
+            phi curIRPhi = (phi) curIRStmt ;
+            register dest = curIRPhi.destReg ;
+            VirtualReg rd = new VirtualReg(curFunction.curRegID ++, dest.type.size) ;
+            toRegMap.put (dest.registerID, rd) ;
+            for (int i = 0; i < curIRPhi.labels.size(); i ++) {
+                label curLabel = curIRPhi.labels.get(i) ;
+                entity value = curIRPhi.value.get(i) ;
+                curFunction.phiRd.put(curLabel.labelID, rd) ;
+                curFunction.phiValue.put(curLabel.labelID, entityToReg(value)) ;
+            }
+        }
+    }
+    private void phi_storeValue () {
+        for (AssemblyFunction curFunc : AssemblyGlobalDef.functions) {
+            if (curFunc.phiRd.isEmpty()) continue ;
+            for (AssemblyBlock curBlock : curFunc.blocks) {
+                boolean flag = curFunc.phiRd.containsKey(curBlock.identifier) ;
+                if (!flag) continue ;
+                VirtualReg value = curFunc.phiValue.get(curBlock.identifier) ;
+                VirtualReg rd = curFunc.phiRd.get(curBlock.identifier) ;
+                for (Inst inst = curBlock.head; inst != null; inst = inst.next) {
+                    if (inst instanceof bnezInst || inst instanceof jumpInst) {
+                        curBlock.insert_before(inst, new mvInst(value, rd)) ;
+                    }
+                }
+            }
         }
     }
     
@@ -254,24 +349,27 @@ public class AssemblyBuilder {
 
     private void RegAlloc_root() {
         for (AssemblyFunction function : AssemblyGlobalDef.functions) {
+            curFunction = function ;
             RegAlloc_function(function) ;
         }
     }
     private void RegAlloc_function (AssemblyFunction function) {
         for (AssemblyBlock block : function.blocks) {
+            curBlock = block ;
             RegAlloc_block(block) ;
         }
-        // int offset = function.offset ;
+        int offset = function.offset ;
+        if (offset % 16 != 0) offset = (offset / 16 + 1) * 16 ;
         AssemblyBlock headBlock = function.blocks.get(0) ;
-        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(-function.offset), sp));
-        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-function.offset), sp));
-        headBlock.insert_after(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(function.offset), s0));
+        if (headBlock.head == null) headBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
+        else headBlock.insert_before(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(-offset), sp));
+        headBlock.insert_after(headBlock.head, new ImmInst(immInstOp.addi, sp, new Imm(offset), s0));
         headBlock.push_back(new storeInst(4, ra, new Imm(-4), s0));
         headBlock.push_back(new storeInst(4, s0, new Imm(-8), s0));
         AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
-        tailBlock.push_back(new loadInst(4, ra, new Imm (function.offset - 4), sp));
-        tailBlock.push_back(new loadInst(4, s0, new Imm (function.offset - 8), sp));
-        tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(function.offset), sp));
+        tailBlock.push_back(new loadInst(4, ra, new Imm (offset - 4), sp));
+        tailBlock.push_back(new loadInst(4, s0, new Imm (offset - 8), sp));
+        tailBlock.push_back(new ImmInst(immInstOp.addi, sp, new Imm(offset), sp));
         tailBlock.push_back(new retInst());
     }
     private void RegAlloc_block (AssemblyBlock block) {
@@ -293,8 +391,8 @@ public class AssemblyBuilder {
                 curInst.rd = storeVirtualReg(inst, curInst.rd, t0) ;
             } else if (inst instanceof loadInst) {
                 loadInst curInst = (loadInst) inst ;
-                curInst.rs1 = loadVirtualReg(inst, curInst.rs1, t0) ;
-                curInst.rs2 = loadVirtualReg(inst, curInst.rs2, t1) ;
+                curInst.rs2 = loadVirtualReg(inst, curInst.rs2, t0) ;
+                curInst.rs1 = storeVirtualReg(inst, curInst.rs1, t1) ; // rd
             } else if (inst instanceof mvInst) {
                 mvInst curInst = (mvInst) inst ;
                 curInst.rs1 = loadVirtualReg(inst, curInst.rs1, t0) ;

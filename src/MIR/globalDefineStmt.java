@@ -3,8 +3,8 @@ package MIR;
 import MIR.IRType.IRPointerType;
 
 public class globalDefineStmt extends statement {
-    register reg ;
-    constant initConstant ;
+    public register reg ;
+    public constant initConstant ;
     public globalDefineStmt (register _reg) {
         reg = _reg ;
         initConstant = new constant(0, ((IRPointerType)reg.type).type) ;

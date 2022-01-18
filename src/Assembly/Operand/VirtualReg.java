@@ -7,7 +7,7 @@ public class VirtualReg extends Reg {
         size = _size ;
     }
     public VirtualReg (int id, int _size) {
-        super (Integer.toString(id)) ;
+        super ("VirtualReg_" + Integer.toString(id)) ;
         size = _size ;
     }
     @Override

@@ -6,13 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Assembly.Operand.Reg;
+import Assembly.Operand.VirtualReg;
 
 public class AssemblyFunction {
     public String identifier ;
     public int offset, curRegID ;
     public ArrayList<AssemblyBlock> blocks = new ArrayList<>() ;
     public Map<Reg, Integer> regOffset = new HashMap<>() ;
+    public Map<String, VirtualReg> phiRd, phiValue ;
     public AssemblyFunction (String _identifier) {
+        phiRd = new HashMap<>(); phiValue = new HashMap<>() ;
         identifier = _identifier ;
         curRegID = offset = 0 ;
     }

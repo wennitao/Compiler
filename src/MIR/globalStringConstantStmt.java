@@ -7,10 +7,11 @@ import MIR.IRType.IRPointerType;
 public class globalStringConstantStmt extends statement {
     public register reg ;
     static int stringConstantID = 0 ;
-    public String stringConstant ;
+    public String initStr, stringConstant ;
     public globalStringConstantStmt (String initString) {
         int len = initString.length() ;
         reg = new register(new String(".str." + stringConstantID ++), new IRPointerType (new IRArrayType(len, new IRIntType(8))), true) ;
+        initStr = initString ;
         stringConstant = initString.replace("\\", "\\5C").replace("\n", "\\0A").replace("\"", "\\22").replace("\0", "\\00") ;
     }
 
