@@ -330,6 +330,10 @@ public class AssemblyBuilder {
             // curBlock.push_back(new retInst()) ;
         } else if (curIRStmt instanceof functioncall) {
             functioncall curFuncCall = (functioncall) curIRStmt ;
+            int size = 0 ;
+            for (int i = 8; i < curFuncCall.parameters.size(); i ++)
+                size += curFuncCall.parameters.get(i).type.size ;
+            curFunction.functionCallOffset = Math.max(curFunction.functionCallOffset, size) ; 
             for (int i = 0; i < Math.min (8, curFuncCall.parameters.size()); i ++) {
                 entity curEntity = curFuncCall.parameters.get(i) ;
                 VirtualReg rs = entityToReg(curEntity) ;
@@ -483,7 +487,7 @@ public class AssemblyBuilder {
             curBlock = block ;
             RegAlloc_block(block) ;
         }
-        int offset = function.offset ;
+        int offset = function.offset + function.functionCallOffset ;
         if (offset % 16 != 0) offset = (offset / 16 + 1) * 16 ;
         // if (immInRange(offset)) {
         //     AssemblyBlock headBlock = function.blocks.get(0) ;

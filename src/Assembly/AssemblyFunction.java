@@ -19,7 +19,7 @@ public class AssemblyFunction {
     public Map<String, entity> phiValue = new HashMap<>() ;
     public AssemblyFunction (String _identifier) {
         identifier = _identifier ;
-        curRegID = offset = 0 ;
+        curRegID = functionCallOffset = offset = 0 ;
     }
     public void print(PrintStream out) {
         out.println("\t.globl\t" + identifier);
