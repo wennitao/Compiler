@@ -383,6 +383,7 @@ public class AssemblyBuilder {
                 constant c = (constant) value ;
                 int idx = c.value ;
                 String className = ((IRClassType)((IRPointerType) from.type).type).className ;
+                // String className = ((IRClassType) from.type).className ;
                 int offset = classOffset.get(className).get(idx) ;
                 curBlock.push_back(new ImmInst(immInstOp.addi, rs, new Imm(offset), rd)) ;
                 // System.out.println("idx:" + idx + " offset:" + offset) ;

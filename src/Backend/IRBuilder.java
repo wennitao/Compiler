@@ -31,7 +31,7 @@ public class IRBuilder implements ASTVisitor{
     private Scope curScope ;
     private globalScope gScope ;
     private entity returnEntity ;
-    private boolean copyVariable, isFunctionID, isGlobalDef, isArrayExpr, isClassDefine, hasAddFunctionName ;
+    private boolean isFunctionID, isGlobalDef, isClassDefine, hasAddFunctionName ;
     private functioncall curFuncCall ;
     private ArrayList<IRType> curFuncCallParameters ;
     private function initFunc ;
@@ -48,7 +48,7 @@ public class IRBuilder implements ASTVisitor{
         initFunc.returnType = new IRVoidType() ;
         initCurrentBlock = initFunc.rootBlock ;
 
-        copyVariable = true; isFunctionID = false; isGlobalDef = false; isArrayExpr = false ;
+        isFunctionID = false; isGlobalDef = false ;
         isClassDefine = false; hasAddFunctionName = false ;
         addBuiltinFunction() ;
         globalDef.functions.add(initFunc) ;
@@ -311,25 +311,22 @@ public class IRBuilder implements ASTVisitor{
 
     @Override 
     public void visit (arrayExprNode it) {
-        boolean copyVariableBackup = copyVariable ;
-        copyVariable = false; it.arrayIdentifier.accept(this); copyVariable = copyVariableBackup ;
+        it.arrayIdentifier.accept(this) ;
         register arrayReg = (register) returnEntity ;
         register array = new register(curFunction.curRegisterID ++, ((IRPointerType)arrayReg.type).type) ;
         currentBlock.push_back(new load(array.type, arrayReg, array)) ;
-        copyVariableBackup = copyVariable ;
-        copyVariable = true; it.arrayIndex.accept(this); copyVariable = copyVariableBackup ;
+        it.arrayIndex.accept(this) ;
         entity arrayInd = returnEntity ;
+        if (returnEntity.isLvalue) {
+            arrayInd = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
+            currentBlock.push_back(new load(new IRIntType(32), returnEntity, arrayInd));
+        }
         register returnRegPointer = new register (curFunction.curRegisterID ++, array.type) ;
+        returnRegPointer.isLvalue = true ;
         getelementptr cur = new getelementptr(array, returnRegPointer) ;
         cur.value.add(arrayInd) ;
         currentBlock.push_back(cur) ;
-        if (copyVariable) {
-            register returnReg = new register(curFunction.curRegisterID ++, ((IRPointerType) returnRegPointer.type).type) ;
-            currentBlock.push_back(new load(returnReg.type, returnRegPointer, returnReg)) ;
-            returnEntity = returnReg ;
-        } else {
-            returnEntity = returnRegPointer ;
-        }
+        returnEntity = returnRegPointer ;
     }
 
     @Override
@@ -338,13 +335,21 @@ public class IRBuilder implements ASTVisitor{
             it.leftExpression.accept(this) ;
             Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
+            if (returnEntity.isLvalue) {
+                left = new register(curFunction.curRegisterID ++, ((IRPointerType) left.type).type) ;
+                currentBlock.push_back(new load(left.type, returnEntity, left));
+            }
             it.rightExpression.accept(this) ;
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
+            if (returnEntity.isLvalue) {
+                right = new register(curFunction.curRegisterID ++, ((IRPointerType) right.type).type) ;
+                currentBlock.push_back(new load(right.type, returnEntity, right));
+            }
             if (leftType.type == basicType.Int) {
-                returnEntity = new register(curFunction.curRegisterID, toIRType(leftType)) ;
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
-                curFunction.curRegisterID ++ ;
+                register res = new register(curFunction.curRegisterID ++, left.type) ;
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, res)) ;
+                returnEntity = res ;
             } else if (leftType.type == basicType.String && it.binaryOp == binaryOperator.Plus) {
                 typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
                 register leftString = (register) returnEntity ;
@@ -360,18 +365,21 @@ public class IRBuilder implements ASTVisitor{
             it.leftExpression.accept(this) ;
             Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
+            if (returnEntity.isLvalue) {
+                left = new register(curFunction.curRegisterID ++, ((IRPointerType) left.type).type) ;
+                currentBlock.push_back(new load(left.type, returnEntity, left));
+            }
             it.rightExpression.accept(this) ;
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
+            if (returnEntity.isLvalue) {
+                right = new register(curFunction.curRegisterID ++, ((IRPointerType) right.type).type) ;
+                currentBlock.push_back(new load(right.type, returnEntity, right));
+            }
             if (leftType.type == basicType.Int) {
-                register cmpRes = new register(curFunction.curRegisterID, new IRIntType(1)) ; // i1
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], toIRType(leftType), left, right, new register(curFunction.curRegisterID, toIRType(leftType)))) ;
-                curFunction.curRegisterID ++ ;
+                register cmpRes = new register(curFunction.curRegisterID ++, new IRIntType(1)) ; // i1
+                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, cmpRes)) ;
                 returnEntity = cmpRes ; // i1
-                // register i8Res = new register (curFunction.curRegisterID, new IRIntType(8)) ; // i8
-                // currentBlock.push_back(new zext(cmpRes, i8Res, cmpRes.type, i8Res.type));
-                // returnEntity = i8Res ;
-                // curFunction.curRegisterID ++ ;
             } else if (leftType.type == basicType.String) {
                 typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
                 register leftString = (register) returnEntity ;
@@ -421,22 +429,22 @@ public class IRBuilder implements ASTVisitor{
                 returnEntity = res ;
             }
         } else if (it.binaryOp == binaryOperator.Assign) {
-            copyVariable = false; it.leftExpression.accept(this) ; copyVariable = true ;
+            it.leftExpression.accept(this) ;
             Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
-            copyVariable = true; it.rightExpression.accept(this) ;
+            it.rightExpression.accept(this) ;
             Type rightType = it.rightExpression.type ;
             entity right = returnEntity ;
-            // if (leftType.dim > 0 && rightType.type != basicType.Null) left.type = new IRPointerType(right.type) ;
+            if (returnEntity.isLvalue) {
+                right = new register(curFunction.curRegisterID ++, ((IRPointerType) right.type).type) ;
+                currentBlock.push_back(new load(right.type, returnEntity, right));
+            }
             if (right instanceof register) typeCasting((register) right, ((IRPointerType) left.type).type) ;
             currentBlock.push_back(new store(((IRPointerType) left.type).type, returnEntity, left));
             returnEntity = right ;
         } else if (it.binaryOp == binaryOperator.Dot) {
             boolean isFunctionIDBackup = isFunctionID ;
-            isFunctionID = false ;
-            boolean copyVariableBackup = copyVariable ;
-            copyVariable = false; it.leftExpression.accept(this); copyVariable = copyVariableBackup ;
-            isFunctionID = isFunctionIDBackup ;
+            isFunctionID = false; it.leftExpression.accept(this); isFunctionID = isFunctionIDBackup ;
             Type leftType = it.leftExpression.type ;
             entity left = returnEntity ;
             if (leftType.dim > 0) {
@@ -459,24 +467,21 @@ public class IRBuilder implements ASTVisitor{
                 register curClassBackup = curClass ;
                 IRClassType curClassTypeBackup = curClassType ;
                 boolean hasAddFunctionNameBackup = hasAddFunctionName ;
-                curClass = (register) left ;
+                if (left.isLvalue) {
+                    register classValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
+                    currentBlock.push_back(new load(classValue.type, left, classValue)) ;
+                    curClass = classValue ;
+                } else {
+                    curClass = (register) left ;
+                }
+                // curClass = (register) left ;
                 String className ;
-                if (((IRPointerType)curClass.type).type instanceof IRClassType) className = ((IRClassType)((IRPointerType)curClass.type).type).className ;
-                else className = ((IRClassType)((IRPointerType)((IRPointerType)curClass.type).type).type).className ;
-                // curClassType = (IRClassType) gScope.getIRTypeFromClassName(leftType.Identifier) ;
-                // curClassType = (IRClassType) ((IRPointerType) left.type).type ;
-                // curClassType = new IRClassType(leftType.Identifier) ;
+                className = ((IRClassType)((IRPointerType)curClass.type).type).className ;
                 curClassType = new IRClassType(className) ;
                 if (curFuncCall != null && isFunctionID) {
                     hasAddFunctionName = true ;
                     curFuncCall.functionName += "class" + curClassType.className + "_" ;
-                    if (((IRPointerType)left.type).type instanceof IRPointerType) {
-                        register classValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
-                        currentBlock.push_back(new load(classValue.type, left, classValue)); 
-                        curFuncCall.parameters.add (classValue) ;
-                    } else {
-                        curFuncCall.parameters.add(curClass) ;
-                    }
+                    curFuncCall.parameters.add(curClass) ;
                 } 
                 globalScope gScopeBackup = gScope ;
                 Scope curScopeBackup = curScope ;
@@ -488,7 +493,7 @@ public class IRBuilder implements ASTVisitor{
                 hasAddFunctionName = hasAddFunctionNameBackup ;
             } else if (leftType.type == basicType.String) {
                 if (curFuncCall != null) {
-                    if (((IRPointerType)left.type).type instanceof IRIntType) {
+                    if (!left.isLvalue) {
                         curFuncCall.parameters.add(left) ;
                     } else {
                         register leftValue = new register(curFunction.curRegisterID ++, ((IRPointerType)left.type).type) ;
@@ -505,6 +510,11 @@ public class IRBuilder implements ASTVisitor{
             }
         } else if (it.binaryOp == binaryOperator.AndAnd) {
             it.leftExpression.accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             label curLabel = new label(currentBlock.identifier) ;
             label trueLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_AndAnd_true") ;
             block trueBlock = new block(trueLabel.labelID) ;
@@ -514,6 +524,11 @@ public class IRBuilder implements ASTVisitor{
             currentBlock.push_back(new branch(returnEntity, trueLabel, outLabel)) ;
             currentBlock = trueBlock ;
             it.rightExpression.accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1)) ;
             currentBlock.push_back(new branch(outLabel)) ;
             currentBlock = outBlock ;
@@ -526,6 +541,11 @@ public class IRBuilder implements ASTVisitor{
             returnEntity = returnReg ;
         } else if (it.binaryOp == binaryOperator.OrOr) {
             it.leftExpression.accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             label curLabel = new label(currentBlock.identifier) ;
             label outLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_OrOr_out") ;
             block outBlock = new block(outLabel.labelID) ;
@@ -535,6 +555,11 @@ public class IRBuilder implements ASTVisitor{
             currentBlock.push_back(new branch(returnEntity, outLabel, falseLabel)) ;
             currentBlock = falseBlock ;
             it.rightExpression.accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1));
             currentBlock.push_back(new branch(outLabel)) ;
             currentBlock = outBlock ;
@@ -573,7 +598,9 @@ public class IRBuilder implements ASTVisitor{
         register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType(parameterReg.type)) ;
         currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
         currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
-        curClass = copyReg ;
+        flowController = new FlowController(it.name) ;
+        // curClass = copyReg ;
+        curClass = parameterReg ;
         it.suite.accept(this) ;
         curClass = null ;
         currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier)));
@@ -629,14 +656,16 @@ public class IRBuilder implements ASTVisitor{
     public void visit (expressionListNode it) {
         if (it.expressions.isEmpty()) return ;
         int offset = curFuncCallParameters.size() - it.expressions.size() ;
-        boolean copyVariableBackup = copyVariable ;
-        copyVariable = true ;
         for (int i = 0; i < it.expressions.size(); i ++) {
             it.expressions.get(i).accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             if (returnEntity instanceof register) typeCasting((register) returnEntity, curFuncCallParameters.get(i + offset));
             curFuncCall.parameters.add(returnEntity) ;
         }
-        copyVariable = copyVariableBackup ;
     }
 
     @Override
@@ -688,6 +717,11 @@ public class IRBuilder implements ASTVisitor{
             currentBlock.push_back(new branch(conditionLabel)) ;
             currentBlock = conditionBlock ;
             it.forCondition.accept(this) ;
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             entity conditionReg = returnEntity ;
             currentBlock.push_back(new branch(conditionReg, suiteLabel, forOutLabel));
             curFunction.blocks.add(conditionBlock) ;
@@ -782,13 +816,15 @@ public class IRBuilder implements ASTVisitor{
             register parameterReg = curFunction.parameters.get(i) ;
             IRparameters.add (parameterReg.type) ;
             register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType (parameterReg.type)) ;
+            copyReg.isLvalue = true ;
             currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
             currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
             curScope.entities.put(curFunction.parameterId.get(i), copyReg) ;
             if (isClassDefine && i == 0) {
-                // register classValue = new register (curFunction.curRegisterID ++, ((IRPointerType) copyReg.type).type) ;
-                // currentBlock.push_back(new load(classValue.type, copyReg, classValue));
-                curClass = copyReg ;
+                register classValue = new register (curFunction.curRegisterID ++, ((IRPointerType) copyReg.type).type) ;
+                currentBlock.push_back(new load(classValue.type, copyReg, classValue));
+                // curClass = copyReg ;
+                curClass = classValue ;
             }
         }
         // gScope.functionIRParameters.put (curFunction.identifier, IRparameters) ;
@@ -834,6 +870,11 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (ifStmtNode it) {
         it.expression.accept(this) ;
+        if (returnEntity.isLvalue) {
+            register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+            currentBlock.push_back(new load(value.type, returnEntity, value));
+            returnEntity = value ;
+        }
         if (returnEntity instanceof register) {
             // register i1Reg = new register(0, new IRIntType(1)) ;
             typeCasting((register) returnEntity, new IRIntType(1)) ;
@@ -985,10 +1026,12 @@ public class IRBuilder implements ASTVisitor{
             ArrayList<entity> newEntities = new ArrayList<>() ;
             it.newSize.forEach(x -> {
                 if (x.expression == null) return ;
-                boolean copyVariableBackup = copyVariable ;
-                copyVariable = true ;
                 x.expression.accept(this) ;
-                copyVariable = copyVariableBackup ;
+                if (returnEntity.isLvalue) {
+                    register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                    currentBlock.push_back(new load(value.type, returnEntity, value));
+                    returnEntity = value ;
+                }
                 newEntities.add(returnEntity) ;
             });
             Type baseType = new Type (curType) ;
@@ -1011,8 +1054,7 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (postIncExprNode it) {
-        boolean copyVariableBackup = copyVariable ;
-        copyVariable = false; it.expression.accept(this); copyVariable = copyVariableBackup ;
+        it.expression.accept(this) ; // isLvalue
         register varCopy = new register(curFunction.curRegisterID ++, ((IRPointerType) returnEntity.type).type) ;
         currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
         register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
@@ -1024,19 +1066,14 @@ public class IRBuilder implements ASTVisitor{
 
     @Override
     public void visit (preIncExprNode it) {
-        boolean copyVariableBackup = copyVariable ;
-        copyVariable = false; it.expression.accept(this); copyVariable = copyVariableBackup ;
+        it.expression.accept(this); // isLvalue ;
         register varCopy = new register(curFunction.curRegisterID ++, ((IRPointerType) returnEntity.type).type) ;
         currentBlock.push_back(new load(varCopy.type, returnEntity, varCopy)) ;
         register resReg = new register(curFunction.curRegisterID ++, new IRIntType(32)) ;
         if (it.preIncOp == preIncOperator.SelfPlus) currentBlock.push_back(new binary(IROperator.add, varCopy.type, varCopy, new constant(1, new IRIntType(32)), resReg)) ;
         else currentBlock.push_back(new binary(IROperator.sub, varCopy.type, varCopy, new constant(1, new IRIntType(32)), resReg)) ;
         currentBlock.push_back(new store(varCopy.type, resReg, returnEntity)) ;
-        if (copyVariable) {
-            register returnReg = new register (curFunction.curRegisterID ++, new IRIntType(32)) ;
-            currentBlock.push_back(new load(returnReg.type, returnEntity, returnReg));
-            returnEntity = returnReg ;
-        }
+        returnEntity.isLvalue = true ;
     }
 
     @Override
@@ -1072,9 +1109,10 @@ public class IRBuilder implements ASTVisitor{
                     // functioncall fcall ;
                     if (curClass != null && !hasAddFunctionName && gScope.getFunctionInClass(it.pos, it.identifier)) {
                         curFuncCall.functionName += "class" + curClassType.className + "_" ;
-                        register classValue = new register(curFunction.curRegisterID ++, ((IRPointerType)curClass.type).type) ;
-                        currentBlock.push_back(new load(classValue.type, curClass, classValue)); 
-                        curFuncCall.parameters.add(classValue) ;
+                        // register classValue = new register(curFunction.curRegisterID ++, ((IRPointerType)curClass.type).type) ;
+                        // currentBlock.push_back(new load(classValue.type, curClass, classValue)); 
+                        // curFuncCall.parameters.add(classValue) ;
+                        curFuncCall.parameters.add(curClass) ;
                     }
                     if (functionReturnType.type == Type.basicType.Void) {
                         // fcall = new functioncall(identifier) ;
@@ -1100,40 +1138,23 @@ public class IRBuilder implements ASTVisitor{
                     if (curClass == null) {
                         entity variableEntity = curScope.getEntity(it.identifier, true) ;
                         IRType type = ((IRPointerType) variableEntity.type).type ;
-                        if (copyVariable || isArrayExpr) {
-                            returnEntity = new register(curFunction.curRegisterID, type) ;
-                            currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
-                            curFunction.curRegisterID ++ ;
-                        } else {
-                            returnEntity = variableEntity ;
-                        }
+                        returnEntity = variableEntity ;
                     } else {
                         entity variableEntity = curScope.getEntity(it.identifier, true) ;
                         if (variableEntity != null) {
                         // if (regID == null) {
                             IRType type = ((IRPointerType) variableEntity.type).type ;
-                            if (copyVariable || isArrayExpr) {
-                                returnEntity = new register(curFunction.curRegisterID, type) ;
-                                currentBlock.push_back(new load(type, variableEntity, new register(curFunction.curRegisterID, type)));
-                                curFunction.curRegisterID ++ ;
-                            } else {
-                                returnEntity = variableEntity ;
-                            }
+                            returnEntity = variableEntity ;
                         } else {
-                            register classReg = new register (curFunction.curRegisterID ++, ((IRPointerType)curClass.type).type) ;
-                            currentBlock.push_back(new load(classReg.type, curClass, classReg));
+                            // register classReg = new register (curFunction.curRegisterID ++, ((IRPointerType)curClass.type).type) ;
+                            // currentBlock.push_back(new load(classReg.type, curClass, classReg));
                             register returnRegPointer = new register(curFunction.curRegisterID ++, new IRPointerType(toIRType(curScope.getType(it.pos, it.identifier, true)))) ; 
-                            getelementptr curInst = new getelementptr(classReg, returnRegPointer) ;
+                            // getelementptr curInst = new getelementptr(classReg, returnRegPointer) ;
+                            getelementptr curInst = new getelementptr(curClass, returnRegPointer) ;
                             curInst.value.add(new constant(0, new IRIntType(32))) ;
                             curInst.value.add(new constant(regID.intValue(), new IRIntType(32))) ;
                             currentBlock.push_back(curInst) ;
-                            if (copyVariable || isArrayExpr) {
-                                register returnReg = new register (curFunction.curRegisterID ++, ((IRPointerType) returnRegPointer.type).type) ;
-                                currentBlock.push_back(new load(returnReg.type, returnRegPointer, returnReg)) ;
-                                returnEntity = returnReg ;
-                            } else {
-                                returnEntity = returnRegPointer ; 
-                            }
+                            returnEntity = returnRegPointer; returnRegPointer.isLvalue = true ;
                         }
                     }
                 }
@@ -1146,6 +1167,11 @@ public class IRBuilder implements ASTVisitor{
         if (it.expression != null) it.expression.accept(this) ;
         // if (!(curFunction.returnType instanceof IRVoidType)) currentBlock.push_back(new returnStmt(returnEntity)) ;
         if (!(curFunction.returnType instanceof IRVoidType)) {
+            if (returnEntity.isLvalue) {
+                register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                currentBlock.push_back(new load(value.type, returnEntity, value));
+                returnEntity = value ;
+            }
             if (returnEntity instanceof register) typeCasting((register) returnEntity, curFunction.returnType) ;
             currentBlock.push_back(new store(returnEntity.type, returnEntity, curFunction.returnReg));
         }
@@ -1184,6 +1210,11 @@ public class IRBuilder implements ASTVisitor{
     @Override
     public void visit (unaryExprNode it) {
         it.expression.accept(this) ;
+        if (returnEntity.isLvalue) {
+            register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+            currentBlock.push_back(new load(value.type, returnEntity, value));
+            returnEntity = value ;
+        }
         if (it.unaryOp == unaryOperator.Not) {
             if (returnEntity instanceof register) {
                 // register i1reg = new register(0, new IRIntType(1)) ;
@@ -1243,11 +1274,17 @@ public class IRBuilder implements ASTVisitor{
             if (!isGlobalDef && curFunction != null) {
                 int varRegID = curFunction.curRegisterID ;
                 register varReg = new register(varRegID, new IRPointerType (varIRType)) ;
+                varReg.isLvalue = true ;
                 curScope.entities.put(x.name, varReg) ;
                 currentBlock.push_back (new alloca(varReg, varIRType));
                 curFunction.curRegisterID ++ ;
                 if (x.isInitialized) {
                     x.expression.accept(this) ;
+                    if (returnEntity.isLvalue) {
+                        register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                        currentBlock.push_back(new load(value.type, returnEntity, value));
+                        returnEntity = value ;
+                    }
                     if (varType.dim > 0) varReg.type = new IRPointerType(returnEntity.type) ;
                     if (returnEntity instanceof register)
                         typeCasting((register) returnEntity, varIRType);
@@ -1261,11 +1298,17 @@ public class IRBuilder implements ASTVisitor{
             } 
             if (isGlobalDef) {
                 register reg = new register(x.name, new IRPointerType (varIRType), true) ;
+                reg.isLvalue = true ;
                 curScope.entities.put(x.name, reg) ;
                 if (x.isInitialized) {
                     curFunction = initFunc ;
                     currentBlock = initCurrentBlock ;
                     x.expression.accept(this) ;
+                    if (returnEntity.isLvalue) {
+                        register value = new register(curFunction.curRegisterID ++, ((IRPointerType)returnEntity.type).type) ;
+                        currentBlock.push_back(new load(value.type, returnEntity, value));
+                        returnEntity = value ;
+                    }
                     if (varType.dim > 0) reg.type = new IRPointerType(returnEntity.type) ;
                     if (returnEntity instanceof constant)
                         globalDef.globalDefStmt.add(new globalDefineStmt(reg, (constant) returnEntity)) ;
