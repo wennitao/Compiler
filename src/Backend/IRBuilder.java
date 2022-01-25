@@ -767,7 +767,7 @@ public class IRBuilder implements ASTVisitor{
         globalDef.functions.add(newFunc) ;
         flowController = new FlowController(it.name) ;
         curScope = gScope.getScopeFromFunctionName(it.pos, it.name) ;
-        if (it.name.equals("main")) {
+        if (newFunc.identifier.equals("main")) {
             currentBlock.push_back(new functioncall("__init")) ;
         }
         ArrayList<IRType> IRparameters = new ArrayList<>() ;
@@ -796,7 +796,7 @@ public class IRBuilder implements ASTVisitor{
         curFunction.returnReg = returnReg ;
         if (!(curFunction.returnType instanceof IRVoidType)) {
             currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
-            if (it.name.equals("main")) currentBlock.push_back(new store(curFunction.returnType, new constant (0, new IRIntType(32)), returnReg));
+            if (curFunction.identifier.equals("main")) currentBlock.push_back(new store(curFunction.returnType, new constant (0, new IRIntType(32)), returnReg));
         }
         it.suite.accept(this) ;
         currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier))) ;
@@ -1109,7 +1109,8 @@ public class IRBuilder implements ASTVisitor{
                         }
                     } else {
                         entity variableEntity = curScope.getEntity(it.identifier, true) ;
-                        if (regID == null) {
+                        if (variableEntity != null) {
+                        // if (regID == null) {
                             IRType type = ((IRPointerType) variableEntity.type).type ;
                             if (copyVariable || isArrayExpr) {
                                 returnEntity = new register(curFunction.curRegisterID, type) ;
