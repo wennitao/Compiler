@@ -1251,7 +1251,8 @@ public class IRBuilder implements ASTVisitor{
             }
             returnEntity = returnReg ;
         } else {
-            if (from.type instanceof IRNullType || from.type.equals(toType)) {
+            if (from.type instanceof IRNullType) {
+                ((IRNullType) from.type).toType = toType ;
                 returnEntity = from ;
             } else {
                 register returnReg = new register(curFunction.curRegisterID ++, toType) ;

@@ -3,3 +3,6 @@ codegen/*
 .VSCodeCounter
 *.mx
 *.ll
+*.out
+*.in
+*.ans

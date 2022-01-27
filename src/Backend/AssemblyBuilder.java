@@ -14,6 +14,7 @@ import Assembly.Inst.binaryInst.binaryInstOp ;
 import Assembly.Operand.* ;
 import MIR.* ;
 import MIR.IRType.IRClassType;
+import MIR.IRType.IRIntType;
 import MIR.IRType.IRNullType;
 import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
@@ -74,7 +75,11 @@ public class AssemblyBuilder {
                 offset.add(0) ;
                 for (int i = 0; i < classType.classTypes.size(); i ++) {
                     IRType curType = classType.classTypes.get(i) ;
-                    offset.add(offset.get(offset.size() - 1) + curType.size) ;
+                    int size = 0 ;
+                    if (curType instanceof IRPointerType) size = 8 ;
+                    else size = ((IRIntType) curType).width / 8 ;
+                    // offset.add(offset.get(offset.size() - 1) + curType.size) ;
+                    offset.add(offset.get(offset.size() - 1) + size) ;
                 }
                 classOffset.put(className, offset) ;
             }
