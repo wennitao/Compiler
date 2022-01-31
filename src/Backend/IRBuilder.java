@@ -43,9 +43,10 @@ public class IRBuilder implements ASTVisitor{
         globalDef = _globalDef; gScope = _gScope; curScope = _gScope ;
 
         initFunc = new function("__init") ;
-        label functionEntryLabel = new label(initFunc.identifier + "_entry") ;
-        initFunc.rootBlock.identifier = functionEntryLabel.labelID ;
+        // label functionEntryLabel = new label(initFunc.identifier + "_entry") ;
+        // initFunc.rootBlock.identifier = functionEntryLabel.labelID ;
         initFunc.returnType = new IRVoidType() ;
+        // initFunc.rootBlock.blockLabel = functionEntryLabel ;
         initCurrentBlock = initFunc.rootBlock ;
 
         isFunctionID = false; isGlobalDef = false ;
@@ -697,7 +698,7 @@ public class IRBuilder implements ASTVisitor{
         label conditionLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_condition") ;
         // label conditionLabel = new label(curFunction.curRegisterID) ;
         // block conditionBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
-        block conditionBlock = new block(conditionLabel.labelID) ;
+        block conditionBlock = new block(conditionLabel.labelID);
         // label suiteLabel = new label(curFunction.curRegisterID) ;
         label suiteLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_suite") ;
         // block suiteBlock = new block(Integer.toString(curFunction.curRegisterID ++)) ;
@@ -795,8 +796,8 @@ public class IRBuilder implements ASTVisitor{
             // if (it.functionType.type.type.dim > 0 || it.functionType.type.type.type == basicType.Class)
                 // newFunc.returnType = new IRPointerType (newFunc.returnType) ;
         }
-        label functionEntryLabel = new label(newFunc.identifier + "_entry") ;
-        currentBlock.identifier = functionEntryLabel.labelID ;
+        // label functionEntryLabel = new label(newFunc.identifier + "_entry") ;
+        // currentBlock.identifier = functionEntryLabel.labelID ;
         curFunction = newFunc ;
         globalDef.functions.add(newFunc) ;
         flowController = new FlowController(it.name) ;
@@ -956,7 +957,7 @@ public class IRBuilder implements ASTVisitor{
         currentBlock.push_back(new alloca(loopVar, new IRIntType (32)));
         currentBlock.push_back(new store(new IRIntType(32), new constant (0, new IRIntType(32)), loopVar));
         label conditionLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_condition") ;
-        block conditionBlock = new block(conditionLabel.labelID) ;
+        block conditionBlock = new block(conditionLabel.labelID);
         label suiteLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_suite") ;
         block suiteBlock = new block (suiteLabel.labelID) ;
         label incrLabel = new label (curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_incr") ;

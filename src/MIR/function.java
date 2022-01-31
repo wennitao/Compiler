@@ -17,8 +17,12 @@ public class function {
     public boolean isBuiltin ;
     public function (String _identifier) {
         identifier = _identifier ;
-        rootBlock = new block(identifier) ;
-        returnBlock = new block (identifier + "_return") ;
+        // label rootBlockLabel = new label(identifier + "_entry") ;
+        // rootBlock = new block(rootBlockLabel.labelID, rootBlockLabel) ;
+        // label returnBlockLabel = new label (identifier + "_return") ;
+        // returnBlock = new block (returnBlockLabel.labelID, returnBlockLabel) ;
+        rootBlock = new block(identifier + "_entry") ;
+        returnBlock = new block(identifier + "_return") ;
         blocks = new ArrayList<>() ;
         blocks.add(rootBlock) ;
         curRegisterID = 0 ;

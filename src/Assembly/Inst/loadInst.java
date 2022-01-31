@@ -9,7 +9,7 @@ public class loadInst extends Inst {
     } ;
     loadOp op ;
     Imm imm ;
-    String symbol = null ;
+    public String symbol = null ;
     public loadInst (int _size, Reg _rs1, Imm _imm, Reg _rs2) {
         if (_size == 1) op = loadOp.lb ;
         else if (_size == 2) op = loadOp.lh ;

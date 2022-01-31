@@ -40,7 +40,7 @@ public class AssemblyBuilder {
         try {
             new AssemblyPrinter(new PrintStream("debug.s"), AssemblyGlobalDef) ;
         } catch (Exception ex) {}
-        RegAlloc_root() ;
+        // RegAlloc_root() ;
     }
     private void init_phyRegs () {
         zero = phyRegs[0] = new PhysicalReg("zero") ;
@@ -119,6 +119,7 @@ public class AssemblyBuilder {
     }
     private void build_block (block curIRBlock) {
         curBlock = new AssemblyBlock(curIRBlock.identifier) ;
+        curFunction.labelToBlock.put(curBlock.identifier, curBlock) ;
         for (statement curStmt : curIRBlock.statements) {
             genInst(curStmt) ;    
         }
