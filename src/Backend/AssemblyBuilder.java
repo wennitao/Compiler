@@ -19,14 +19,14 @@ import MIR.IRType.IRNullType;
 import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
-import Optimize.RegisterAllocation;
+// import Optimize.RegisterAllocation;
 
 public class AssemblyBuilder {
     globalDefine globalDef ;
     AssemblyGlobalDefine AssemblyGlobalDef ;
     AssemblyFunction curFunction ;
     AssemblyBlock curBlock ;
-    PhysicalReg[] phyRegs = new PhysicalReg [32] ;
+    PhysicalReg[] phyRegs ;
     PhysicalReg zero, ra, sp, a0, s0 ;
     PhysicalReg t0, t1, t2, t3 ;
     // Map<String, VirtualReg> toRegMap = new HashMap<>() ;
@@ -38,12 +38,14 @@ public class AssemblyBuilder {
         build_globalDef () ;
         build_root() ;
         phi_storeValue() ;
+        // addRetInst () ;
         try {
             new AssemblyPrinter(new PrintStream("debug.s"), AssemblyGlobalDef) ;
         } catch (Exception ex) {}
         // RegAlloc_root() ;
     }
     private void init_phyRegs () {
+        phyRegs = AssemblyGlobalDef.phyRegs ;
         zero = phyRegs[0] ;
         ra = phyRegs[1] ;
         sp = phyRegs[2] ;
@@ -435,6 +437,12 @@ public class AssemblyBuilder {
                     }
                 }
             }
+        }
+    }
+    private void addRetInst () {
+        for (AssemblyFunction function : AssemblyGlobalDef.functions) {
+            AssemblyBlock tailBlock = function.blocks.get(function.blocks.size() - 1) ;
+            tailBlock.push_back(new retInst());
         }
     }
     

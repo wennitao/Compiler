@@ -23,7 +23,7 @@ public class AssemblyFunction {
     public Map<String, entity> phiValue = new HashMap<>() ;
     // register allocation
     public Map<Inst, Set<Inst> > succ, pred ;
-    public Map<Inst, Set<VirtualReg> > use, def, in, out ;
+    public Map<Inst, Set<Reg> > use, def, in, out ;
     public AssemblyFunction (String _identifier) {
         identifier = _identifier ;
         curRegID = functionCallOffset = offset = 0 ;
