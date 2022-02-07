@@ -19,6 +19,7 @@ import MIR.IRType.IRNullType;
 import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
+import Optimize.RegisterAllocation;
 
 public class AssemblyBuilder {
     globalDefine globalDef ;
@@ -43,21 +44,15 @@ public class AssemblyBuilder {
         // RegAlloc_root() ;
     }
     private void init_phyRegs () {
-        zero = phyRegs[0] = new PhysicalReg("zero") ;
-        ra = phyRegs[1] = new PhysicalReg("ra") ;
-        sp = phyRegs[2] = new PhysicalReg("sp") ;
-        for (int i = 10; i <= 17; i ++) {
-            phyRegs[i] = new PhysicalReg("a" + Integer.toString(i - 10)) ;
-        }
+        zero = phyRegs[0] ;
+        ra = phyRegs[1] ;
+        sp = phyRegs[2] ;
         a0 = phyRegs[10] ;
-        s0 = phyRegs[8] = new PhysicalReg("s0") ;
-        for (int i = 18; i <= 27; i ++) {
-            phyRegs[i] = new PhysicalReg("s" + Integer.toString(i - 16)) ;
-        }
-        t0 = phyRegs[5] = new PhysicalReg("t0") ;
-        t1 = phyRegs[6] = new PhysicalReg("t1") ;
-        t2 = phyRegs[7] = new PhysicalReg("t2") ;
-        t3 = phyRegs[28] = new PhysicalReg("t3") ;
+        s0 = phyRegs[8] ;
+        t0 = phyRegs[5] ;
+        t1 = phyRegs[6] ;
+        t2 = phyRegs[7] ;
+        t3 = phyRegs[28] ;
     }
     private void build_globalDef () {
         for (statement stmt : globalDef.globalDefStmt) {
