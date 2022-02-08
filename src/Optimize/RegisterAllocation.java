@@ -214,7 +214,7 @@ public class RegisterAllocation {
                     }
                     curFunction.use.put(inst, curSet) ;
                     curSet = new HashSet<>() ;
-                    curSet.add(load.rs1) ;
+                    curSet.add(load.rd) ;
                     // if (load.rs1 instanceof VirtualReg) curSet.add((VirtualReg) load.rs1) ;
                     curFunction.def.put(inst, curSet) ;
                 } else if (inst instanceof storeInst) {
@@ -568,6 +568,7 @@ public class RegisterAllocation {
         for (Reg reg : spilledNodes) {
             curFunction.offset += 4 ;
             curFunction.regOffset.put(reg, curFunction.offset) ;
+            System.out.println ("to stack: " + reg + " " + curFunction.offset) ;
         }
         for (AssemblyBlock block : curFunction.blocks) {
             for (Inst inst = block.head; inst != null; inst = inst.next) {
