@@ -133,7 +133,8 @@ public class RegisterAllocation {
                 curFunction.pred.put(inst, new HashSet<>()) ;
             }
         }
-        for (AssemblyBlock block : curFunction.blocks) {
+        for (int i = 0; i < curFunction.blocks.size(); i ++) {
+            AssemblyBlock block = curFunction.blocks.get(i) ;
             for (Inst inst = block.head; inst != null; inst = inst.next) {
                 if (inst instanceof bnezInst) {
                     bnezInst bnez = (bnezInst) inst ;
@@ -146,6 +147,7 @@ public class RegisterAllocation {
                     if (toInst != null) addInstEdge(curFunction, inst, toInst) ;
                 } else {
                     if (inst.next != null) addInstEdge(curFunction, inst, inst.next);
+                    else if (i + 1 < curFunction.blocks.size()) addInstEdge(curFunction, inst, curFunction.blocks.get(i + 1).head);
                 }
             }
         }
@@ -184,7 +186,7 @@ public class RegisterAllocation {
                     Set<Reg> curSet = new HashSet<>() ;
                     curSet.add(inst.rd) ;
                     // if (inst.rd instanceof VirtualReg) curSet.add ((VirtualReg) inst.rd) ;
-                    curFunction.def.put(inst, new HashSet<>()) ;
+                    curFunction.def.put(inst, curSet) ;
                 } else if (inst instanceof liInst) {
                     curFunction.use.put(inst, new HashSet<>()) ;
                     Set<Reg> curSet = new HashSet<>() ;
