@@ -15,7 +15,6 @@ import Assembly.Operand.Imm;
 import Assembly.Operand.PhysicalReg;
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
-import MIR.block;
 
 public class RegisterAllocation {
     final int K = 26 ;
@@ -55,7 +54,7 @@ public class RegisterAllocation {
         for (int i = 0; i < 32; i ++) {
             precolored.add(phyRegs[i]) ;
             color.put(phyRegs[i], i) ;
-            degree.put(phyRegs[i], 0) ;
+            degree.put(phyRegs[i], 100) ; // inf
         }
     }
     private void analyzeRoot () {
@@ -68,6 +67,7 @@ public class RegisterAllocation {
         functionStackInst () ;
     }
     private void analyzeFunction (AssemblyFunction curFunction) {
+        // System.out.println("cur function: " + curFunction.identifier);
         clear() ;
         getSuccAndPred(curFunction);
         getUseAndDef(curFunction);
@@ -95,16 +95,28 @@ public class RegisterAllocation {
         for (AssemblyBlock block : curFunction.blocks) {
             for (Inst inst = block.head; inst != null; inst = inst.next) {
                 if (inst.rs1 != null) {
-                    if (inst.rs1 instanceof VirtualReg) initial.add(inst.rs1) ;
-                    degree.put(inst.rs1, 0) ;
+                    if (inst.rs1 instanceof VirtualReg) {
+                        initial.add(inst.rs1) ;
+                        degree.put(inst.rs1, 0) ;
+                    } else {
+                        degree.put(inst.rs1, 100) ; // inf
+                    }
                 }
                 if (inst.rs2 != null) {
-                    if (inst.rs2 instanceof VirtualReg) initial.add(inst.rs2) ;
-                    degree.put(inst.rs2, 0) ;
+                    if (inst.rs2 instanceof VirtualReg) {
+                        initial.add(inst.rs2) ;
+                        degree.put(inst.rs2, 0) ;
+                    } else {
+                        degree.put(inst.rs2, 100) ; // inf
+                    }
                 }
                 if (inst.rd != null) {
-                    if (inst.rd instanceof VirtualReg) initial.add(inst.rd) ;
-                    degree.put(inst.rd, 0) ;
+                    if (inst.rd instanceof VirtualReg) {
+                        initial.add(inst.rd) ;
+                        degree.put(inst.rd, 0) ;
+                    } else {
+                        degree.put(inst.rd, 100) ; // inf
+                    }
                 }
             }
         }
@@ -119,7 +131,7 @@ public class RegisterAllocation {
                     if (inst.rs2 != null) degree.put(inst.rs2, 0) ;
                     if (inst.rd != null) degree.put(inst.rd, 0) ;
                 }
-        for (int i = 0; i < 32; i ++) degree.put(phyRegs[i], 0) ;
+        for (int i = 0; i < 32; i ++) degree.put(phyRegs[i], 100); // inf
     }
     private void addInstEdge (AssemblyFunction curFunction, Inst from, Inst to) {
         curFunction.succ.get(from).add(to) ;
@@ -386,7 +398,7 @@ public class RegisterAllocation {
             spillWorklist.remove(v) ;
         }
         coalescedNodes.add(v) ;
-        alias.put(v, u) ;
+        alias.put(v, u) ; // System.out.println("merge " + v + " and " + u);
         Set<Inst> tmp = new HashSet<>() ;
         if (moveList.containsKey(v)) tmp.addAll(moveList.get(v)) ;
         if (moveList.containsKey(u)) moveList.get(u).addAll(tmp) ;
@@ -502,11 +514,12 @@ public class RegisterAllocation {
                 for (Integer tmp : okColors) {
                     c = tmp; break ;
                 }
-                // System.out.print(n); System.out.print(" "); System.out.println (c) ;
+                // System.out.println("assign color: " + n + " " + c) ;
                 color.put(n, c) ;
             }
         }
         for (Reg n : coalescedNodes) {
+            // System.out.println("assign color: " + n + " " + color.get(getAlias(n))) ;
             color.put(n, color.get(getAlias(n))) ;
         }
     }

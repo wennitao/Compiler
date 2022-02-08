@@ -6,11 +6,13 @@ import java.util.ArrayList;
 public class block {
     public String identifier ;
     public ArrayList<statement> statements = new ArrayList<>();
+    public boolean hasJumped = false ;
     public block (String _identifier) {
         identifier = _identifier ;
     }
     public void push_back (statement stmt) {
-        statements.add(stmt) ;
+        if (!hasJumped) statements.add(stmt) ;
+        if (stmt instanceof branch) hasJumped = true ;
     }
     public void print(PrintStream out) {
         out.println(identifier + ": ");

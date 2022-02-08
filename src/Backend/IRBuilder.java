@@ -1178,6 +1178,7 @@ public class IRBuilder implements ASTVisitor{
         }
         label returnLabel = new label(curFunction.identifier + "_return") ;
         currentBlock.push_back(new branch(returnLabel)) ;
+        currentBlock.hasJumped = true ;
     }
 
     @Override
