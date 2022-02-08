@@ -18,7 +18,7 @@ import Assembly.Operand.VirtualReg;
 import MIR.block;
 
 public class RegisterAllocation {
-    final int K = 17 ;
+    final int K = 26 ;
     AssemblyGlobalDefine globalDef ;
     PhysicalReg phyRegs[] ;
     PhysicalReg zero, ra, sp, a0, s0 ;
@@ -119,6 +119,7 @@ public class RegisterAllocation {
                     if (inst.rs2 != null) degree.put(inst.rs2, 0) ;
                     if (inst.rd != null) degree.put(inst.rd, 0) ;
                 }
+        for (int i = 0; i < 32; i ++) degree.put(phyRegs[i], 0) ;
     }
     private void addInstEdge (AssemblyFunction curFunction, Inst from, Inst to) {
         curFunction.succ.get(from).add(to) ;
@@ -177,7 +178,7 @@ public class RegisterAllocation {
                     curSet = new HashSet<>() ;
                     curSet.add(inst.rd) ;
                     // if (inst.rd instanceof VirtualReg) curSet.add ((VirtualReg) inst.rd) ;
-                    curFunction.def.put(inst, new HashSet<>()) ;
+                    curFunction.def.put(inst, curSet);
                 } else if (inst instanceof laInst) {
                     curFunction.use.put(inst, new HashSet<>()) ;
                     Set<Reg> curSet = new HashSet<>() ;
@@ -209,6 +210,15 @@ public class RegisterAllocation {
                     // if (inst.rs2 instanceof VirtualReg) curSet.add ((VirtualReg) inst.rs2) ;
                     curFunction.use.put(inst, curSet) ;
                     curFunction.def.put(inst, new HashSet<>()) ;
+                } else if (inst instanceof callInst) {
+                    curFunction.use.put(inst, new HashSet<>()) ;
+                    Set<Reg> curSet = new HashSet<>() ;
+                    // caller registers
+                    curSet.add(phyRegs[1]); 
+                    for (int i = 5; i <= 7; i ++) curSet.add(phyRegs[i]) ;
+                    for (int i = 10; i <= 17; i ++) curSet.add(phyRegs[i]) ;
+                    for (int i = 28; i <= 31; i ++) curSet.add(phyRegs[i]) ;
+                    curFunction.def.put(inst, curSet) ;
                 } else {
                     curFunction.use.put(inst, new HashSet<>()) ;
                     curFunction.def.put(inst, new HashSet<>()) ;
@@ -472,7 +482,9 @@ public class RegisterAllocation {
         while (!selectStack.isEmpty()) {
             Reg n = selectStack.pop() ;
             Set<Integer> okColors = new HashSet<>() ;
-            for (int i = 0; i < K; i ++) okColors.add(i) ;
+            // for (int i = 0; i < K; i ++) okColors.add(i) ;
+            for (int i = 5; i <= 7; i ++) okColors.add(i) ;
+            for (int i = 9; i <= 31; i ++) okColors.add(i) ;
             if (adjList.containsKey(n)) {
                 Set<Reg> tmp = new HashSet<>(coloredNodes) ;
                 tmp.addAll(precolored) ;
@@ -548,9 +560,10 @@ public class RegisterAllocation {
         coloredNodes.clear(); coalescedNodes.clear(); 
     }
     private PhysicalReg colorToPhyReg (int c) {
-        if (c < 10) return globalDef.phyRegs[18 + c] ;
-        else if (c >= 10 && c <= 12) return globalDef.phyRegs[c - 5] ;
-        else return globalDef.phyRegs[c + 15] ;
+        return phyRegs[c] ;
+        // if (c < 10) return globalDef.phyRegs[18 + c] ;
+        // else if (c >= 10 && c <= 12) return globalDef.phyRegs[c - 5] ;
+        // else return globalDef.phyRegs[c + 15] ;
     }
     private void assignPhyReg () {
         for (AssemblyFunction function : globalDef.functions) {

@@ -3,6 +3,7 @@ package Assembly;
 import java.io.PrintStream;
 
 import Assembly.Inst.Inst;
+import Assembly.Inst.mvInst;
 
 public class AssemblyBlock {
     public Inst head = null, tail = null ;
@@ -38,6 +39,7 @@ public class AssemblyBlock {
     public void print (PrintStream out) {
         out.println("." + identifier + ":") ;
         for (Inst inst = head; inst != null; inst = inst.next) {
+            if (inst instanceof mvInst && inst.rs1 == inst.rd) continue ;
             out.println ("\t" + inst) ;
         }
     }

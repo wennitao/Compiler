@@ -109,9 +109,32 @@ public class AssemblyBuilder {
             initBlock.push_back(new loadInst(curParameter.type.size, parameterReg, new Imm((i - 8) * 4), s0));
             curFunction.toRegMap.put(curParameter.registerID, parameterReg) ;
         }
+
+        // callee registers
+        VirtualReg calleeRegs[] = new VirtualReg [32] ;
+        calleeRegs[2] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        initBlock.push_back(new mvInst(phyRegs[2], calleeRegs[2]));
+        calleeRegs[8] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        initBlock.push_back(new mvInst(phyRegs[8], calleeRegs[8]));
+        calleeRegs[9] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        initBlock.push_back(new mvInst(phyRegs[9], calleeRegs[9]));
+        for (int i = 18; i <= 27; i ++) {
+            calleeRegs[i] = new VirtualReg(curFunction.curRegID ++, 4) ;
+            initBlock.push_back(new mvInst(phyRegs[i], calleeRegs[i]));
+        }
+
         for (block curIRBlock : curIRFunc.blocks) {
             build_block(curIRBlock) ;
             curFunction.blocks.add(curBlock) ;
+        }
+
+        // callee registers 
+        AssemblyBlock tailBlock = curFunction.blocks.get(curFunction.blocks.size() - 1) ;
+        tailBlock.push_back(new mvInst(calleeRegs[2], phyRegs[2]));
+        tailBlock.push_back(new mvInst(calleeRegs[8], phyRegs[8]));
+        tailBlock.push_back(new mvInst(calleeRegs[9], phyRegs[9]));
+        for (int i = 18; i <= 27; i ++) {
+            tailBlock.push_back(new mvInst(calleeRegs[i], phyRegs[i]));
         }
     }
     private void build_block (block curIRBlock) {
@@ -303,6 +326,7 @@ public class AssemblyBuilder {
             if (to instanceof register && ((register) to).isGlobal) {
                 register toGlobal = (register) to ;
                 VirtualReg rs = entityToReg(from), t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                curBlock.push_back(new liInst(t, new Imm(0)));
                 curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
             } else {
                 VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
