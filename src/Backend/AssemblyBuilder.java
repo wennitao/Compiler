@@ -112,10 +112,10 @@ public class AssemblyBuilder {
 
         // callee registers
         VirtualReg calleeRegs[] = new VirtualReg [32] ;
-        calleeRegs[2] = new VirtualReg(curFunction.curRegID ++, 4) ;
-        initBlock.push_back(new mvInst(phyRegs[2], calleeRegs[2]));
-        calleeRegs[8] = new VirtualReg(curFunction.curRegID ++, 4) ;
-        initBlock.push_back(new mvInst(phyRegs[8], calleeRegs[8]));
+        // calleeRegs[2] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        // initBlock.push_back(new mvInst(phyRegs[2], calleeRegs[2]));
+        // calleeRegs[8] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        // initBlock.push_back(new mvInst(phyRegs[8], calleeRegs[8]));
         calleeRegs[9] = new VirtualReg(curFunction.curRegID ++, 4) ;
         initBlock.push_back(new mvInst(phyRegs[9], calleeRegs[9]));
         for (int i = 18; i <= 27; i ++) {
@@ -131,8 +131,8 @@ public class AssemblyBuilder {
 
         // callee registers 
         AssemblyBlock tailBlock = curFunction.blocks.get(curFunction.blocks.size() - 1) ;
-        tailBlock.push_back(new mvInst(calleeRegs[2], phyRegs[2]));
-        tailBlock.push_back(new mvInst(calleeRegs[8], phyRegs[8]));
+        // tailBlock.push_back(new mvInst(calleeRegs[2], phyRegs[2]));
+        // tailBlock.push_back(new mvInst(calleeRegs[8], phyRegs[8]));
         tailBlock.push_back(new mvInst(calleeRegs[9], phyRegs[9]));
         for (int i = 18; i <= 27; i ++) {
             tailBlock.push_back(new mvInst(calleeRegs[i], phyRegs[i]));
