@@ -1,6 +1,8 @@
 package Assembly;
 
 import java.io.PrintStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import Assembly.Inst.Inst;
 import Assembly.Inst.mvInst;
@@ -8,6 +10,7 @@ import Assembly.Inst.mvInst;
 public class AssemblyBlock {
     public Inst head = null, tail = null ;
     public String identifier ;
+    public Set<AssemblyBlock> succ = new HashSet<>() ;
     public AssemblyBlock (String _identifier) {
         identifier = _identifier ;
     }

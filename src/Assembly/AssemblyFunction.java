@@ -10,7 +10,6 @@ import Assembly.Inst.Inst;
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
 import MIR.entity;
-import MIR.label;
 
 public class AssemblyFunction {
     public String identifier ;
@@ -22,12 +21,13 @@ public class AssemblyFunction {
     public Map<String, VirtualReg> phiRd = new HashMap<>() ;
     public Map<String, entity> phiValue = new HashMap<>() ;
     // register allocation
-    public Map<Inst, Set<Inst> > succ, pred ;
+    // public Map<Inst, Set<Inst> > succ, pred ;
+    // public Map<AssemblyBlock, Set<AssemblyBlock> > succ ;
     public Map<Inst, Set<Reg> > use, def, in, out ;
     public AssemblyFunction (String _identifier) {
         identifier = _identifier ;
         curRegID = functionCallOffset = offset = 0 ;
-        succ = new HashMap<>(); pred = new HashMap<>() ;
+        // succ = new HashMap<>(); pred = new HashMap<>() ;
         use = new HashMap<>(); def = new HashMap<>() ;
         in = new HashMap<>(); out = new HashMap<>() ;
     }

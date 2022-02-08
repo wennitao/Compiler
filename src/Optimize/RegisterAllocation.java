@@ -15,6 +15,7 @@ import Assembly.Operand.Imm;
 import Assembly.Operand.PhysicalReg;
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
+import MIR.block;
 
 public class RegisterAllocation {
     final int K = 26 ;
@@ -23,6 +24,7 @@ public class RegisterAllocation {
     PhysicalReg zero, ra, sp, a0, s0 ;
     PhysicalReg t0, t1, t2, t3 ;
     // AssemblyFunction curFunction ;
+    Map<AssemblyBlock, Set<Reg> > blockDef, blockLivein, blockLiveout ;
     Map<Reg, Set<Inst> > moveList = new HashMap<>() ;
     Set<Pair<Reg, Reg> > adjSet = new HashSet<>() ;
     Map<Reg, Set<Reg> > adjList = new HashMap<>() ;
@@ -54,7 +56,7 @@ public class RegisterAllocation {
         for (int i = 0; i < 32; i ++) {
             precolored.add(phyRegs[i]) ;
             color.put(phyRegs[i], i) ;
-            degree.put(phyRegs[i], 100) ; // inf
+            degree.put(phyRegs[i], Integer.MAX_VALUE) ; // inf
         }
     }
     private void analyzeRoot () {
@@ -69,7 +71,8 @@ public class RegisterAllocation {
     private void analyzeFunction (AssemblyFunction curFunction) {
         // System.out.println("cur function: " + curFunction.identifier);
         clear() ;
-        getSuccAndPred(curFunction);
+        // getSuccAndPred(curFunction);
+        getSucc(curFunction) ;
         getUseAndDef(curFunction);
         livenessAnalysis(curFunction);
         build(curFunction) ;
@@ -131,38 +134,51 @@ public class RegisterAllocation {
                     if (inst.rs2 != null) degree.put(inst.rs2, 0) ;
                     if (inst.rd != null) degree.put(inst.rd, 0) ;
                 }
-        for (int i = 0; i < 32; i ++) degree.put(phyRegs[i], 100); // inf
+        for (int i = 0; i < 32; i ++) degree.put(phyRegs[i], Integer.MAX_VALUE); // inf
     }
-    private void addInstEdge (AssemblyFunction curFunction, Inst from, Inst to) {
-        curFunction.succ.get(from).add(to) ;
-        curFunction.pred.get(to).add(from) ;
-    }
-    private void getSuccAndPred (AssemblyFunction curFunction) {
-        curFunction.succ.clear(); curFunction.pred.clear() ;
-        for (AssemblyBlock block : curFunction.blocks) {
-            for (Inst inst = block.head; inst != null; inst = inst.next) {
-                curFunction.succ.put(inst, new HashSet<>()) ;
-                curFunction.pred.put(inst, new HashSet<>()) ;
-            }
-        }
-        for (int i = 0; i < curFunction.blocks.size(); i ++) {
-            AssemblyBlock block = curFunction.blocks.get(i) ;
+    // private void addInstEdge (AssemblyFunction curFunction, Inst from, Inst to) {
+    //     curFunction.succ.get(from).add(to) ;
+    //     curFunction.pred.get(to).add(from) ;
+    // }
+    // private void getSuccAndPred (AssemblyFunction curFunction) {
+    //     curFunction.succ.clear(); curFunction.pred.clear() ;
+    //     for (AssemblyBlock block : curFunction.blocks) {
+    //         for (Inst inst = block.head; inst != null; inst = inst.next) {
+    //             curFunction.succ.put(inst, new HashSet<>()) ;
+    //             curFunction.pred.put(inst, new HashSet<>()) ;
+    //         }
+    //     }
+    //     for (int i = 0; i < curFunction.blocks.size(); i ++) {
+    //         AssemblyBlock block = curFunction.blocks.get(i) ;
+    //         for (Inst inst = block.head; inst != null; inst = inst.next) {
+    //             if (inst instanceof bnezInst) {
+    //                 bnezInst bnez = (bnezInst) inst ;
+    //                 Inst toInst = curFunction.labelToBlock.get(bnez.toLabel.labelID).head ;
+    //                 if (toInst != null) addInstEdge(curFunction, inst, toInst);
+    //             }
+    //             if (inst instanceof jumpInst) {
+    //                 jumpInst jump = (jumpInst) inst ;
+    //                 Inst toInst = curFunction.labelToBlock.get(jump.toLabel.labelID).head ;
+    //                 if (toInst != null) addInstEdge(curFunction, inst, toInst) ;
+    //             } else {
+    //                 if (inst.next != null) addInstEdge(curFunction, inst, inst.next);
+    //                 else if (i + 1 < curFunction.blocks.size()) addInstEdge(curFunction, inst, curFunction.blocks.get(i + 1).head);
+    //             }
+    //         }
+    //     }
+    // }
+    private void getSucc (AssemblyFunction curFunction) {
+        for (AssemblyBlock block : curFunction.blocks)
             for (Inst inst = block.head; inst != null; inst = inst.next) {
                 if (inst instanceof bnezInst) {
-                    bnezInst bnez = (bnezInst) inst ;
-                    Inst toInst = curFunction.labelToBlock.get(bnez.toLabel.labelID).head ;
-                    if (toInst != null) addInstEdge(curFunction, inst, toInst);
+                    bnezInst bnezinst = (bnezInst) inst ;
+                    block.succ.add(curFunction.labelToBlock.get(bnezinst.toLabel.labelID)) ;
                 }
                 if (inst instanceof jumpInst) {
-                    jumpInst jump = (jumpInst) inst ;
-                    Inst toInst = curFunction.labelToBlock.get(jump.toLabel.labelID).head ;
-                    if (toInst != null) addInstEdge(curFunction, inst, toInst) ;
-                } else {
-                    if (inst.next != null) addInstEdge(curFunction, inst, inst.next);
-                    else if (i + 1 < curFunction.blocks.size()) addInstEdge(curFunction, inst, curFunction.blocks.get(i + 1).head);
+                    jumpInst jumpinst = (jumpInst) inst ;
+                    block.succ.add(curFunction.labelToBlock.get(jumpinst.toLabel.labelID)) ;
                 }
             }
-        }
     }
     private void getUseAndDef (AssemblyFunction curFunction) {
         curFunction.use.clear(); curFunction.def.clear();
@@ -247,48 +263,78 @@ public class RegisterAllocation {
             }
         }
     }
+    // private void livenessAnalysis (AssemblyFunction curFunction) {
+    //     for (AssemblyBlock block : curFunction.blocks) {
+    //         for (Inst inst = block.head; inst != null; inst = inst.next) {
+    //             curFunction.in.put(inst, new HashSet<>()) ;
+    //             curFunction.out.put(inst, new HashSet<>()) ;
+    //         }
+    //     }
+    //     while (true) {
+    //         boolean hasUpdated = false ;
+    //         for (AssemblyBlock block : curFunction.blocks) {
+    //             for (Inst inst = block.tail; inst != null; inst = inst.prev) {
+    //                 Set<Reg> preIn = new HashSet<>(curFunction.in.get(inst)) ;
+    //                 Set<Reg> preOut = new HashSet<>(curFunction.out.get(inst)) ;
+    //                 Set<Reg> in = curFunction.in.get(inst), out = curFunction.out.get(inst) ;
+    //                 in.clear(); in.addAll(out) ;
+    //                 in.removeAll(curFunction.def.get(inst)) ;
+    //                 in.addAll(curFunction.use.get(inst)) ;
+    //                 out.clear() ;
+    //                 for (Inst succInst : curFunction.succ.get(inst)) {
+    //                     out.addAll(curFunction.in.get(succInst)) ;
+    //                 }
+    //                 if (preIn.size() != in.size() || preOut.size() != out.size()) hasUpdated = true ;
+    //                 // if (!preIn.equals(in) || !preOut.equals(out)) hasUpdated = true ;
+    //             }
+    //         }
+    //         if (!hasUpdated) break ;
+    //     }
+    //     // for (AssemblyBlock block : curFunction.blocks) {
+    //     //     for (Inst inst = block.head; inst != null; inst = inst.next) {
+    //     //         System.out.println(inst);
+    //     //         System.out.print("in: ") ;
+    //     //         for (Reg reg : curFunction.in.get(inst)) System.out.print(reg + " ") ;
+    //     //         System.out.println() ;
+    //     //         System.out.print("out: ") ;
+    //     //         for (Reg reg : curFunction.out.get(inst)) System.out.print(reg + " ") ;
+    //     //         System.out.println(); System.out.println() ;
+    //     //     }
+    //     // }
+    // }
     private void livenessAnalysis (AssemblyFunction curFunction) {
+        blockLivein = new HashMap<>(); blockLiveout = new HashMap<>(); blockDef = new HashMap<>() ;
         for (AssemblyBlock block : curFunction.blocks) {
+            Set<Reg> def = new HashSet<>(), use = new HashSet<>() ;
             for (Inst inst = block.head; inst != null; inst = inst.next) {
-                curFunction.in.put(inst, new HashSet<>()) ;
-                curFunction.out.put(inst, new HashSet<>()) ;
+                Set<Reg> instUse = curFunction.use.get(inst), instDef = curFunction.def.get(inst) ;
+                for (Reg reg : instUse) {
+                    if (!def.contains(reg)) use.add(reg) ;
+                }
+                for (Reg reg : instDef) def.add(reg) ;
             }
+            blockDef.put(block, def) ;
+            blockLivein.put(block, use) ;
+            blockLiveout.put(block, new HashSet<>()) ;
         }
         while (true) {
             boolean hasUpdated = false ;
-            for (AssemblyBlock block : curFunction.blocks) {
-                for (Inst inst = block.tail; inst != null; inst = inst.prev) {
-                    Set<Reg> preIn = new HashSet<>(curFunction.in.get(inst)) ;
-                    Set<Reg> preOut = new HashSet<>(curFunction.out.get(inst)) ;
-                    Set<Reg> in = curFunction.in.get(inst), out = curFunction.out.get(inst) ;
-                    in.clear(); in.addAll(out) ;
-                    in.removeAll(curFunction.def.get(inst)) ;
-                    in.addAll(curFunction.use.get(inst)) ;
-                    out.clear() ;
-                    for (Inst succInst : curFunction.succ.get(inst)) {
-                        out.addAll(curFunction.in.get(succInst)) ;
-                    }
-                    if (preIn.size() != in.size() || preOut.size() != out.size()) hasUpdated = true ;
-                    // if (!preIn.equals(in) || !preOut.equals(out)) hasUpdated = true ;
-                }
+            for (int i = curFunction.blocks.size() - 1; i >= 0; i --) {
+                AssemblyBlock block = curFunction.blocks.get(i) ;
+                Set<Reg> livein = blockLivein.get(block), liveout = blockLiveout.get(block) ;
+                int preLiveinSize = livein.size(), preLiveoutSize = liveout.size() ;
+                liveout.removeAll(blockDef.get(block)) ;
+                livein.addAll(liveout) ;
+                for (AssemblyBlock succBlock : block.succ)
+                    liveout.addAll(blockLivein.get(succBlock)) ;
+                if (preLiveinSize != livein.size() || preLiveoutSize != liveout.size()) hasUpdated = true ;
             }
             if (!hasUpdated) break ;
         }
-        // for (AssemblyBlock block : curFunction.blocks) {
-        //     for (Inst inst = block.head; inst != null; inst = inst.next) {
-        //         System.out.println(inst);
-        //         System.out.print("in: ") ;
-        //         for (Reg reg : curFunction.in.get(inst)) System.out.print(reg + " ") ;
-        //         System.out.println() ;
-        //         System.out.print("out: ") ;
-        //         for (Reg reg : curFunction.out.get(inst)) System.out.print(reg + " ") ;
-        //         System.out.println(); System.out.println() ;
-        //     }
-        // }
     }
     private void addEdge (Reg reg1, Reg reg2) {
         if (!adjSet.contains(new Pair<Reg, Reg>(reg1, reg2)) && reg1 != reg2) {
-            // System.out.println ("add edge " + reg1 + " " + reg2) ;
+            // System.out.println ("addedge " + reg1 + " " + reg2) ;
 
             adjSet.add(new Pair<Reg, Reg>(reg1, reg2)) ;
             adjSet.add(new Pair<Reg, Reg>(reg2, reg1)) ;
@@ -308,51 +354,76 @@ public class RegisterAllocation {
             }
         }
     }
+    // private void build (AssemblyFunction curFunction) {
+    //     // for (AssemblyBlock block : curFunction.blocks) {
+    //     //     if (block.head == null && block.tail == null) continue ;
+    //     //     Set<Reg> live = new HashSet<>(curFunction.out.get(block.tail)) ;
+    //     //     for (Inst inst = block.tail; inst != null; inst = inst.prev) {
+    //     //         Set<Reg> def = curFunction.def.get(inst) ;
+    //     //         Set<Reg> use = curFunction.use.get(inst) ;
+    //     //         if (inst instanceof mvInst) {
+    //     //             live.removeAll(use) ;
+    //     //             Set<Reg> defAndUse = new HashSet<>(def) ;
+    //     //             defAndUse.addAll(use) ;
+    //     //             for (Reg reg : defAndUse) {
+    //     //                 if (!moveList.containsKey(reg)) moveList.put(reg, new HashSet<>()) ;
+    //     //                 moveList.get(reg).add(inst) ;
+    //     //             }
+    //     //             worklistMoves.add(inst) ;
+    //     //         }
+    //     //         live.addAll(def) ;
+    //     //         for (Reg d : def)
+    //     //             for (Reg l : live) {
+    //     //                 addEdge (l, d) ;
+    //     //             }
+    //     //         live.removeAll(def); live.addAll(use) ;
+    //     //     }
+    //     // }
+    //     for (AssemblyBlock block : curFunction.blocks)
+    //         for (Inst inst = block.head; inst != null; inst = inst.next) {
+    //             Set<Reg> def = curFunction.def.get(inst) ;
+    //             Set<Reg> use = curFunction.use.get(inst) ;
+    //             if (inst instanceof mvInst) {
+    //                 Set<Reg> defAndUse = new HashSet<>(def) ;
+    //                 defAndUse.addAll(use) ;
+    //                 for (Reg reg : defAndUse) {
+    //                     if (!moveList.containsKey(reg)) moveList.put(reg, new HashSet<>()) ;
+    //                         moveList.get(reg).add(inst) ;
+    //                 }
+    //                 worklistMoves.add(inst) ;
+    //             }
+    //             Set<Reg> tmp = new HashSet<>(def) ;
+    //             tmp.addAll(curFunction.out.get(inst)) ;
+    //             for (Reg d : def)
+    //                 for (Reg l : tmp) {
+    //                     addEdge (d, l) ;
+    //                 }
+    //         }
+    // }
     private void build (AssemblyFunction curFunction) {
-        // for (AssemblyBlock block : curFunction.blocks) {
-        //     if (block.head == null && block.tail == null) continue ;
-        //     Set<Reg> live = new HashSet<>(curFunction.out.get(block.tail)) ;
-        //     for (Inst inst = block.tail; inst != null; inst = inst.prev) {
-        //         Set<Reg> def = curFunction.def.get(inst) ;
-        //         Set<Reg> use = curFunction.use.get(inst) ;
-        //         if (inst instanceof mvInst) {
-        //             live.removeAll(use) ;
-        //             Set<Reg> defAndUse = new HashSet<>(def) ;
-        //             defAndUse.addAll(use) ;
-        //             for (Reg reg : defAndUse) {
-        //                 if (!moveList.containsKey(reg)) moveList.put(reg, new HashSet<>()) ;
-        //                 moveList.get(reg).add(inst) ;
-        //             }
-        //             worklistMoves.add(inst) ;
-        //         }
-        //         live.addAll(def) ;
-        //         for (Reg d : def)
-        //             for (Reg l : live) {
-        //                 addEdge (l, d) ;
-        //             }
-        //         live.removeAll(def); live.addAll(use) ;
-        //     }
-        // }
-        for (AssemblyBlock block : curFunction.blocks)
-            for (Inst inst = block.head; inst != null; inst = inst.next) {
-                Set<Reg> def = curFunction.def.get(inst) ;
-                Set<Reg> use = curFunction.use.get(inst) ;
+        for (AssemblyBlock block : curFunction.blocks) {
+            Set<Reg> liveout = blockLiveout.get(block) ;
+            for (Inst inst = block.tail; inst != null; inst = inst.prev) {
+                Set<Reg> use = curFunction.use.get(inst), def = curFunction.def.get(inst) ;
                 if (inst instanceof mvInst) {
-                    Set<Reg> defAndUse = new HashSet<>(def) ;
-                    defAndUse.addAll(use) ;
-                    for (Reg reg : defAndUse) {
+                    liveout.removeAll(use) ;
+                    for (Reg reg : use) {
+                        if (!moveList.containsKey(reg)) moveList.put(reg, new HashSet<>()) ;
+                            moveList.get(reg).add(inst) ;
+                    }
+                    for (Reg reg : def) {
                         if (!moveList.containsKey(reg)) moveList.put(reg, new HashSet<>()) ;
                             moveList.get(reg).add(inst) ;
                     }
                     worklistMoves.add(inst) ;
                 }
-                Set<Reg> tmp = new HashSet<>(def) ;
-                tmp.addAll(curFunction.out.get(inst)) ;
+                liveout.addAll(def) ;
                 for (Reg d : def)
-                    for (Reg l : tmp) {
+                    for (Reg l : liveout)
                         addEdge (d, l) ;
-                    }
+                liveout.removeAll(def); liveout.addAll(use) ;
             }
+        }
     }
     private Set<Inst> nodeMoves (Reg reg) {
         Set<Inst> tmp = new HashSet<>(activeMoves) ;
@@ -568,7 +639,7 @@ public class RegisterAllocation {
         for (Reg reg : spilledNodes) {
             curFunction.offset += 4 ;
             curFunction.regOffset.put(reg, curFunction.offset) ;
-            System.out.println ("to stack: " + reg + " " + curFunction.offset) ;
+            // System.out.println ("to stack: " + reg + " " + curFunction.offset) ;
         }
         for (AssemblyBlock block : curFunction.blocks) {
             for (Inst inst = block.head; inst != null; inst = inst.next) {
