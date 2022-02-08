@@ -15,6 +15,7 @@ import Assembly.Operand.Imm;
 import Assembly.Operand.PhysicalReg;
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
+import MIR.block;
 
 public class RegisterAllocation {
     final int K = 17 ;
@@ -54,6 +55,7 @@ public class RegisterAllocation {
         for (int i = 0; i < 32; i ++) {
             precolored.add(phyRegs[i]) ;
             color.put(phyRegs[i], i) ;
+            degree.put(phyRegs[i], 0) ;
         }
     }
     private void analyzeRoot () {
@@ -66,6 +68,7 @@ public class RegisterAllocation {
         functionStackInst () ;
     }
     private void analyzeFunction (AssemblyFunction curFunction) {
+        clear() ;
         getSuccAndPred(curFunction);
         getUseAndDef(curFunction);
         livenessAnalysis(curFunction);
@@ -106,20 +109,19 @@ public class RegisterAllocation {
             }
         }
     }
+    private void clear() {
+        adjSet.clear(); adjList.clear();
+        moveList.clear(); degree.clear() ;
+        for (AssemblyFunction function : globalDef.functions)
+            for (AssemblyBlock block : function.blocks)
+                for (Inst inst = block.head; inst != null; inst = inst.next) {
+                    if (inst.rs1 != null) degree.put(inst.rs1, 0) ;
+                    if (inst.rs2 != null) degree.put(inst.rs2, 0) ;
+                    if (inst.rd != null) degree.put(inst.rd, 0) ;
+                }
+    }
     private void addInstEdge (AssemblyFunction curFunction, Inst from, Inst to) {
-        // if (curFunction.succ.containsKey(from)) curFunction.succ.get(from).add(to) ;
-        // else {
-        //     Set<Inst> curSet = new HashSet<>() ;
-        //     curSet.add(to) ;
-        //     curFunction.succ.put(from, curSet) ;
-        // }
         curFunction.succ.get(from).add(to) ;
-        // if (curFunction.pred.containsKey(to)) curFunction.pred.get(to).add(from) ;
-        // else {
-        //     Set<Inst> curSet = new HashSet<>() ;
-        //     curSet.add(from) ;
-        //     curFunction.pred.put(to, curSet) ;
-        // }
         curFunction.pred.get(to).add(from) ;
     }
     private void getSuccAndPred (AssemblyFunction curFunction) {
@@ -248,20 +250,14 @@ public class RegisterAllocation {
             adjSet.add(new Pair<Reg, Reg>(reg2, reg1)) ;
             
             if (reg1 instanceof VirtualReg) {
-                if (!adjList.containsKey(reg1)) {
-                    adjList.put(reg1, new HashSet<>()) ;
-                    degree.put(reg1, 1) ;
-                }
+                if (!adjList.containsKey(reg1)) adjList.put(reg1, new HashSet<>()) ;
                 adjList.get(reg1).add(reg2) ;
                 Integer deg = degree.get(reg1); deg ++ ;
                 degree.replace(reg1, deg) ;
             }
 
             if (reg2 instanceof VirtualReg) {
-                if (!adjList.containsKey(reg2)) {
-                    adjList.put(reg2, new HashSet<>()) ;
-                    degree.put(reg2, 1) ;
-                }
+                if (!adjList.containsKey(reg2)) adjList.put(reg2, new HashSet<>()) ;
                 adjList.get(reg2).add(reg1) ;
                 Integer deg = degree.get(reg2); deg ++ ;
                 degree.replace(reg2, deg) ;
@@ -290,6 +286,7 @@ public class RegisterAllocation {
                     for (Reg l : live) {
                         addEdge (l, d) ;
                     }
+                live.removeAll(def); live.addAll(use) ;
             }
         }
     }
@@ -444,7 +441,7 @@ public class RegisterAllocation {
     private void freezeMoves (Reg u) {
         for (Inst inst : nodeMoves(u)) {
             mvInst mvinst = (mvInst) inst ;
-            Reg x = (Reg) mvinst.rs1, y = (Reg) mvinst.rd, v = null ;
+            Reg x = mvinst.rs1, y = mvinst.rd, v = null ;
             if (getAlias(y) == getAlias(u)) v = getAlias(x) ;
             else v = getAlias(y) ;
             activeMoves.remove(mvinst) ;
@@ -491,7 +488,7 @@ public class RegisterAllocation {
                 for (Integer tmp : okColors) {
                     c = tmp; break ;
                 }
-                System.out.print(n); System.out.print(" "); System.out.println (c) ;
+                // System.out.print(n); System.out.print(" "); System.out.println (c) ;
                 color.put(n, c) ;
             }
         }
@@ -510,56 +507,39 @@ public class RegisterAllocation {
                 if (inst.rs1 != null && inst.rs1 instanceof VirtualReg && spilledNodes.contains(inst.rs1)) {
                     VirtualReg reg = (VirtualReg) inst.rs1 ;
                     VirtualReg tmpReg = new VirtualReg(curFunction.curRegID ++, reg.size) ;
+                    VirtualReg valReg = new VirtualReg(curFunction.curRegID ++, 4) ;
                     int imm = -curFunction.regOffset.get(reg) ;
-                    block.insert_before(inst, new liInst(t3, new Imm(imm)));
-                    block.insert_before(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
-                    block.insert_before(inst, new loadInst(reg.size, tmpReg, new Imm(0), t3));
+                    block.insert_before(inst, new liInst(valReg, new Imm(imm)));
+                    block.insert_before(inst, new binaryInst(binaryInstOp.add, s0, valReg, valReg));
+                    block.insert_before(inst, new loadInst(reg.size, tmpReg, new Imm(0), valReg));
                     newTemps.add(tmpReg); newRegs.add(tmpReg) ;
+                    newTemps.add(valReg); newRegs.add(valReg) ;
                     inst.rs1 = tmpReg ;
                 }
                 if (inst.rs2 != null && inst.rs2 instanceof VirtualReg && spilledNodes.contains(inst.rs2)) {
                     VirtualReg reg = (VirtualReg) inst.rs2 ;
                     VirtualReg tmpReg = new VirtualReg(curFunction.curRegID ++, reg.size) ;
+                    VirtualReg valReg = new VirtualReg(curFunction.curRegID ++, 4) ;
                     int imm = -curFunction.regOffset.get(reg) ;
-                    block.insert_before(inst, new liInst(t3, new Imm(imm)));
-                    block.insert_before(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
-                    block.insert_before(inst, new loadInst(reg.size, tmpReg, new Imm(0), t3));
+                    block.insert_before(inst, new liInst(valReg, new Imm(imm)));
+                    block.insert_before(inst, new binaryInst(binaryInstOp.add, s0, valReg, valReg));
+                    block.insert_before(inst, new loadInst(reg.size, tmpReg, new Imm(0), valReg));
                     newTemps.add(tmpReg); newRegs.add(tmpReg) ;
+                    newTemps.add(valReg); newRegs.add(valReg) ;
                     inst.rs2 = tmpReg ;
                 }
-
-                // Set<VirtualReg> use = curFunction.use.get(inst) ;
-                // for (VirtualReg reg : use) {
-                //     if (spilledNodes.contains(reg)) {
-                //         VirtualReg tmpReg = new VirtualReg(curFunction.curRegID ++, reg.size) ;
-                //         int imm = -curFunction.regOffset.get(reg) ;
-                //         block.insert_before(inst, new liInst(t3, new Imm(imm)));
-                //         block.insert_before(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
-                //         block.insert_before(inst, new loadInst(reg.size, tmpReg, new Imm(0), t3));
-                //         newTemps.add(tmpReg) ;
-                //     }
-                // }
                 if (inst.rd != null && inst.rd instanceof VirtualReg && spilledNodes.contains(inst.rd)) {
                     VirtualReg reg = (VirtualReg) inst.rd ;
                     VirtualReg tmpReg = new VirtualReg(curFunction.curRegID ++, reg.size) ;
+                    VirtualReg valReg = new VirtualReg(curFunction.curRegID ++, 4) ;
                     int imm = -curFunction.regOffset.get(reg) ;
-                    block.insert_after(inst, new storeInst(reg.size, tmpReg, new Imm(0), t3));
-                    block.insert_after(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
-                    block.insert_after(inst, new liInst(t3, new Imm(imm)));
+                    block.insert_after(inst, new storeInst(reg.size, tmpReg, new Imm(0), valReg));
+                    block.insert_after(inst, new binaryInst(binaryInstOp.add, s0, valReg, valReg));
+                    block.insert_after(inst, new liInst(valReg, new Imm(imm)));
                     newTemps.add(tmpReg); newRegs.add(tmpReg) ;
+                    newTemps.add(valReg); newRegs.add(valReg) ;
                     inst.rd = tmpReg ;
                 }
-                // Set<VirtualReg> def = curFunction.def.get(inst) ;
-                // for (VirtualReg reg : def) {
-                //     if (spilledNodes.contains(reg)) {
-                //         VirtualReg tmpReg = new VirtualReg(curFunction.curRegID ++, reg.size) ;
-                //         int imm = -curFunction.regOffset.get(reg) ;
-                //         block.insert_after(inst, new storeInst(reg.size, Preg, new Imm(0), t3));
-                //         block.insert_after(inst, new binaryInst(binaryInstOp.add, s0, t3, t3));
-                //         block.insert_after(inst, new liInst(t3, new Imm(imm)));
-                //         newTemps.add(tmpReg) ;
-                //     }
-                // }
             }
         }
         spilledNodes.clear() ;
