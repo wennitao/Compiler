@@ -3,6 +3,7 @@ package Assembly;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,8 +19,10 @@ public class AssemblyFunction {
     public Map<String, AssemblyBlock> labelToBlock = new HashMap<>() ;
     public Map<String, VirtualReg> toRegMap = new HashMap<>() ;
     public Map<Reg, Integer> regOffset = new HashMap<>() ;
+    public Set<String> allocaRegs = new HashSet<>() ;
     public Map<String, VirtualReg> phiRd = new HashMap<>() ;
     public Map<String, entity> phiValue = new HashMap<>() ;
+    public Map<Reg, Integer> useCount = new HashMap<>() ;
     // register allocation
     // public Map<Inst, Set<Inst> > succ, pred ;
     // public Map<AssemblyBlock, Set<AssemblyBlock> > succ ;

@@ -81,7 +81,7 @@ public class RegisterAllocation {
             if (!simplifiyWorklist.isEmpty()) simplifiy () ;
             else if (!worklistMoves.isEmpty()) coalesce() ;
             else if (!freezeWorklist.isEmpty()) freeze() ;
-            else if (!spillWorklist.isEmpty()) selectSpill();
+            else if (!spillWorklist.isEmpty()) selectSpill(curFunction);
         } while (!simplifiyWorklist.isEmpty() || !worklistMoves.isEmpty() || !freezeWorklist.isEmpty() || !spillWorklist.isEmpty()) ;
         assignColors() ;
         if (!spilledNodes.isEmpty()) {
@@ -182,6 +182,7 @@ public class RegisterAllocation {
     }
     private void getUseAndDef (AssemblyFunction curFunction) {
         curFunction.use.clear(); curFunction.def.clear();
+        curFunction.useCount.clear() ;
         for (AssemblyBlock block : curFunction.blocks) {
             for (Inst inst = block.head; inst != null; inst = inst.next) {
                 if (inst instanceof binaryInst) {
@@ -234,6 +235,7 @@ public class RegisterAllocation {
                     // if (load.rs1 instanceof VirtualReg) curSet.add((VirtualReg) load.rs1) ;
                     curFunction.def.put(inst, curSet) ;
                 } else if (inst instanceof storeInst) {
+                    // System.out.println (inst) ;
                     Set<Reg> curSet = new HashSet<>() ;
                     curSet.add(inst.rs1); curSet.add (inst.rs2) ;
                     // if (inst.rs1 instanceof VirtualReg) curSet.add ((VirtualReg) inst.rs1) ;
@@ -253,6 +255,12 @@ public class RegisterAllocation {
                     curFunction.use.put(inst, new HashSet<>()) ;
                     curFunction.def.put(inst, new HashSet<>()) ;
                 }
+                for (Reg reg : curFunction.use.get(inst))
+                    if (reg instanceof VirtualReg) {
+                        if (!curFunction.useCount.containsKey(reg)) curFunction.useCount.put(reg, 0) ;
+                        int cnt = curFunction.useCount.get(reg) ;
+                        curFunction.useCount.replace(reg, cnt + 1) ;
+                    }
                 // System.out.println (inst) ;
                 // System.out.print("use: ") ;
                 // for (Reg reg : curFunction.use.get(inst)) System.out.print (reg + " ") ;
@@ -587,15 +595,12 @@ public class RegisterAllocation {
             }
         }
     }
-    private void selectSpill () {
-        Reg m = null ;
+    private void selectSpill (AssemblyFunction curFunction) {
+        Reg m = null; int minCnt = Integer.MAX_VALUE ;
         for (Reg tmp : spillWorklist) {
-            if (newRegs.contains(tmp)) continue ;
-            m = tmp; break ;
-        }
-        if (m == null) {
-            for (Reg tmp : spillWorklist) {
-                m = tmp; break ;
+            int cnt = curFunction.useCount.get(tmp) ;
+            if (cnt < minCnt) {
+                minCnt = cnt; m = tmp ;
             }
         }
         if (m == null) return ;

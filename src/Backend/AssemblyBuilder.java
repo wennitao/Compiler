@@ -188,8 +188,9 @@ public class AssemblyBuilder {
                 if (!curFunction.toRegMap.containsKey(reg.registerID)) {
                     rs = new VirtualReg(curFunction.curRegID ++, x.type.size) ;
                     curFunction.toRegMap.put(reg.registerID, rs) ;
-                    curFunction.offset += 4 ;
-                    curFunction.regOffset.put(rs, curFunction.offset) ;
+                    // fake alloca
+                    // curFunction.offset += 4 ;
+                    // curFunction.regOffset.put(rs, curFunction.offset) ;
                 } else {
                     rs = curFunction.toRegMap.get(reg.registerID) ;
                 }
@@ -213,8 +214,9 @@ public class AssemblyBuilder {
                 if (!curFunction.toRegMap.containsKey(reg.registerID)) {
                     rs = new VirtualReg(curFunction.curRegID ++, x.type.size) ;
                     curFunction.toRegMap.put(reg.registerID, rs) ;
-                    curFunction.offset += 4 ;
-                    curFunction.regOffset.put(rs, curFunction.offset) ;
+                    // fake alloca
+                    // curFunction.offset += 4 ;
+                    // curFunction.regOffset.put(rs, curFunction.offset) ;
                 } else {
                     rs = curFunction.toRegMap.get(reg.registerID) ;
                 }
@@ -224,13 +226,22 @@ public class AssemblyBuilder {
     }
     private void genInst (statement curIRStmt) {
         if (curIRStmt instanceof alloca) {
+            // real alloca
+            // alloca curIRInst = (alloca) curIRStmt ;
+            // if (curFunction.toRegMap.containsKey(curIRInst.reg.registerID)) return ;
+            // VirtualReg cur = new VirtualReg(curFunction.curRegID ++, curIRInst.type.size) ;
+            // curFunction.toRegMap.put(curIRInst.reg.registerID, cur) ;
+            // // System.out.println("alloc " + curIRInst.reg.registerID + " " + cur);
+            // curFunction.offset += 4 ;
+            // curFunction.regOffset.put(cur, curFunction.offset) ;
+
+            // fake alloca
+            // System.out.println(curIRStmt) ;
             alloca curIRInst = (alloca) curIRStmt ;
             if (curFunction.toRegMap.containsKey(curIRInst.reg.registerID)) return ;
             VirtualReg cur = new VirtualReg(curFunction.curRegID ++, curIRInst.type.size) ;
             curFunction.toRegMap.put(curIRInst.reg.registerID, cur) ;
-            // System.out.println("alloc " + curIRInst.reg.registerID + " " + cur);
-            curFunction.offset += 4 ;
-            curFunction.regOffset.put(cur, curFunction.offset) ;
+            curFunction.allocaRegs.add(curIRInst.reg.registerID) ;
         } else if (curIRStmt instanceof binary) {
             binary curIRInst = (binary) curIRStmt ;
             entity left = curIRInst.left, right = curIRInst.right, dest = curIRInst.dest ;
@@ -304,19 +315,26 @@ public class AssemblyBuilder {
                 curBlock.push_back(new loadInst(fromGlobal.type.size, fromGlobal.registerID, rd));
             } else {
                 VirtualReg rs = entityToReg(from) ;
-                if (curFunction.regOffset.containsKey(rs)) {
-                    int imm = -curFunction.regOffset.get(rs) ;
-                    // if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
-                    // else {
-                        VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
-                        curBlock.push_back(new liInst(t, new Imm(imm)));
-                        curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
-                        curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
-                    // }
-                    // loadFromImm(to.type.size, rd, imm, s0) ;
-                    // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+                
+                if (!curFunction.allocaRegs.contains(((register) from).registerID)) {
+                    // real load
+                    if (curFunction.regOffset.containsKey(rs)) {
+                        // int imm = -curFunction.regOffset.get(rs) ;
+                        // // if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
+                        // // else {
+                        //     VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                        //     curBlock.push_back(new liInst(t, new Imm(imm)));
+                        //     curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
+                        //     curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
+                        // // }
+                        // // loadFromImm(to.type.size, rd, imm, s0) ;
+                        // // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+                    } else {
+                        curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
+                    }
                 } else {
-                    curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
+                    // fake load
+                    curBlock.push_back(new mvInst(rs, rd));
                 }
             }
             curFunction.toRegMap.put (((register) to).registerID, rd) ;
@@ -331,21 +349,30 @@ public class AssemblyBuilder {
                 curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
             } else {
                 VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
+                // System.out.println(rs + " " + rd);
                 // System.out.println(rd + " " + curFunction.regOffset.containsKey(rd)) ;
-                if (curFunction.regOffset.containsKey(rd)) {
-                    int imm = -curFunction.regOffset.get(rd) ;
-                    // System.out.println(rd + " imm:" + imm);
-                    // if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
-                    // else {
-                        VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
-                        curBlock.push_back(new liInst(t, new Imm(imm)));
-                        curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
-                        curBlock.push_back(new storeInst(from.type.size, rs, new Imm(0), t));
-                    // }
-                    // loadFromImm(from.type.size, rs, imm, s0);
-                    // curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
+
+                // real store
+                if (!curFunction.allocaRegs.contains(((register) to).registerID)) {
+                    if (curFunction.regOffset.containsKey(rd)) {
+                        int imm = -curFunction.regOffset.get(rd) ;
+                        // System.out.println(rd + " imm:" + imm);
+                        // if (immInRange(imm)) curBlock.push_back(new storeInst(from.type.size, rs, new Imm(imm), s0));
+                        // else {
+                            VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                            curBlock.push_back(new liInst(t, new Imm(imm)));
+                            curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
+                            curBlock.push_back(new storeInst(from.type.size, rs, new Imm(0), t));
+                        // }
+                        // loadFromImm(from.type.size, rs, imm, s0);
+                        // curBlock.push_back(new storeInst(from.type.size, rs, new Imm (imm), s0)) ;
+                    } else {
+                        // System.out.println(rs + " " + rd);
+                        curBlock.push_back(new storeInst(from.type.size, rs, new Imm (0), rd));
+                    }
                 } else {
-                    curBlock.push_back(new storeInst(from.type.size, rs, new Imm (0), rd));
+                    // fake store
+                    curBlock.push_back(new mvInst(rs, rd));
                 }
             }
         } else if (curIRStmt instanceof returnStmt) {
