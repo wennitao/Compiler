@@ -7,7 +7,7 @@ import MIR.IRType.IRType;
 
 public class function {
     public String identifier ;
-    public block rootBlock, returnBlock ;
+    public block allocaBlock, rootBlock, returnBlock ;
     public ArrayList<block> blocks ;
     public int curRegisterID ;
     public IRType returnType ;
@@ -15,16 +15,18 @@ public class function {
     public ArrayList<register> parameters ;
     public ArrayList<String> parameterId ;
     public boolean isBuiltin ;
+    public ArrayList<alloca> allocaInst = new ArrayList<>() ;
     public function (String _identifier) {
         identifier = _identifier ;
         // label rootBlockLabel = new label(identifier + "_entry") ;
         // rootBlock = new block(rootBlockLabel.labelID, rootBlockLabel) ;
         // label returnBlockLabel = new label (identifier + "_return") ;
         // returnBlock = new block (returnBlockLabel.labelID, returnBlockLabel) ;
+        allocaBlock = new block (identifier + "_alloca") ;
         rootBlock = new block(identifier + "_entry") ;
         returnBlock = new block(identifier + "_return") ;
         blocks = new ArrayList<>() ;
-        blocks.add(rootBlock) ;
+        blocks.add (allocaBlock); blocks.add(rootBlock) ;
         curRegisterID = 0 ;
         parameters = new ArrayList<>() ;
         parameterId = new ArrayList<>() ;

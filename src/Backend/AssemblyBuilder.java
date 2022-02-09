@@ -122,7 +122,7 @@ public class AssemblyBuilder {
             calleeRegs[i] = new VirtualReg(curFunction.curRegID ++, 4) ;
             initBlock.push_back(new mvInst(phyRegs[i], calleeRegs[i]));
         }
-        initBlock.push_back(new jumpInst(new label(curIRFunc.identifier + "_entry")));
+        initBlock.push_back(new jumpInst(new label(curIRFunc.identifier + "_alloca")));
 
         for (block curIRBlock : curIRFunc.blocks) {
             build_block(curIRBlock) ;
