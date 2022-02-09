@@ -626,9 +626,16 @@ public class RegisterAllocation {
             if (okColors.isEmpty()) spilledNodes.add(n) ;
             else {
                 coloredNodes.add(n) ;
-                int c = 0 ;
+                int c = -1 ;
                 for (Integer tmp : okColors) {
-                    c = tmp; break ;
+                    if ((tmp >= 5 && tmp <= 7) || (tmp >= 10 && tmp <= 17) || (tmp >= 28 && tmp <= 31)) {
+                        c = tmp; break ;
+                    }
+                }
+                if (c == -1) {
+                    for (Integer tmp : okColors) {
+                        c = tmp; break ;
+                    }
                 }
                 // System.out.println("assign color: " + n + " " + c) ;
                 color.put(n, c) ;
