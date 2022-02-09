@@ -47,6 +47,7 @@ public class IRBuilder implements ASTVisitor{
         // initFunc.rootBlock.identifier = functionEntryLabel.labelID ;
         initFunc.returnType = new IRVoidType() ;
         // initFunc.rootBlock.blockLabel = functionEntryLabel ;
+        initFunc.allocaBlock.push_back(new branch(new label(initFunc.rootBlock.identifier)));
         initCurrentBlock = initFunc.rootBlock ;
 
         isFunctionID = false; isGlobalDef = false ;
@@ -597,7 +598,8 @@ public class IRBuilder implements ASTVisitor{
         curFunction.parameterId.add("__class_ptr") ;
         curFunction.parameters.add (parameterReg) ;
         register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType(parameterReg.type)) ;
-        currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+        // currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+        curFunction.allocaInst.add(new alloca(copyReg, parameterReg.type)) ;
         currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
         flowController = new FlowController(it.name) ;
         // curClass = copyReg ;
@@ -629,7 +631,8 @@ public class IRBuilder implements ASTVisitor{
             curFunction.parameterId.add("__class_ptr") ;
             curFunction.parameters.add (parameterReg) ;
             register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType(parameterReg.type)) ;
-            currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+            // currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+            curFunction.allocaInst.add(new alloca(copyReg, parameterReg.type)) ;
             currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
             currentBlock.push_back(new branch(new label(curFunction.returnBlock.identifier)));
             currentBlock = curFunction.returnBlock ;
@@ -818,7 +821,8 @@ public class IRBuilder implements ASTVisitor{
             IRparameters.add (parameterReg.type) ;
             register copyReg = new register(curFunction.curRegisterID ++, new IRPointerType (parameterReg.type)) ;
             copyReg.isLvalue = true ;
-            currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+            // currentBlock.push_back(new alloca(copyReg, parameterReg.type)) ;
+            curFunction.allocaInst.add(new alloca(copyReg, parameterReg.type)) ;
             currentBlock.push_back(new store(copyReg.type, parameterReg, copyReg));
             curScope.entities.put(curFunction.parameterId.get(i), copyReg) ;
             if (isClassDefine && i == 0) {
@@ -832,7 +836,8 @@ public class IRBuilder implements ASTVisitor{
         register returnReg = new register(curFunction.curRegisterID ++, new IRPointerType (curFunction.returnType)) ;
         curFunction.returnReg = returnReg ;
         if (!(curFunction.returnType instanceof IRVoidType)) {
-            currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
+            // currentBlock.push_back(new alloca(returnReg, curFunction.returnType)) ;
+            curFunction.allocaInst.add(new alloca(returnReg, curFunction.returnType)) ;
             if (curFunction.identifier.equals("main")) currentBlock.push_back(new store(curFunction.returnType, new constant (0, new IRIntType(32)), returnReg));
         }
         it.suite.accept(this) ;
@@ -845,6 +850,9 @@ public class IRBuilder implements ASTVisitor{
             currentBlock.push_back(new load(reg.type, curFunction.returnReg, reg)) ;
             currentBlock.push_back(new returnStmt(reg)) ;
         }
+        currentBlock = curFunction.allocaBlock ;
+        for (alloca curAlloca : curFunction.allocaInst) currentBlock.push_back(curAlloca) ;
+        currentBlock.push_back(new branch(new label(curFunction.rootBlock.identifier)));
         curScope = curScope.parentScope() ;
         if (curClass != null) curClass = null ;
         curFunction = null; currentBlock = null;
@@ -954,7 +962,8 @@ public class IRBuilder implements ASTVisitor{
         if (dim == 1) return curArrayPtr ;
 
         register loopVar = new register(curFunction.curRegisterID ++, new IRPointerType (new IRIntType (32))) ;
-        currentBlock.push_back(new alloca(loopVar, new IRIntType (32)));
+        // currentBlock.push_back(new alloca(loopVar, new IRIntType (32)));
+        curFunction.allocaInst.add(new alloca(loopVar, new IRIntType (32))) ;
         currentBlock.push_back(new store(new IRIntType(32), new constant (0, new IRIntType(32)), loopVar));
         label conditionLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_for_condition") ;
         block conditionBlock = new block(conditionLabel.labelID);
@@ -1279,7 +1288,8 @@ public class IRBuilder implements ASTVisitor{
                 register varReg = new register(varRegID, new IRPointerType (varIRType)) ;
                 varReg.isLvalue = true ;
                 curScope.entities.put(x.name, varReg) ;
-                currentBlock.push_back (new alloca(varReg, varIRType));
+                // currentBlock.push_back (new alloca(varReg, varIRType));
+                curFunction.allocaInst.add(new alloca(varReg, varIRType)) ;
                 curFunction.curRegisterID ++ ;
                 if (x.isInitialized) {
                     x.expression.accept(this) ;
