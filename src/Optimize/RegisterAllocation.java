@@ -659,7 +659,7 @@ public class RegisterAllocation {
         }
     }
     private boolean immInRange (int val) {
-        return val > -2048 && val < 2048 ;
+        return val >= -2048 && val < 2048 ;
     }
     private void rewriteProgram (AssemblyFunction curFunction) {
         Set<Reg> newTemps = new HashSet<>() ;
