@@ -54,7 +54,7 @@ Edge:
 	j	.Edge_alloca
 .Edge_alloca:
 .Edge_entry:
-	sw	VirtualReg_0, 0(VirtualReg_12)
+	mv	VirtualReg_12, VirtualReg_0
 	j	.Edge_return
 .Edge_return:
 	mv	s1, VirtualReg_1
@@ -89,7 +89,7 @@ EdgeList:
 	j	.EdgeList_alloca
 .EdgeList_alloca:
 .EdgeList_entry:
-	sw	VirtualReg_0, 0(VirtualReg_12)
+	mv	VirtualReg_12, VirtualReg_0
 	j	.EdgeList_return
 .EdgeList_return:
 	mv	s1, VirtualReg_1
@@ -463,7 +463,7 @@ Array_Node:
 	j	.Array_Node_alloca
 .Array_Node_alloca:
 .Array_Node_entry:
-	sw	VirtualReg_0, 0(VirtualReg_12)
+	mv	VirtualReg_12, VirtualReg_0
 	addi	VirtualReg_13, VirtualReg_0, 8
 	li	VirtualReg_14, 0
 	sw	VirtualReg_14, 0(VirtualReg_13)
@@ -1113,7 +1113,7 @@ Heap_Node:
 	j	.Heap_Node_alloca
 .Heap_Node_alloca:
 .Heap_Node_entry:
-	sw	VirtualReg_0, 0(VirtualReg_12)
+	mv	VirtualReg_12, VirtualReg_0
 	addi	VirtualReg_13, VirtualReg_0, 0
 	li	VirtualReg_14, 12
 	mv	a0, VirtualReg_14
@@ -1810,7 +1810,7 @@ Node:
 	j	.Node_alloca
 .Node_alloca:
 .Node_entry:
-	sw	VirtualReg_0, 0(VirtualReg_12)
+	mv	VirtualReg_12, VirtualReg_0
 	j	.Node_return
 .Node_return:
 	mv	s1, VirtualReg_1
