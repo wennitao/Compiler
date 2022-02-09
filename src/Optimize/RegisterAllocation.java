@@ -261,12 +261,6 @@ public class RegisterAllocation {
                         int cnt = curFunction.useCount.get(reg) ;
                         curFunction.useCount.replace(reg, cnt + 1) ;
                     }
-                for (Reg reg : curFunction.def.get(inst))
-                    if (reg instanceof VirtualReg) {
-                        if (!curFunction.useCount.containsKey(reg)) curFunction.useCount.put(reg, 0) ;
-                        int cnt = curFunction.useCount.get(reg) ;
-                        curFunction.useCount.replace(reg, cnt + 1) ;
-                    }
                 // System.out.println (inst) ;
                 // System.out.print("use: ") ;
                 // for (Reg reg : curFunction.use.get(inst)) System.out.print (reg + " ") ;
