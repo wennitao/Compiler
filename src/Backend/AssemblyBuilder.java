@@ -114,8 +114,8 @@ public class AssemblyBuilder {
         VirtualReg calleeRegs[] = new VirtualReg [32] ;
         // calleeRegs[2] = new VirtualReg(curFunction.curRegID ++, 4) ;
         // initBlock.push_back(new mvInst(phyRegs[2], calleeRegs[2]));
-        // calleeRegs[8] = new VirtualReg(curFunction.curRegID ++, 4) ;
-        // initBlock.push_back(new mvInst(phyRegs[8], calleeRegs[8]));
+        calleeRegs[8] = new VirtualReg(curFunction.curRegID ++, 4) ;
+        initBlock.push_back(new mvInst(phyRegs[8], calleeRegs[8]));
         calleeRegs[9] = new VirtualReg(curFunction.curRegID ++, 4) ;
         initBlock.push_back(new mvInst(phyRegs[9], calleeRegs[9]));
         for (int i = 18; i <= 27; i ++) {

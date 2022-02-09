@@ -15,10 +15,9 @@ import Assembly.Operand.Imm;
 import Assembly.Operand.PhysicalReg;
 import Assembly.Operand.Reg;
 import Assembly.Operand.VirtualReg;
-import MIR.block;
 
 public class RegisterAllocation {
-    final int K = 26 ;
+    final int K = 27 ;
     AssemblyGlobalDefine globalDef ;
     PhysicalReg phyRegs[] ;
     PhysicalReg zero, ra, sp, a0, s0 ;
@@ -246,7 +245,7 @@ public class RegisterAllocation {
                     curFunction.use.put(inst, new HashSet<>()) ;
                     Set<Reg> curSet = new HashSet<>() ;
                     // caller registers
-                    // curSet.add(phyRegs[1]); 
+                    curSet.add(phyRegs[1]); 
                     for (int i = 5; i <= 7; i ++) curSet.add(phyRegs[i]) ;
                     for (int i = 10; i <= 17; i ++) curSet.add(phyRegs[i]) ;
                     for (int i = 28; i <= 31; i ++) curSet.add(phyRegs[i]) ;
@@ -621,6 +620,8 @@ public class RegisterAllocation {
             // for (int i = 0; i < K; i ++) okColors.add(i) ;
             for (int i = 5; i <= 7; i ++) okColors.add(i) ;
             for (int i = 9; i <= 31; i ++) okColors.add(i) ;
+            okColors.add(1) ;
+            // for (int i = 5; i <= 31; i ++) okColors.add(i) ;
             if (adjList.containsKey(n)) {
                 Set<Reg> tmp = new HashSet<>(coloredNodes) ;
                 tmp.addAll(precolored) ;
@@ -634,7 +635,7 @@ public class RegisterAllocation {
                 coloredNodes.add(n) ;
                 int c = -1 ;
                 for (Integer tmp : okColors) {
-                    if ((tmp >= 5 && tmp <= 7) || (tmp >= 10 && tmp <= 17) || (tmp >= 28 && tmp <= 31)) {
+                    if (tmp == 1 || (tmp >= 5 && tmp <= 7) || (tmp >= 10 && tmp <= 17) || (tmp >= 28 && tmp <= 31)) {
                         c = tmp; break ;
                     }
                 }
