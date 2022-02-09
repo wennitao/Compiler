@@ -47,7 +47,7 @@ public class IRBuilder implements ASTVisitor{
         // initFunc.rootBlock.identifier = functionEntryLabel.labelID ;
         initFunc.returnType = new IRVoidType() ;
         // initFunc.rootBlock.blockLabel = functionEntryLabel ;
-        initFunc.allocaBlock.push_back(new branch(new label(initFunc.rootBlock.identifier)));
+        // initFunc.allocaBlock.push_back(new branch(new label(initFunc.rootBlock.identifier)));
         initCurrentBlock = initFunc.rootBlock ;
 
         isFunctionID = false; isGlobalDef = false ;
