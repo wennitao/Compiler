@@ -40,7 +40,6 @@ public class AssemblyBlock {
     }
     
     public void print (PrintStream out) {
-        if (head == null && tail == null) return ;
         out.println("." + identifier + ":") ;
         for (Inst inst = head; inst != null; inst = inst.next) {
             if (inst instanceof mvInst && inst.rs1 == inst.rd) continue ;
