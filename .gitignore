@@ -1,4 +1,5 @@
 codegen/*
+optim-new/*
 *.class
 .VSCodeCounter
 *.mx

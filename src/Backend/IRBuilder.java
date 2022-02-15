@@ -349,9 +349,25 @@ public class IRBuilder implements ASTVisitor{
                 currentBlock.push_back(new load(right.type, returnEntity, right));
             }
             if (leftType.type == basicType.Int) {
-                register res = new register(curFunction.curRegisterID ++, left.type) ;
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, res)) ;
-                returnEntity = res ;
+                // constant calculation
+                if (left instanceof constant && right instanceof constant) {
+                    int leftValue = ((constant) left).value, rightValue = ((constant) right).value ;
+                    constant res = new constant(0, left.type) ;
+                    if (it.binaryOp == binaryOperator.Plus) res.value = leftValue + rightValue ;
+                    else if (it.binaryOp == binaryOperator.Minus) res.value = leftValue - rightValue ;
+                    else if (it.binaryOp == binaryOperator.Mul) res.value = leftValue * rightValue ;
+                    else if (it.binaryOp == binaryOperator.Div) res.value = rightValue == 0 ? -1 : leftValue / rightValue ;
+                    else if (it.binaryOp == binaryOperator.LeftShift) res.value = leftValue << rightValue ;
+                    else if (it.binaryOp == binaryOperator.RightShift) res.value = leftValue >> rightValue ;
+                    else if (it.binaryOp == binaryOperator.And) res.value = leftValue & rightValue ;
+                    else if (it.binaryOp == binaryOperator.Or) res.value = leftValue | rightValue ;
+                    else if (it.binaryOp == binaryOperator.Caret) res.value = leftValue ^ rightValue ;
+                    returnEntity = res ;
+                } else {
+                    register res = new register(curFunction.curRegisterID ++, left.type) ;
+                    currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, res)) ;
+                    returnEntity = res ;
+                }
             } else if (leftType.type == basicType.String && it.binaryOp == binaryOperator.Plus) {
                 typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
                 register leftString = (register) returnEntity ;
@@ -379,9 +395,20 @@ public class IRBuilder implements ASTVisitor{
                 currentBlock.push_back(new load(right.type, returnEntity, right));
             }
             if (leftType.type == basicType.Int) {
-                register cmpRes = new register(curFunction.curRegisterID ++, new IRIntType(1)) ; // i1
-                currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, cmpRes)) ;
-                returnEntity = cmpRes ; // i1
+                if (left instanceof constant && right instanceof constant) {
+                    int leftValue = ((constant) left).value, rightValue = ((constant) right).value ;
+                    constant res = new constant(0, new IRIntType(1)) ;
+                    if (it.binaryOp == binaryOperator.Greater) res.value = leftValue > rightValue ? 1 : 0 ;
+                    else if (it.binaryOp == binaryOperator.GreaterEqual) res.value = leftValue >= rightValue ? 1 : 0 ;
+                    else if (it.binaryOp == binaryOperator.Less) res.value = leftValue < rightValue ? 1 : 0 ;
+                    else if (it.binaryOp == binaryOperator.LessEqual) res.value = leftValue <= rightValue ? 1 : 0 ;
+                    else if (it.binaryOp == binaryOperator.Equal) res.value = leftValue == rightValue ? 1 : 0 ;
+                    else if (it.binaryOp == binaryOperator.NotEqual) res.value = leftValue != rightValue ? 1 : 0 ;
+                } else {
+                    register cmpRes = new register(curFunction.curRegisterID ++, new IRIntType(1)) ; // i1
+                    currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, cmpRes)) ;
+                    returnEntity = cmpRes ; // i1
+                }
             } else if (leftType.type == basicType.String) {
                 typeCasting((register) left, new IRPointerType(new IRIntType(8))) ;
                 register leftString = (register) returnEntity ;
