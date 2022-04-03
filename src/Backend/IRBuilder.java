@@ -404,6 +404,7 @@ public class IRBuilder implements ASTVisitor{
                     else if (it.binaryOp == binaryOperator.LessEqual) res.value = leftValue <= rightValue ? 1 : 0 ;
                     else if (it.binaryOp == binaryOperator.Equal) res.value = leftValue == rightValue ? 1 : 0 ;
                     else if (it.binaryOp == binaryOperator.NotEqual) res.value = leftValue != rightValue ? 1 : 0 ;
+                    returnEntity = res ;
                 } else {
                     register cmpRes = new register(curFunction.curRegisterID ++, new IRIntType(1)) ; // i1
                     currentBlock.push_back(new binary(IROperator.values()[it.binaryOp.ordinal()], left.type, left, right, cmpRes)) ;
@@ -549,8 +550,14 @@ public class IRBuilder implements ASTVisitor{
             block trueBlock = new block(trueLabel.labelID) ;
             label outLabel = new label(curFunction.identifier + "_ID" + (curFunction.curRegisterID - 1) + "_AndAnd_out") ;
             block outBlock = new block(outLabel.labelID) ;
-            if (returnEntity instanceof register) typeCasting((register) returnEntity, new IRIntType(1));
-            currentBlock.push_back(new branch(returnEntity, trueLabel, outLabel)) ;
+            if (returnEntity instanceof constant) {
+                int value = ((constant) returnEntity).value ;
+                if (value == 1) currentBlock.push_back(new branch(trueLabel));
+                else currentBlock.push_back(new branch(outLabel));
+            } else {
+                typeCasting((register) returnEntity, new IRIntType(1));
+                currentBlock.push_back(new branch(returnEntity, trueLabel, outLabel)) ;
+            }
             currentBlock = trueBlock ;
             it.rightExpression.accept(this) ;
             if (returnEntity.isLvalue) {
