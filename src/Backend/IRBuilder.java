@@ -6,7 +6,6 @@ import AST.*;
 import AST.primaryNode.primaryType;
 import AST.unaryExprNode.unaryOperator;
 import MIR.*;
-import MIR.IRType.IRArrayType;
 import MIR.IRType.IRClassType;
 import MIR.IRType.IRIntType;
 import MIR.IRType.IRNullType;
