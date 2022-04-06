@@ -3,11 +3,14 @@ package Optimize;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 import MIR.* ;
+import MIR.IRType.IRPointerType;
 
 public class MemToReg {
     private globalDefine globalDefine ;
@@ -20,11 +23,13 @@ public class MemToReg {
 
     private Map<block, Set<block> > child, DF ; // Dominator Tree
 
+    private Set<register> allocaRegs ;
     private Map<block, Set<register> > A_orig, A_phi ; // variables defined in block
     private Map<register, Set<block> > defsites ;
-    private Map<register, Integer> Count ;
-    private Map<register, Stack<Integer> > Stack ;
-    private Map<register, ArrayList<register> > newRegisters ;
+    // private Map<register, Integer> Count ;
+    // private Map<register, Stack<Integer> > Stack ;
+    // private Map<register, ArrayList<register> > newRegisters ;
+    private Map<block, Set<phi> > phiInsertions ;
     
     public MemToReg (globalDefine _globalDefine) {
         globalDefine = _globalDefine ;
@@ -60,6 +65,7 @@ public class MemToReg {
     private void analyzeFunction (function curFunc) {
         getSuccAndPred (curFunc) ;
         Dominators(curFunc) ;
+        getAllocaRegs (curFunc) ;
         getVarDef (curFunc) ;
         placePhiFunctions(curFunc);
         RenamePhi(curFunc);
@@ -244,7 +250,19 @@ public class MemToReg {
             zext curZext = (zext) curStmt ;
             S.add(curZext.to) ;
         }
-        return S ;
+        Set<register> SS = new HashSet<>() ;
+        for (register a : S)
+            if (allocaRegs.contains(a)) SS.add(a) ;
+        return SS ;
+    }
+
+    private void getAllocaRegs (function curFunc) {
+        allocaRegs = new HashSet<>() ;
+        for (statement stmt : curFunc.allocaBlock.statements) {
+            if (!(stmt instanceof alloca)) continue ;
+            alloca curAlloca = (alloca) stmt ;
+            allocaRegs.add(curAlloca.reg) ;
+        }
     }
 
     private void getVarDef (function curFunc) {
@@ -255,7 +273,7 @@ public class MemToReg {
                 // S.addAll(getDefFromStmt(curStmt)) ;
                 Set<register> tmp = getDefFromStmt(curStmt) ;
                 for (register reg : tmp)
-                    if (!reg.isGlobal) S.add(reg) ;
+                    if (!reg.isGlobal && allocaRegs.contains(reg)) S.add(reg) ;
             }
             A_orig.put(curBlock, S) ;
         }
@@ -264,8 +282,10 @@ public class MemToReg {
     private void placePhiFunctions (function curFunc) {
         defsites = new HashMap<>() ;
         A_phi = new HashMap<>() ;
+        phiInsertions = new HashMap<>() ;
         for (block n : curFunc.blocks) {
             A_phi.put(n, new HashSet<>()) ;
+            phiInsertions.put(n, new HashSet<>()) ;
             for (register a : A_orig.get(n)) {
                 if (!defsites.containsKey(a)) defsites.put(a, new HashSet<>()) ;
                 defsites.get(a).add(n) ;
@@ -281,138 +301,344 @@ public class MemToReg {
                 W.remove(n) ;
                 for (block Y : DF.get(n)) {
                     if (!A_phi.get(Y).contains(a)) {
-                        phi curPhi = new phi(a, a.type) ;
+                        phi curPhi = new phi(a, ((IRPointerType) a.type).type) ;
                         for (block pre : pred.get(Y)) {
                             curPhi.labels.add(new label(pre.identifier)) ;
                             curPhi.value.add(a) ;
                         }
+                        phiInsertions.get(Y).add(curPhi) ;
                         Y.statements.add(0, curPhi);
                         A_phi.get(Y).add(a) ;
-                        if (!A_orig.get(n).contains(a)) W.add(Y) ;
+                        if (!A_orig.get(Y).contains(a)) W.add(Y) ;
                     }
                 }
             }
         }
     }
 
+    // private void RenamePhi (function curFunc) {
+    //     Count = new HashMap<>() ;
+    //     Stack = new HashMap<>() ;
+    //     newRegisters = new HashMap<>() ;
+    //     for (register a : defsites.keySet()) {
+    //         Count.put(a, 0) ;
+    //         Stack.put(a, new Stack<>()) ;
+    //         Stack.get(a).push(0) ;
+    //         newRegisters.put(a, new ArrayList<>()) ;
+    //         newRegisters.get(a).add(a) ;
+    //     }
+    //     block root = curFunc.blocks.get(0) ;
+    //     Rename (root) ;
+    // }
+
+    // private void updateUse (register reg) {
+    //     int i = Stack.get(reg).peek() ;
+    //     reg = newRegisters.get(reg).get(i) ;
+    // }
+
+    // private void replaceUse (statement S) {
+    //     if (S instanceof binary) {
+    //         binary curBinary = (binary) S ;
+    //         if (curBinary.left instanceof register) updateUse((register) curBinary.left) ;
+    //         if (curBinary.right instanceof register) updateUse((register) curBinary.right) ;
+    //     } else if (S instanceof bitcast) {
+    //         bitcast curBitcast = (bitcast) S ;
+    //         updateUse(curBitcast.from) ;
+    //     } else if (S instanceof functioncall) {
+    //         functioncall curFuncCall = (functioncall) S ;
+    //         for (entity cur : curFuncCall.parameters) {
+    //             if (cur instanceof register) updateUse((register) cur) ;
+    //         }
+    //     } else if (S instanceof getelementptr) {
+    //         getelementptr curGet = (getelementptr) S ;
+    //         updateUse((register) curGet.from) ;
+    //     } else if (S instanceof load) {
+    //         load curLoad = (load) S ;
+    //         updateUse((register) curLoad.from) ;
+    //     } else if (S instanceof phi) {
+    //         phi curPhi = (phi) S ;
+    //         for (entity cur : curPhi.value) {
+    //             if (cur instanceof register) updateUse((register) cur);
+    //         }
+    //     } else if (S instanceof store) {
+    //         store curStore = (store) S ;
+    //         if (curStore.from instanceof register) updateUse((register) curStore.from) ;
+    //     } else if (S instanceof trunc) {
+    //         trunc curTrunc = (trunc) S ;
+    //         updateUse(curTrunc.from) ;
+    //     } else if (S instanceof zext) {
+    //         zext curZext = (zext) S ;
+    //         updateUse(curZext.from) ;
+    //     }
+    // }
+
+    // private void updateDef (register reg) {
+    //     int i = Count.get(reg) + 1 ;
+    //     Count.put(reg, i) ;
+    //     Stack.get(reg).push(i) ;
+    //     register newReg = new register(reg.registerID + "_" + i, reg.type, false) ;
+    //     newRegisters.get(reg).add(newReg) ;
+    //     reg = newReg ;
+    // }
+
+    // private void replaceDef (statement S) {
+    //     if (S instanceof binary) {
+    //         binary curBinary = (binary) S ;
+    //         updateDef((register) curBinary.dest);
+    //     } else if (S instanceof bitcast) {
+    //         bitcast curBitcast = (bitcast) S ;
+    //         updateDef(curBitcast.to);
+    //     } else if (S instanceof functioncall) {
+    //         functioncall curFuncCall = (functioncall) S ;
+    //         if (!curFuncCall.isVoid) updateDef(curFuncCall.destReg) ;
+    //     } else if (S instanceof getelementptr) {
+    //         getelementptr curGet = (getelementptr) S ;
+    //         updateDef(curGet.to) ;
+    //     } else if (S instanceof load) {
+    //         load curLoad = (load) S ;
+    //         updateDef((register) curLoad.to) ;
+    //     } else if (S instanceof phi) {
+    //         phi curPhi = (phi) S ;
+    //         updateDef(curPhi.destReg) ;
+    //     } else if (S instanceof store) {
+    //         store curStore = (store) S ;
+    //         updateDef((register) curStore.dest) ;
+    //     } else if (S instanceof trunc) {
+    //         trunc curTrunc = (trunc) S ;
+    //         updateDef(curTrunc.to) ;
+    //     } else if (S instanceof zext) {
+    //         zext curZext = (zext) S ;
+    //         updateDef(curZext.to) ;
+    //     }
+    // }
+
+    // private void Rename (block n) {
+    //     Set<register> origDef = new HashSet<>() ;
+    //     for (statement S : n.statements) {
+    //         origDef.addAll(getDefFromStmt(S)) ;
+    //         if (!(S instanceof phi)) {
+    //             replaceUse (S) ;
+    //         }
+    //         replaceDef (S) ;
+    //     }
+    //     for (block Y : succ.get(n)) {
+    //         int j = pred.get(Y).indexOf(n) ;
+    //         for (statement stmt : Y.statements) {
+    //             if (!(stmt instanceof phi)) continue ;
+    //             phi curPhi = (phi) stmt ;
+    //             entity tmp = curPhi.value.get(j) ;
+    //             if (!(tmp instanceof register)) continue ;
+    //             register a = (register) tmp ;
+    //             int i = Stack.get(a).peek() ;
+    //             a = newRegisters.get(a).get(i) ;
+    //         }
+    //     }
+    //     for (block X : child.get(n)) Rename(X);
+    //     for (register a : origDef) Stack.get(a).pop() ;
+    // }
+
+    Map<register, entity> IncomingVals = new HashMap<>() ;
+    Queue<block> worklist = new LinkedList<>() ;
+    Set<block> visited = new HashSet<>() ;
+    Map<register, entity> regUpdate = new HashMap<>() ;
+    Map<register, Integer> regID = new HashMap<>() ;
+
     private void RenamePhi (function curFunc) {
-        Count = new HashMap<>() ;
-        Stack = new HashMap<>() ;
-        newRegisters = new HashMap<>() ;
-        for (register a : defsites.keySet()) {
-            Count.put(a, 0) ;
-            Stack.put(a, new Stack<>()) ;
-            Stack.get(a).push(0) ;
-            newRegisters.put(a, new ArrayList<>()) ;
-            newRegisters.get(a).add(a) ;
-        }
-        block root = curFunc.blocks.get(0) ;
-        Rename (root) ;
-    }
+        Map<register, entity> IncomingVals = new HashMap<>() ;
+        Queue<block> worklist = new LinkedList<>() ;
+        Set<block> visited = new HashSet<>() ;
+        Map<register, entity> regUpdate = new HashMap<>() ;
+        Map<register, Integer> regID = new HashMap<>() ;
+        
+        for (register reg : allocaRegs)
+            regID.put(reg, 0) ;
 
-    private void updateUse (register reg) {
-        int i = Stack.get(reg).peek() ;
-        reg = newRegisters.get(reg).get(i) ;
-    }
-
-    private void replaceUse (statement S) {
-        if (S instanceof binary) {
-            binary curBinary = (binary) S ;
-            if (curBinary.left instanceof register) updateUse((register) curBinary.left) ;
-            if (curBinary.right instanceof register) updateUse((register) curBinary.right) ;
-        } else if (S instanceof bitcast) {
-            bitcast curBitcast = (bitcast) S ;
-            updateUse(curBitcast.from) ;
-        } else if (S instanceof functioncall) {
-            functioncall curFuncCall = (functioncall) S ;
-            for (entity cur : curFuncCall.parameters) {
-                if (cur instanceof register) updateUse((register) cur) ;
+        worklist.add(curFunc.blocks.get(0)) ;
+        visited.add(curFunc.blocks.get(0)) ;
+        while (!worklist.isEmpty()) {
+            block B = worklist.poll() ;
+            ArrayList<Integer> eraseStmts = new ArrayList<>() ;
+            for (int i = 0; i < B.statements.size(); i ++) {
+                statement stmt = B.statements.get(i) ;
+                if (stmt instanceof load) {
+                    load curLoad = (load) stmt ;
+                    if (!allocaRegs.contains((register) curLoad.from)) continue ;
+                    register L = (register) curLoad.from, V = (register) curLoad.to ;
+                    regUpdate.put(V, IncomingVals.get(L)) ;
+                    eraseStmts.add(i) ;
+                } else if (stmt instanceof store) {
+                    store curStore = (store) stmt ;
+                    if (!allocaRegs.contains((register) curStore.dest)) continue ;
+                    register L = (register) curStore.dest; entity V = curStore.from ;
+                    IncomingVals.put(L, V) ;
+                    eraseStmts.add(i) ;
+                } else if (stmt instanceof branch) {
+                    branch curBranch = (branch) stmt ;
+                    block toBlock = labelToBlock.get(curBranch.trueBranch.labelID) ;
+                    for (phi curPhi : phiInsertions.get(toBlock)) {
+                        for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
+                            label fromLabel = curPhi.labels.get(phiIdx) ;
+                            if (fromLabel.labelID.equals(B.identifier)) {
+                                register reg = (register) curPhi.value.get(phiIdx) ;
+                                curPhi.value.remove(phiIdx) ;
+                                curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                            }
+                        }
+                    }
+                    if (curBranch.isConditioned) {
+                        toBlock = labelToBlock.get(curBranch.falseBranch.labelID) ;
+                        for (phi curPhi : phiInsertions.get(toBlock)) {
+                            for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
+                                label fromLabel = curPhi.labels.get(phiIdx) ;
+                                if (fromLabel.labelID.equals(B.identifier)) {
+                                    register reg = (register) curPhi.value.get(phiIdx) ;
+                                    curPhi.value.remove(phiIdx) ;
+                                    curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                                }
+                            }
+                        }
+                    }
+                } else if (stmt instanceof phi) {
+                    phi curPhi = (phi) stmt ;
+                    register reg = curPhi.destReg ;
+                    if (allocaRegs.contains(reg)) {
+                        int curID = regID.get(reg) ;
+                        register renameReg = new register(reg.registerID.substring(9) + "." + curID, ((IRPointerType) reg.type).type, false) ;
+                        curPhi.destReg = renameReg ;
+                        IncomingVals.put(reg, renameReg) ;
+                        regID.put(reg, curID + 1) ;
+                    }
+                }
             }
-        } else if (S instanceof getelementptr) {
-            getelementptr curGet = (getelementptr) S ;
-            updateUse((register) curGet.from) ;
-        } else if (S instanceof load) {
-            load curLoad = (load) S ;
-            updateUse((register) curLoad.from) ;
-        } else if (S instanceof phi) {
-            phi curPhi = (phi) S ;
-            for (entity cur : curPhi.value) {
-                if (cur instanceof register) updateUse((register) cur);
+            for (int i = eraseStmts.size() - 1; i >= 0; i --) {
+                int idx = eraseStmts.get(i) ;
+                B.statements.remove(idx) ;
             }
-        } else if (S instanceof store) {
-            store curStore = (store) S ;
-            if (curStore.from instanceof register) updateUse((register) curStore.from) ;
-        } else if (S instanceof trunc) {
-            trunc curTrunc = (trunc) S ;
-            updateUse(curTrunc.from) ;
-        } else if (S instanceof zext) {
-            zext curZext = (zext) S ;
-            updateUse(curZext.from) ;
-        }
-    }
-
-    private void updateDef (register reg) {
-        int i = Count.get(reg) + 1 ;
-        Count.put(reg, i) ;
-        Stack.get(reg).push(i) ;
-        register newReg = new register(reg.registerID + "_" + i, reg.type, false) ;
-        newRegisters.get(reg).add(newReg) ;
-        reg = newReg ;
-    }
-
-    private void replaceDef (statement S) {
-        if (S instanceof binary) {
-            binary curBinary = (binary) S ;
-            updateDef((register) curBinary.dest);
-        } else if (S instanceof bitcast) {
-            bitcast curBitcast = (bitcast) S ;
-            updateDef(curBitcast.to);
-        } else if (S instanceof functioncall) {
-            functioncall curFuncCall = (functioncall) S ;
-            if (!curFuncCall.isVoid) updateDef(curFuncCall.destReg) ;
-        } else if (S instanceof getelementptr) {
-            getelementptr curGet = (getelementptr) S ;
-            updateDef(curGet.to) ;
-        } else if (S instanceof load) {
-            load curLoad = (load) S ;
-            updateDef((register) curLoad.to) ;
-        } else if (S instanceof phi) {
-            phi curPhi = (phi) S ;
-            updateDef(curPhi.destReg) ;
-        } else if (S instanceof store) {
-            store curStore = (store) S ;
-            updateDef((register) curStore.dest) ;
-        } else if (S instanceof trunc) {
-            trunc curTrunc = (trunc) S ;
-            updateDef(curTrunc.to) ;
-        } else if (S instanceof zext) {
-            zext curZext = (zext) S ;
-            updateDef(curZext.to) ;
-        }
-    }
-
-    private void Rename (block n) {
-        Set<register> origDef = new HashSet<>() ;
-        for (statement S : n.statements) {
-            origDef.addAll(getDefFromStmt(S)) ;
-            if (!(S instanceof phi)) {
-                replaceUse (S) ;
+            for (block nxt : succ.get(B)) {
+                if (!visited.contains(nxt)) {
+                    worklist.add(nxt) ;
+                    visited.add(nxt) ;
+                }
             }
-            replaceDef (S) ;
         }
-        for (block Y : succ.get(n)) {
-            int j = pred.get(Y).indexOf(n) ;
-            for (statement stmt : Y.statements) {
-                if (!(stmt instanceof phi)) continue ;
+
+        // update use
+        for (block curBlock : curFunc.blocks)
+            for (statement S : curBlock.statements) {
+                if (S instanceof binary) {
+                    binary curBinary = (binary) S ;
+                    if (regUpdate.containsKey(curBinary.left)) 
+                        curBinary.left = regUpdate.get(curBinary.left) ;
+                    if (regUpdate.containsKey(curBinary.right)) 
+                        curBinary.right = regUpdate.get(curBinary.right) ;
+                } else if (S instanceof bitcast) {
+                    bitcast curBitcast = (bitcast) S ;
+                    if (regUpdate.containsKey(curBitcast.from))
+                        curBitcast.from = (register) regUpdate.get(curBitcast.from) ;
+                } else if (S instanceof functioncall) {
+                    functioncall curFuncCall = (functioncall) S ;
+                    for (int i = 0; i < curFuncCall.parameters.size(); i ++) {
+                        entity cur = curFuncCall.parameters.get(i) ;
+                        if (regUpdate.containsKey(cur)) {
+                            curFuncCall.parameters.remove(i) ;
+                            curFuncCall.parameters.add(i, regUpdate.get(cur));
+                        }
+                    }
+                } else if (S instanceof getelementptr) {
+                    getelementptr curGet = (getelementptr) S ;
+                    if (regUpdate.containsKey(curGet.from))
+                        curGet.from = (register) regUpdate.get(curGet.from) ;
+                } else if (S instanceof load) {
+                    load curLoad = (load) S ;
+                    if (regUpdate.containsKey(curLoad.from))
+                        curLoad.from = regUpdate.get(curLoad.from) ;
+                } else if (S instanceof phi) {
+                    phi curPhi = (phi) S ;
+                    for (int i = 0; i < curPhi.value.size(); i ++) {
+                        entity cur = curPhi.value.get(i) ;
+                        if (regUpdate.containsKey(cur)) {
+                            curPhi.value.remove(i) ;
+                            curPhi.value.add(i, regUpdate.get(cur)) ;
+                        }
+                    }
+                } else if (S instanceof store) {
+                    store curStore = (store) S ;
+                    if (regUpdate.containsKey(curStore.from))
+                        curStore.from = regUpdate.get(curStore.from) ;
+                } else if (S instanceof trunc) {
+                    trunc curTrunc = (trunc) S ;
+                    if (regUpdate.containsKey(curTrunc.from))
+                        curTrunc.from = (register) regUpdate.get(curTrunc.from) ;
+                } else if (S instanceof zext) {
+                    zext curZext = (zext) S ;
+                    if (regUpdate.containsKey(curZext.from))
+                        curZext.from = (register) regUpdate.get(curZext.from) ;
+                }
+            }
+    }
+    private void Rename (block B) {
+        ArrayList<Integer> eraseStmts = new ArrayList<>() ;
+        for (int i = 0; i < B.statements.size(); i ++) {
+            statement stmt = B.statements.get(i) ;
+            if (stmt instanceof load) {
+                load curLoad = (load) stmt ;
+                if (!allocaRegs.contains((register) curLoad.from)) continue ;
+                register L = (register) curLoad.from, V = (register) curLoad.to ;
+                regUpdate.put(V, IncomingVals.get(L)) ;
+                eraseStmts.add(i) ;
+            } else if (stmt instanceof store) {
+                store curStore = (store) stmt ;
+                if (!allocaRegs.contains((register) curStore.dest)) continue ;
+                register L = (register) curStore.dest; entity V = curStore.from ;
+                IncomingVals.put(L, V) ;
+                eraseStmts.add(i) ;
+            } else if (stmt instanceof branch) {
+                branch curBranch = (branch) stmt ;
+                block toBlock = labelToBlock.get(curBranch.trueBranch.labelID) ;
+                for (phi curPhi : phiInsertions.get(toBlock)) {
+                    for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
+                        label fromLabel = curPhi.labels.get(phiIdx) ;
+                        if (fromLabel.labelID.equals(B.identifier)) {
+                            register reg = (register) curPhi.value.get(phiIdx) ;
+                            curPhi.value.remove(phiIdx) ;
+                            curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                        }
+                    }
+                }
+                if (curBranch.isConditioned) {
+                    toBlock = labelToBlock.get(curBranch.falseBranch.labelID) ;
+                    for (phi curPhi : phiInsertions.get(toBlock)) {
+                        for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
+                            label fromLabel = curPhi.labels.get(phiIdx) ;
+                            if (fromLabel.labelID.equals(B.identifier)) {
+                                register reg = (register) curPhi.value.get(phiIdx) ;
+                                curPhi.value.remove(phiIdx) ;
+                                curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                            }
+                        }
+                    }
+                }
+            } else if (stmt instanceof phi) {
                 phi curPhi = (phi) stmt ;
-                entity tmp = curPhi.value.get(j) ;
-                if (!(tmp instanceof register)) continue ;
-                register a = (register) tmp ;
-                int i = Stack.get(a).peek() ;
-                a = newRegisters.get(a).get(i) ;
+                register reg = curPhi.destReg ;
+                if (allocaRegs.contains(reg)) {
+                    int curID = regID.get(reg) ;
+                    register renameReg = new register(reg.registerID.substring(9) + "." + curID, ((IRPointerType) reg.type).type, false) ;
+                    curPhi.destReg = renameReg ;
+                    IncomingVals.put(reg, renameReg) ;
+                    regID.put(reg, curID + 1) ;
+                }
             }
         }
-        for (block X : child.get(n)) Rename(X);
-        for (register a : origDef) Stack.get(a).pop() ;
+        for (int i = eraseStmts.size() - 1; i >= 0; i --) {
+            int idx = eraseStmts.get(i) ;
+            B.statements.remove(idx) ;
+        }
+        for (block nxt : succ.get(B)) {
+            if (!visited.contains(nxt)) {
+                visited.add(nxt) ;
+                Rename (nxt) ;
+            }
+        }
     }
 }
