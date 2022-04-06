@@ -437,90 +437,20 @@ public class MemToReg {
     //     for (register a : origDef) Stack.get(a).pop() ;
     // }
 
-    Map<register, entity> IncomingVals = new HashMap<>() ;
-    Queue<block> worklist = new LinkedList<>() ;
     Set<block> visited = new HashSet<>() ;
     Map<register, entity> regUpdate = new HashMap<>() ;
     Map<register, Integer> regID = new HashMap<>() ;
 
     private void RenamePhi (function curFunc) {
         Map<register, entity> IncomingVals = new HashMap<>() ;
-        Queue<block> worklist = new LinkedList<>() ;
-        Set<block> visited = new HashSet<>() ;
-        Map<register, entity> regUpdate = new HashMap<>() ;
-        Map<register, Integer> regID = new HashMap<>() ;
+        visited = new HashSet<>() ;
+        regUpdate = new HashMap<>() ;
+        regID = new HashMap<>() ;
         
         for (register reg : allocaRegs)
             regID.put(reg, 0) ;
 
-        worklist.add(curFunc.blocks.get(0)) ;
-        visited.add(curFunc.blocks.get(0)) ;
-        while (!worklist.isEmpty()) {
-            block B = worklist.poll() ;
-            ArrayList<Integer> eraseStmts = new ArrayList<>() ;
-            for (int i = 0; i < B.statements.size(); i ++) {
-                statement stmt = B.statements.get(i) ;
-                if (stmt instanceof load) {
-                    load curLoad = (load) stmt ;
-                    if (!allocaRegs.contains((register) curLoad.from)) continue ;
-                    register L = (register) curLoad.from, V = (register) curLoad.to ;
-                    regUpdate.put(V, IncomingVals.get(L)) ;
-                    eraseStmts.add(i) ;
-                } else if (stmt instanceof store) {
-                    store curStore = (store) stmt ;
-                    if (!allocaRegs.contains((register) curStore.dest)) continue ;
-                    register L = (register) curStore.dest; entity V = curStore.from ;
-                    IncomingVals.put(L, V) ;
-                    eraseStmts.add(i) ;
-                } else if (stmt instanceof branch) {
-                    branch curBranch = (branch) stmt ;
-                    block toBlock = labelToBlock.get(curBranch.trueBranch.labelID) ;
-                    for (phi curPhi : phiInsertions.get(toBlock)) {
-                        for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
-                            label fromLabel = curPhi.labels.get(phiIdx) ;
-                            if (fromLabel.labelID.equals(B.identifier)) {
-                                register reg = (register) curPhi.value.get(phiIdx) ;
-                                curPhi.value.remove(phiIdx) ;
-                                curPhi.value.add(phiIdx, IncomingVals.get(reg));
-                            }
-                        }
-                    }
-                    if (curBranch.isConditioned) {
-                        toBlock = labelToBlock.get(curBranch.falseBranch.labelID) ;
-                        for (phi curPhi : phiInsertions.get(toBlock)) {
-                            for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
-                                label fromLabel = curPhi.labels.get(phiIdx) ;
-                                if (fromLabel.labelID.equals(B.identifier)) {
-                                    register reg = (register) curPhi.value.get(phiIdx) ;
-                                    curPhi.value.remove(phiIdx) ;
-                                    curPhi.value.add(phiIdx, IncomingVals.get(reg));
-                                }
-                            }
-                        }
-                    }
-                } else if (stmt instanceof phi) {
-                    phi curPhi = (phi) stmt ;
-                    register reg = curPhi.destReg ;
-                    if (allocaRegs.contains(reg)) {
-                        int curID = regID.get(reg) ;
-                        register renameReg = new register(reg.registerID.substring(9) + "." + curID, ((IRPointerType) reg.type).type, false) ;
-                        curPhi.destReg = renameReg ;
-                        IncomingVals.put(reg, renameReg) ;
-                        regID.put(reg, curID + 1) ;
-                    }
-                }
-            }
-            for (int i = eraseStmts.size() - 1; i >= 0; i --) {
-                int idx = eraseStmts.get(i) ;
-                B.statements.remove(idx) ;
-            }
-            for (block nxt : succ.get(B)) {
-                if (!visited.contains(nxt)) {
-                    worklist.add(nxt) ;
-                    visited.add(nxt) ;
-                }
-            }
-        }
+        Rename (curFunc.blocks.get(0), IncomingVals) ;
 
         // update use
         for (block curBlock : curFunc.blocks)
@@ -576,21 +506,23 @@ public class MemToReg {
                 }
             }
     }
-    private void Rename (block B) {
+    private void Rename (block B, Map<register, entity> IncomingVals) {
+        visited.add(B) ;
         ArrayList<Integer> eraseStmts = new ArrayList<>() ;
+        Map<register, entity> newIncomingVals = new HashMap<>(IncomingVals) ;
         for (int i = 0; i < B.statements.size(); i ++) {
             statement stmt = B.statements.get(i) ;
             if (stmt instanceof load) {
                 load curLoad = (load) stmt ;
                 if (!allocaRegs.contains((register) curLoad.from)) continue ;
                 register L = (register) curLoad.from, V = (register) curLoad.to ;
-                regUpdate.put(V, IncomingVals.get(L)) ;
+                regUpdate.put(V, newIncomingVals.get(L)) ;
                 eraseStmts.add(i) ;
             } else if (stmt instanceof store) {
                 store curStore = (store) stmt ;
                 if (!allocaRegs.contains((register) curStore.dest)) continue ;
                 register L = (register) curStore.dest; entity V = curStore.from ;
-                IncomingVals.put(L, V) ;
+                newIncomingVals.put(L, V) ;
                 eraseStmts.add(i) ;
             } else if (stmt instanceof branch) {
                 branch curBranch = (branch) stmt ;
@@ -601,7 +533,7 @@ public class MemToReg {
                         if (fromLabel.labelID.equals(B.identifier)) {
                             register reg = (register) curPhi.value.get(phiIdx) ;
                             curPhi.value.remove(phiIdx) ;
-                            curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                            curPhi.value.add(phiIdx, newIncomingVals.get(reg));
                         }
                     }
                 }
@@ -613,7 +545,7 @@ public class MemToReg {
                             if (fromLabel.labelID.equals(B.identifier)) {
                                 register reg = (register) curPhi.value.get(phiIdx) ;
                                 curPhi.value.remove(phiIdx) ;
-                                curPhi.value.add(phiIdx, IncomingVals.get(reg));
+                                curPhi.value.add(phiIdx, newIncomingVals.get(reg));
                             }
                         }
                     }
@@ -625,7 +557,7 @@ public class MemToReg {
                     int curID = regID.get(reg) ;
                     register renameReg = new register(reg.registerID.substring(9) + "." + curID, ((IRPointerType) reg.type).type, false) ;
                     curPhi.destReg = renameReg ;
-                    IncomingVals.put(reg, renameReg) ;
+                    newIncomingVals.put(reg, renameReg) ;
                     regID.put(reg, curID + 1) ;
                 }
             }
@@ -635,10 +567,8 @@ public class MemToReg {
             B.statements.remove(idx) ;
         }
         for (block nxt : succ.get(B)) {
-            if (!visited.contains(nxt)) {
-                visited.add(nxt) ;
-                Rename (nxt) ;
-            }
+            if (!visited.contains(nxt))
+                Rename (nxt, newIncomingVals) ;
         }
     }
 }
