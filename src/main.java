@@ -7,6 +7,7 @@ import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
 import MIR.globalDefine;
+import Optimize.MemToReg;
 import Optimize.RegisterAllocation;
 import Frontend.SemanticChecker;
 import Parser.MxLiteLexer;
@@ -45,6 +46,7 @@ public class main {
         // PrintStream out = new PrintStream(System.out) ;
         // PrintStream out2 = new PrintStream(System.out) ;
         PrintStream IRout = new PrintStream("llvm-test.ll") ;
+        PrintStream IROptOut = new PrintStream("opt.ll") ;
         PrintStream out = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
@@ -69,12 +71,14 @@ public class main {
                 globalDefine globalDef = new globalDefine() ;
                 new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
                 new IRPrinter().visitGlobalDef(IRout, globalDef);
+                new MemToReg(globalDef) ;
+                new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
-                AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
-                new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
+                // AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
+                // new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
+                // // new AssemblyPrinter(out, assemblyGlobalDefine) ;
+                // new RegisterAllocation(assemblyGlobalDefine) ;
                 // new AssemblyPrinter(out, assemblyGlobalDefine) ;
-                new RegisterAllocation(assemblyGlobalDefine) ;
-                new AssemblyPrinter(out, assemblyGlobalDefine) ;
             }
         } catch(error er) {
             System.err.println(er.toString());
