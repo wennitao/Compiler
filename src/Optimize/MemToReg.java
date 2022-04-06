@@ -69,6 +69,7 @@ public class MemToReg {
         getVarDef (curFunc) ;
         placePhiFunctions(curFunc);
         RenamePhi(curFunc);
+        EliminateAlloca (curFunc) ;
     }
 
     private void addBlockEdge (block from, block to) {
@@ -151,7 +152,7 @@ public class MemToReg {
         for (int i = 1; i <= N - 1; i ++) {
             block n = vertex.get(i) ;
             if (samedom.containsKey(n)) idom.put(n, idom.get(samedom.get(n))) ;
-            System.out.println(idom.get(n).identifier + " dominates " + n.identifier);
+            // System.out.println(idom.get(n).identifier + " dominates " + n.identifier);
             child.get(idom.get(n)).add(n) ;
         }
         computeDF(r) ;
@@ -177,9 +178,9 @@ public class MemToReg {
             }
         }
         DF.put(n, S) ;
-        System.out.print("DF[" + n.identifier + "]: ");
-        for (block b : S) System.out.print (b.identifier + " ") ;
-        System.out.println();
+        // System.out.print("DF[" + n.identifier + "]: ");
+        // for (block b : S) System.out.print (b.identifier + " ") ;
+        // System.out.println();
     }
 
     private Set<register> getUseFromStmt (statement curStmt) {
@@ -465,6 +466,10 @@ public class MemToReg {
                     bitcast curBitcast = (bitcast) S ;
                     if (regUpdate.containsKey(curBitcast.from))
                         curBitcast.from = (register) regUpdate.get(curBitcast.from) ;
+                } else if (S instanceof branch) {
+                    branch curBranch = (branch) S ;
+                    if (regUpdate.containsKey(curBranch.condition))
+                        curBranch.condition = regUpdate.get(curBranch.condition) ;
                 } else if (S instanceof functioncall) {
                     functioncall curFuncCall = (functioncall) S ;
                     for (int i = 0; i < curFuncCall.parameters.size(); i ++) {
@@ -478,6 +483,13 @@ public class MemToReg {
                     getelementptr curGet = (getelementptr) S ;
                     if (regUpdate.containsKey(curGet.from))
                         curGet.from = (register) regUpdate.get(curGet.from) ;
+                    for (int i = 0; i < curGet.value.size(); i ++) {
+                        entity cur = curGet.value.get(i) ;
+                        if (regUpdate.containsKey(cur)) {
+                            curGet.value.remove(i) ;
+                            curGet.value.add(i, regUpdate.get(cur)) ;
+                        }
+                    }
                 } else if (S instanceof load) {
                     load curLoad = (load) S ;
                     if (regUpdate.containsKey(curLoad.from))
@@ -491,6 +503,10 @@ public class MemToReg {
                             curPhi.value.add(i, regUpdate.get(cur)) ;
                         }
                     }
+                } else if (S instanceof returnStmt) {
+                    returnStmt curReturn = (returnStmt) S ;
+                    if (regUpdate.containsKey(curReturn.returnReg))
+                        curReturn.returnReg = regUpdate.get(curReturn.returnReg) ;
                 } else if (S instanceof store) {
                     store curStore = (store) S ;
                     if (regUpdate.containsKey(curStore.from))
@@ -570,5 +586,9 @@ public class MemToReg {
             if (!visited.contains(nxt))
                 Rename (nxt, newIncomingVals) ;
         }
+    }
+
+    private void EliminateAlloca(function curFunc) {
+        curFunc.blocks.remove(curFunc.allocaBlock) ;
     }
 }

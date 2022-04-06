@@ -47,6 +47,7 @@ public class main {
         // PrintStream out2 = new PrintStream(System.out) ;
         PrintStream IRout = new PrintStream("llvm-test.ll") ;
         PrintStream IROptOut = new PrintStream("opt.ll") ;
+        PrintStream AssmDebugOut = new PrintStream("debug.s") ;
         PrintStream out = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
@@ -74,11 +75,11 @@ public class main {
                 new MemToReg(globalDef) ;
                 new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
-                // AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
-                // new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
-                // // new AssemblyPrinter(out, assemblyGlobalDefine) ;
-                // new RegisterAllocation(assemblyGlobalDefine) ;
-                // new AssemblyPrinter(out, assemblyGlobalDefine) ;
+                AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
+                new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
+                new AssemblyPrinter(AssmDebugOut, assemblyGlobalDefine) ;
+                new RegisterAllocation(assemblyGlobalDefine) ;
+                new AssemblyPrinter(out, assemblyGlobalDefine) ;
             }
         } catch(error er) {
             System.err.println(er.toString());

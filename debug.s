@@ -17,8 +17,6 @@ __init:
 	mv	VirtualReg_9, s9
 	mv	VirtualReg_10, s10
 	mv	VirtualReg_11, s11
-	j	.__init_alloca
-.__init_alloca:
 	j	.__init_entry
 .__init_entry:
 	j	.__init_return
@@ -52,45 +50,48 @@ main:
 	mv	VirtualReg_9, s9
 	mv	VirtualReg_10, s10
 	mv	VirtualReg_11, s11
-	j	.main_alloca
-.main_alloca:
 	j	.main_entry
 .main_entry:
 	call	__init
-	li	VirtualReg_17, 0
+	li	VirtualReg_21, 1
+	mv	VirtualReg_12, VirtualReg_21
+	li	VirtualReg_22, 0
+	mv	VirtualReg_13, VirtualReg_22
+	j	.main_ID4_while_condition
+.main_ID4_while_condition:
+	li	VirtualReg_14, 100
+	slt	fuckLLVM_5, VirtualReg_13, VirtualReg_14
+	bnez	fuckLLVM_5, .main_ID6_while_suite
+	j	.main_ID6_while_out
+.main_ID7_if_true:
+	li	VirtualReg_15, 1
+	add	fuckLLVM_10, VirtualReg_13, VirtualReg_15
+	li	VirtualReg_23, 1
+	mv	VirtualReg_17, VirtualReg_23
+	mv	VirtualReg_18, fuckLLVM_10
+	j	.main_ID7_if_out
+.main_ID7_if_false:
+	li	VirtualReg_16, 2
+	add	fuckLLVM_13, VirtualReg_13, VirtualReg_16
+	mv	VirtualReg_17, VirtualReg_13
+	mv	VirtualReg_18, fuckLLVM_13
+	j	.main_ID7_if_out
+.main_ID7_if_out:
 	mv	VirtualReg_12, VirtualReg_17
-	li	VirtualReg_18, 1
 	mv	VirtualReg_13, VirtualReg_18
-	li	VirtualReg_19, 2
-	mv	VirtualReg_14, VirtualReg_19
-	mv	VirtualReg_20, VirtualReg_13
-	mv	VirtualReg_21, VirtualReg_14
-	add	fuckLLVM_6, VirtualReg_20, VirtualReg_21
-	mv	VirtualReg_15, fuckLLVM_6
-	mv	VirtualReg_22, VirtualReg_15
-	li	VirtualReg_23, 3
-	xor	fuckLLVM_9, VirtualReg_22, VirtualReg_23
-	sltiu	fuckLLVM_9, fuckLLVM_9, 1
-	bnez	fuckLLVM_9, .main_ID9_if_true
-	j	.main_ID9_if_false
-.main_ID9_if_true:
-	li	VirtualReg_24, 4
-	mv	VirtualReg_16, VirtualReg_24
-	j	.main_ID9_if_out
-.main_ID9_if_false:
-	li	VirtualReg_25, 5
-	mv	VirtualReg_16, VirtualReg_25
-	j	.main_ID9_if_out
-.main_ID9_if_out:
-	mv	VirtualReg_26, VirtualReg_16
-	mv	a0, VirtualReg_26
+	j	.main_ID4_while_condition
+.main_ID6_while_suite:
+	li	VirtualReg_19, 20
+	slt	fuckLLVM_7, VirtualReg_12, VirtualReg_19
+	bnez	fuckLLVM_7, .main_ID7_if_true
+	j	.main_ID7_if_false
+.main_ID6_while_out:
+	mv	a0, VirtualReg_12
 	call	printlnInt
-	li	VirtualReg_27, 0
-	mv	VirtualReg_12, VirtualReg_27
 	j	.main_return
 .main_return:
-	mv	VirtualReg_28, VirtualReg_12
-	mv	a0, VirtualReg_28
+	li	VirtualReg_20, 0
+	mv	a0, VirtualReg_20
 	mv	s1, VirtualReg_1
 	mv	s2, VirtualReg_2
 	mv	s3, VirtualReg_3
