@@ -30,4 +30,9 @@ public class zext extends statement {
         if (to instanceof register) S.add((register) to) ;
         return S ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        if (from == origReg) from = (register) toReg ;
+    }
 }

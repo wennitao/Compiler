@@ -12,10 +12,12 @@ public class alloca extends statement {
         reg = _reg ;
         type = _type ;
     }
+
     @Override 
     public String toString () {
         return reg + " = alloca " + type ;
     }
+
     @Override
     public Set<register> getUseVar() {
         return new HashSet<>() ;
@@ -23,5 +25,10 @@ public class alloca extends statement {
     @Override
     public Set<register> getDefVar() {
         return new HashSet<>() ;
+    }
+    
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        
     }
 }

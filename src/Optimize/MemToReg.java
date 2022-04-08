@@ -152,7 +152,7 @@ public class MemToReg {
         for (int i = 1; i <= N - 1; i ++) {
             block n = vertex.get(i) ;
             if (samedom.containsKey(n)) idom.put(n, idom.get(samedom.get(n))) ;
-            System.out.println(idom.get(n).identifier + " dominates " + n.identifier);
+            // System.out.println(idom.get(n).identifier + " dominates " + n.identifier);
             child.get(idom.get(n)).add(n) ;
         }
         computeDF(r) ;
@@ -178,9 +178,9 @@ public class MemToReg {
             }
         }
         DF.put(n, S) ;
-        System.out.print("DF[" + n.identifier + "]: ");
-        for (block b : S) System.out.print (b.identifier + " ") ;
-        System.out.println();
+        // System.out.print("DF[" + n.identifier + "]: ");
+        // for (block b : S) System.out.print (b.identifier + " ") ;
+        // System.out.println();
     }
 
     private Set<register> getUseFromStmt (statement curStmt) {
@@ -222,20 +222,20 @@ public class MemToReg {
         defsites = new HashMap<>() ;
         A_phi = new HashMap<>() ;
         phiInsertions = new HashMap<>() ;
+        for (register reg : allocaRegs) defsites.put(reg, new HashSet<>()) ;
         for (block n : curFunc.blocks) {
             A_phi.put(n, new HashSet<>()) ;
             phiInsertions.put(n, new HashSet<>()) ;
             for (register a : A_orig.get(n)) {
-                if (!defsites.containsKey(a)) defsites.put(a, new HashSet<>()) ;
                 defsites.get(a).add(n) ;
             }
         }
         for (register a : allocaRegs) {
-            System.out.println("placing phi of var " + a.registerID);
+            // System.out.println("placing phi of var " + a.registerID);
             Queue<block> W = new LinkedList<>(defsites.get(a)) ;
             while (!W.isEmpty()) {
                 block n = W.poll() ;
-                System.out.println("block n: " + n.identifier);
+                // System.out.println("block n: " + n.identifier);
                 for (block Y : DF.get(n)) {
                     if (!A_phi.get(Y).contains(a)) {
                         phi curPhi = new phi(a, ((IRPointerType) a.type).type) ;
@@ -246,12 +246,12 @@ public class MemToReg {
                         phiInsertions.get(Y).add(curPhi) ;
                         Y.statements.add(0, curPhi);
                         A_phi.get(Y).add(a) ;
-                        System.out.println("in block " + Y.identifier);
+                        // System.out.println("in block " + Y.identifier);
                         if (!A_orig.get(Y).contains(a)) W.add(Y) ;
                     }
                 }
             }
-            System.out.println();
+            // System.out.println();
         }
     }
 
@@ -377,91 +377,40 @@ public class MemToReg {
     // }
 
     Set<block> visited = new HashSet<>() ;
-    Map<register, entity> regUpdate = new HashMap<>() ;
     Map<register, Integer> regID = new HashMap<>() ;
+    Map<register, Set<statement> > varUseStmt = new HashMap<>() ;
 
     private void RenamePhi (function curFunc) {
         Map<register, entity> IncomingVals = new HashMap<>() ;
         visited = new HashSet<>() ;
-        regUpdate = new HashMap<>() ;
         regID = new HashMap<>() ;
+        varUseStmt = new HashMap<>() ;
         
         for (register reg : allocaRegs) {
             regID.put(reg, 0) ;
-            IncomingVals.put(reg, new constant(0, reg.type));
+            IncomingVals.put(reg, new constant(0, ((IRPointerType) reg.type).type));
         }
 
-        Rename (curFunc.blocks.get(0), IncomingVals) ;
-
-        // update use
         for (block curBlock : curFunc.blocks)
-            for (statement S : curBlock.statements) {
-                if (S instanceof binary) {
-                    binary curBinary = (binary) S ;
-                    if (regUpdate.containsKey(curBinary.left)) 
-                        curBinary.left = regUpdate.get(curBinary.left) ;
-                    if (regUpdate.containsKey(curBinary.right)) 
-                        curBinary.right = regUpdate.get(curBinary.right) ;
-                } else if (S instanceof bitcast) {
-                    bitcast curBitcast = (bitcast) S ;
-                    if (regUpdate.containsKey(curBitcast.from))
-                        curBitcast.from = (register) regUpdate.get(curBitcast.from) ;
-                } else if (S instanceof branch) {
-                    branch curBranch = (branch) S ;
-                    if (regUpdate.containsKey(curBranch.condition))
-                        curBranch.condition = regUpdate.get(curBranch.condition) ;
-                } else if (S instanceof functioncall) {
-                    functioncall curFuncCall = (functioncall) S ;
-                    for (int i = 0; i < curFuncCall.parameters.size(); i ++) {
-                        entity cur = curFuncCall.parameters.get(i) ;
-                        if (regUpdate.containsKey(cur)) {
-                            curFuncCall.parameters.remove(i) ;
-                            curFuncCall.parameters.add(i, regUpdate.get(cur));
-                        }
-                    }
-                } else if (S instanceof getelementptr) {
-                    getelementptr curGet = (getelementptr) S ;
-                    if (regUpdate.containsKey(curGet.from))
-                        curGet.from = (register) regUpdate.get(curGet.from) ;
-                    for (int i = 0; i < curGet.value.size(); i ++) {
-                        entity cur = curGet.value.get(i) ;
-                        if (regUpdate.containsKey(cur)) {
-                            curGet.value.remove(i) ;
-                            curGet.value.add(i, regUpdate.get(cur)) ;
-                        }
-                    }
-                } else if (S instanceof load) {
-                    load curLoad = (load) S ;
-                    if (regUpdate.containsKey(curLoad.from))
-                        curLoad.from = regUpdate.get(curLoad.from) ;
-                } else if (S instanceof phi) {
-                    phi curPhi = (phi) S ;
-                    for (int i = 0; i < curPhi.value.size(); i ++) {
-                        entity cur = curPhi.value.get(i) ;
-                        if (regUpdate.containsKey(cur)) {
-                            curPhi.value.remove(i) ;
-                            curPhi.value.add(i, regUpdate.get(cur)) ;
-                        }
-                    }
-                } else if (S instanceof returnStmt) {
-                    returnStmt curReturn = (returnStmt) S ;
-                    if (regUpdate.containsKey(curReturn.returnReg))
-                        curReturn.returnReg = regUpdate.get(curReturn.returnReg) ;
-                } else if (S instanceof store) {
-                    store curStore = (store) S ;
-                    if (regUpdate.containsKey(curStore.from))
-                        curStore.from = regUpdate.get(curStore.from) ;
-                } else if (S instanceof trunc) {
-                    trunc curTrunc = (trunc) S ;
-                    if (regUpdate.containsKey(curTrunc.from))
-                        curTrunc.from = (register) regUpdate.get(curTrunc.from) ;
-                } else if (S instanceof zext) {
-                    zext curZext = (zext) S ;
-                    if (regUpdate.containsKey(curZext.from))
-                        curZext.from = (register) regUpdate.get(curZext.from) ;
+            for (statement stmt : curBlock.statements) {
+                for (register reg : stmt.getUseVar()) {
+                    if (!varUseStmt.containsKey(reg)) varUseStmt.put(reg, new HashSet<>()) ;
+                    varUseStmt.get(reg).add(stmt) ;
                 }
             }
+
+        Rename (curFunc.blocks.get(0), IncomingVals) ;
     }
+
+    private void regUpdate (register from, entity to) {
+        if (to instanceof register && !varUseStmt.containsKey(to)) varUseStmt.put((register) to, new HashSet<>()) ;
+        for (statement stmt : varUseStmt.get(from)) {
+            stmt.updateUseReg(from, to);
+            if (to instanceof register) varUseStmt.get(to).add(stmt) ;
+        }
+        varUseStmt.remove(from) ;
+    }
+
     private void Rename (block B, Map<register, entity> IncomingVals) {
         visited.add(B) ;
         ArrayList<Integer> eraseStmts = new ArrayList<>() ;
@@ -472,7 +421,9 @@ public class MemToReg {
                 load curLoad = (load) stmt ;
                 if (!allocaRegs.contains((register) curLoad.from)) continue ;
                 register L = (register) curLoad.from, V = (register) curLoad.to ;
-                regUpdate.put(V, newIncomingVals.get(L)) ;
+                // regUpdate.put(V, newIncomingVals.get(L)) ;
+                regUpdate(V, newIncomingVals.get(L));
+                // System.out.println("reg update " + V + " " + newIncomingVals.get(L));
                 eraseStmts.add(i) ;
             } else if (stmt instanceof store) {
                 store curStore = (store) stmt ;
@@ -520,6 +471,7 @@ public class MemToReg {
         }
         for (int i = eraseStmts.size() - 1; i >= 0; i --) {
             int idx = eraseStmts.get(i) ;
+            // System.out.println(B.statements.get(idx));
             B.statements.remove(idx) ;
         }
         for (block nxt : succ.get(B)) {

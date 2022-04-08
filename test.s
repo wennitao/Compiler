@@ -35,31 +35,46 @@ test:
 	mv	s0, t1
 	j	.test_entry
 .test_entry:
-	lw	a1, fuckLLVM_n
-	li	ra, 0
 	li	t0, 0
-	j	.test_ID4_for_condition
-.test_ID4_for_condition:
-	slt	t2, ra, a1
-	bnez	t2, .test_ID4_for_suite
-	j	.test_ID4_for_out
-.test_ID4_for_suite:
-	li	t2, 0
-	xor	t2, t1, t2
-	sltiu	t2, t2, 1
-	xori	t2, t2, 1
-	bnez	t2, .test_ID453_if_true
-	j	.test_ID453_if_out
-.test_ID453_if_true:
-	mv	t0, t1
-	j	.test_ID453_if_out
-.test_ID453_if_out:
-	j	.test_ID4_for_incr
-.test_ID4_for_incr:
-	li	t2, 1
-	add	ra, ra, t2
-	j	.test_ID4_for_condition
-.test_ID4_for_out:
+	li	a0, 0
+	j	.test_ID2_for_condition
+.test_ID2_for_condition:
+	li	ra, 200
+	slt	ra, t0, ra
+	bnez	ra, .test_ID2_for_suite
+	j	.test_ID2_for_out
+.test_ID2_for_suite:
+	li	t1, 0
+	j	.test_ID4_AndAnd_true
+.test_ID4_AndAnd_true:
+	li	t1, 1
+	j	.test_ID4_AndAnd_out
+.test_ID4_AndAnd_out:
+	li	ra, 0
+	bnez	t1, .test_ID5_AndAnd_true
+	j	.test_ID5_AndAnd_out
+.test_ID5_AndAnd_true:
+	li	ra, 1
+	j	.test_ID5_AndAnd_out
+.test_ID5_AndAnd_out:
+	bnez	ra, .test_ID6_if_true
+	j	.test_ID6_if_false
+.test_ID6_if_true:
+	li	ra, 1
+	add	t0, t0, ra
+	li	ra, 1
+	add	a0, a0, ra
+	j	.test_ID6_if_out
+.test_ID6_if_false:
+	li	a0, -1
+	j	.test_ID6_if_out
+.test_ID6_if_out:
+	j	.test_ID2_for_incr
+.test_ID2_for_incr:
+	li	ra, 1
+	add	t0, t0, ra
+	j	.test_ID2_for_condition
+.test_ID2_for_out:
 	j	.test_return
 .test_return:
 	li	t0, 16
@@ -80,39 +95,18 @@ main:
 	sw	ra, -4(t1)
 	sw	s0, -8(t1)
 	mv	s0, t1
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s3, 0(ra)
 	j	.main_entry
 .main_entry:
 	call	__init
 	call	test
-	mv	s3, a0
-	mv	a0, s3
-	call	printlnInt
-	call	test
-	add	t0, s3, a0
-	li	ra, 300
-	sub	a0, t0, ra
-	call	printlnInt
+	li	ra, 100
+	sub	a0, a0, ra
 	j	.main_return
 .main_return:
-	li	a0, 0
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s3, 0(ra)
 	li	t0, 16
 	add	t1, sp, t0
 	lw	ra, -4(t1)
 	lw	s0, -8(t1)
 	add	sp, sp, t0
 	ret
-
-	.section	.sbss
-	.type	fuckLLVM_n,@object
-	.globl	fuckLLVM_n
-	.p2align	2
-fuckLLVM_n:
-	.word	0
-	.size	fuckLLVM_n, 8
 

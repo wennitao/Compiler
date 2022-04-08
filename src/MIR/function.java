@@ -14,7 +14,7 @@ public class function {
     public register returnReg ;
     public ArrayList<register> parameters ;
     public ArrayList<String> parameterId ;
-    public boolean isBuiltin ;
+    public boolean isBuiltin, isEmpty = true ;
     public ArrayList<alloca> allocaInst = new ArrayList<>() ;
     public function (String _identifier) {
         identifier = _identifier ;

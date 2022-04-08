@@ -27,4 +27,9 @@ public class returnStmt extends statement {
     public Set<register> getDefVar() {
         return new HashSet<>() ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        if (returnReg == origReg) returnReg = toReg ;
+    }
 }

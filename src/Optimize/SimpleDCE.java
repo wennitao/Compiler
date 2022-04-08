@@ -35,7 +35,7 @@ public class SimpleDCE {
                 Set<register> useVars = curStmt.getUseVar() ;
                 Set<register> defVars = curStmt.getDefVar() ;
                 regs.addAll(useVars); regs.addAll(defVars) ;
-            }
+            }  
         for (register reg : regs) {
             varUseStmt.put(reg, new HashSet<>()) ;
             varDefStmt.put(reg, new HashSet<>()) ;
@@ -48,6 +48,7 @@ public class SimpleDCE {
                 for (register reg : useVars) varUseStmt.get(reg).add(curStmt) ;
                 for (register reg : defVars) varDefStmt.get(reg).add(curStmt) ;
             }
+        regs.removeIf(reg -> reg.isGlobal) ;
         
         Queue<register> W = new LinkedList<>(regs) ;
         while (!W.isEmpty()) {

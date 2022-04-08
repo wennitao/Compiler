@@ -41,4 +41,15 @@ public class phi extends statement {
         S.add(destReg) ;
         return S ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        for (int i = 0; i < value.size(); i ++) {
+            entity cur = value.get(i) ;
+            if (cur == origReg) {
+                value.remove(i) ;
+                value.add(i, toReg) ;
+            }
+        }
+    }
 }

@@ -66,4 +66,15 @@ public class functioncall extends statement {
         if (!isVoid) S.add(destReg) ;
         return S ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        for (int i = 0; i < parameters.size(); i ++) {
+            entity cur = parameters.get(i) ;
+            if (cur == origReg) {
+                parameters.remove(i) ;
+                parameters.add(i, toReg) ;
+            }
+        }
+    }
 }

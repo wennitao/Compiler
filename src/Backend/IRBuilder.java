@@ -1351,6 +1351,7 @@ public class IRBuilder implements ASTVisitor{
                 reg.isLvalue = true ;
                 curScope.entities.put(x.name, reg) ;
                 if (x.isInitialized) {
+                    initFunc.isEmpty = false ;
                     curFunction = initFunc ;
                     currentBlock = initCurrentBlock ;
                     x.expression.accept(this) ;

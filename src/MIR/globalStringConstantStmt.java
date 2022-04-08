@@ -31,4 +31,9 @@ public class globalStringConstantStmt extends statement {
     public Set<register> getDefVar() {
         return new HashSet<>() ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        
+    }
 }

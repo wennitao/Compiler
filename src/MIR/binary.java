@@ -41,4 +41,10 @@ public class binary extends statement {
         S.add ((register) dest) ;
         return S ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        if (left == origReg) left = toReg ;
+        if (right == origReg) right = toReg ;
+    }
 }

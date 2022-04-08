@@ -27,4 +27,9 @@ public class bitcast extends statement {
         S.add(to) ;
         return S ;
     }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        if (from == origReg) from = (register) toReg ;
+    }
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class branch extends statement {
     public boolean isConditioned ;
-    public entity condition ;
+    public entity condition = null ;
     public label trueBranch, falseBranch ;
     public branch (entity _condition, label _trueBranch, label _falseBranch) {
         condition = _condition ;
@@ -33,5 +33,10 @@ public class branch extends statement {
     public Set<register> getDefVar() {
         Set<register> S = new HashSet<>() ;
         return S ;
+    }
+
+    @Override
+    public void updateUseReg (register origReg, entity toReg) {
+        if (condition == origReg) condition = toReg ;
     }
 }
