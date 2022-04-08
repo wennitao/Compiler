@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRClassType;
 import MIR.IRType.IRType;
 
@@ -21,5 +24,14 @@ public class structDefine extends statement {
         }
         res = res + " }" ;
         return res ;
+    }
+
+    @Override
+    public Set<register> getUseVar() {
+        return new HashSet<>() ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        return new HashSet<>() ;
     }
 }

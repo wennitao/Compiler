@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRType;
 
 public class alloca extends statement {
@@ -12,5 +15,13 @@ public class alloca extends statement {
     @Override 
     public String toString () {
         return reg + " = alloca " + type ;
+    }
+    @Override
+    public Set<register> getUseVar() {
+        return new HashSet<>() ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        return new HashSet<>() ;
     }
 }

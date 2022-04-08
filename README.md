@@ -1,2 +1,3 @@
 ## Mx Compiler
-optimizing
+pass all basic optimizations
+SSA constructing...

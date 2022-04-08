@@ -1,6 +1,8 @@
 package MIR;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import MIR.IRType.IRType;
 
@@ -14,6 +16,7 @@ public class phi extends statement {
         value = new ArrayList<>() ;
         labels = new ArrayList<>() ;
     }
+
     @Override
     public String toString() {
         String res = destReg + " = phi " + type + " " ;
@@ -22,5 +25,20 @@ public class phi extends statement {
         }
         if (!value.isEmpty()) res = res + "[ " + value.get(value.size() - 1) + ", " + labels.get(labels.size() - 1) + " ]" ;
         return res ;
+    }
+
+    @Override
+    public Set<register> getUseVar() {
+        Set<register> S = new HashSet<>() ;
+        for (entity cur : value) {
+            if (cur instanceof register) S.add((register) cur) ;
+        }
+        return S ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        Set<register> S = new HashSet<>() ;
+        S.add(destReg) ;
+        return S ;
     }
 }

@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRPointerType;
 
 public class globalDefineStmt extends statement {
@@ -12,8 +15,18 @@ public class globalDefineStmt extends statement {
     public globalDefineStmt (register _reg, constant _init) {
         reg = _reg; initConstant = _init ;
     }
+
     @Override
     public String toString () {
         return reg + " = global " + ((IRPointerType)reg.type).type + " " + initConstant ;
+    }
+
+    @Override
+    public Set<register> getUseVar() {
+        return new HashSet<>() ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        return new HashSet<>() ;
     }
 }

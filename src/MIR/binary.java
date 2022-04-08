@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRType;
 
 public class binary extends statement {
@@ -24,5 +27,18 @@ public class binary extends statement {
     public String toString() {
         if (isCompareOperator(op)) return dest + " = icmp " + op.name() + " " + type + " " + left + ", " + right ;
         else return dest + " = " + op.name() + " " + type + " " + left + ", " + right ;
+    }
+    @Override
+    public Set<register> getUseVar() {
+        Set<register> S = new HashSet<>() ;
+        if (left instanceof register) S.add((register) left) ;
+        if (right instanceof register) S.add((register) right) ;
+        return S ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        Set<register> S = new HashSet<>() ;
+        S.add ((register) dest) ;
+        return S ;
     }
 }

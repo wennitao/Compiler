@@ -1,6 +1,8 @@
 package MIR;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
@@ -48,5 +50,20 @@ public class functioncall extends statement {
         }
         str = str + ')' ;
         return str ;
+    }
+
+    @Override
+    public Set<register> getUseVar() {
+        Set<register> S = new HashSet<>() ;
+        for (entity cur : parameters) {
+            if (cur instanceof register) S.add((register) cur) ;
+        }
+        return S ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        Set<register> S = new HashSet<>() ;
+        if (!isVoid) S.add(destReg) ;
+        return S ;
     }
 }

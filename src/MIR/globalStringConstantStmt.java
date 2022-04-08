@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRArrayType;
 import MIR.IRType.IRIntType;
 import MIR.IRType.IRPointerType;
@@ -18,5 +21,14 @@ public class globalStringConstantStmt extends statement {
     @Override
     public String toString () {
         return reg + " = private constant " + ((IRPointerType)reg.type).type + " c\"" + stringConstant + "\"" ;
+    }
+
+    @Override
+    public Set<register> getUseVar() {
+        return new HashSet<>() ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        return new HashSet<>() ;
     }
 }

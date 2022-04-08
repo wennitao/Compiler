@@ -1,5 +1,8 @@
 package MIR;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import MIR.IRType.IRType;
 
 public class bitcast extends statement {
@@ -11,5 +14,17 @@ public class bitcast extends statement {
     @Override
     public String toString () {
         return to + " = bitcast " + from.type + " " + from + " to " + toType ;
+    }
+    @Override
+    public Set<register> getUseVar() {
+        Set<register> S = new HashSet<>() ;
+        S.add(from) ;
+        return S ;
+    }
+    @Override
+    public Set<register> getDefVar() {
+        Set<register> S = new HashSet<>() ;
+        S.add(to) ;
+        return S ;
     }
 }
