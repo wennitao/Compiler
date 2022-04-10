@@ -1,8 +1,6 @@
 ## Mx Compiler
 pass all basic optimizations
 
-SSA constructing...
+codegen pass SSA, simple DCE, SCCP
 
-(bug in rename phase)
-
-test simple DCE
+(but inst limit didn't pass because of ADCE...)

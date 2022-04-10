@@ -150,6 +150,39 @@ public class ConstantPropagation {
         }
 
         curFunc.getSuccAndPred();
+
+        // eliminate block only has one branch
+        // Map<block, block> branchBlock = new HashMap<>() ;
+        // deleteBlocks = new ArrayList<>() ;
+        // for (int i = 0; i < curFunc.blocks.size(); i ++) {
+        //     block b = curFunc.blocks.get(i) ;
+        //     statement stmt = b.statements.get(b.statements.size() - 1) ;
+        //     if (stmt instanceof branch) {
+        //         branch curBranch = (branch) stmt ;
+        //         if (!curBranch.isConditioned && b.statements.size() == 1) {
+        //             branchBlock.put(b, curFunc.labelToBlock.get(curBranch.trueBranch.labelID)) ;
+        //             deleteBlocks.add(b) ;
+        //         }
+        //     }
+        // }
+        // for (block b : deleteBlocks) curFunc.blocks.remove(b) ;
+        // for (int i = 0; i < curFunc.blocks.size(); i ++) {
+        //     block b = curFunc.blocks.get(i) ;
+        //     statement stmt = b.statements.get(b.statements.size() - 1) ;
+        //     if (stmt instanceof branch) {
+        //         branch curBranch = (branch) stmt ;
+        //         if (curBranch.isConditioned) {
+        //             block curBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
+        //             if (branchBlock.containsKey(curBlock))
+        //                 curBranch.falseBranch = new label(branchBlock.get(curBlock).identifier) ;
+        //         }
+        //         block curBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
+        //         if (branchBlock.containsKey(curBlock))
+        //             curBranch.trueBranch = new label(branchBlock.get(curBlock).identifier) ;
+        //     }
+        // }
+
+        // curFunc.getSuccAndPred();
     }
 
     private void analyzeStatement (function curFunc, statement stmt) {
