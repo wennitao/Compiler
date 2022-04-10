@@ -22,6 +22,7 @@ public class AssemblyFunction {
     public Set<String> allocaRegs = new HashSet<>() ;
     public Map<String, ArrayList<VirtualReg> > phiRd = new HashMap<>() ;
     public Map<String, ArrayList<entity> > phiValue = new HashMap<>() ;
+    public Map<String, ArrayList<String> > phiAtBlock = new HashMap<>() ;
     public Map<Reg, Integer> useCount = new HashMap<>() ;
     // register allocation
     // public Map<Inst, Set<Inst> > succ, pred ;

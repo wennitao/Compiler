@@ -42,11 +42,9 @@ public class getelementptr extends statement {
     @Override
     public void updateUseReg (register origReg, entity toReg) {
         for (int i = 0; i < value.size(); i ++) {
-            entity cur = value.get(i) ;
-            if (cur == origReg) {
-                value.remove(i) ;
-                value.add(i, toReg) ;
-            }
+            if (value.get(i) == origReg)
+                value.set(i, toReg) ;
         }
+        if (from == origReg) from = (register) toReg ;
     }
 }

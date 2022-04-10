@@ -182,6 +182,7 @@ public class AssemblyBuilder {
                 return rs ;
             }
             if (reg.isGlobal) {
+                // System.out.println (reg) ;
                 rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
                 curBlock.push_back(new laInst(rs, reg.registerID)) ;
             } else {
@@ -208,6 +209,7 @@ public class AssemblyBuilder {
         } else {
             register reg = (register) x ;
             if (reg.isGlobal) {
+                // System.out.println (reg) ;
                 rs = new VirtualReg(curFunction.curRegID ++, reg.type.size) ;
                 curBlock.insert_before(inst, new laInst(rs, reg.registerID)) ;
             } else {
@@ -247,7 +249,8 @@ public class AssemblyBuilder {
             entity left = curIRInst.left, right = curIRInst.right, dest = curIRInst.dest ;
             VirtualReg rs1, rs2, rd ;
             rs1 = entityToReg(left); rs2 = entityToReg(right) ;
-            rd = new VirtualReg(((register) dest).registerID, dest.type.size) ;
+            // rd = new VirtualReg(((register) dest).registerID, dest.type.size) ;
+            rd = entityToReg(dest) ;
             switch (curIRInst.op) {
                 case add:
                     curBlock.push_back(new binaryInst(binaryInstOp.add, rs1, rs2, rd)) ;
@@ -309,26 +312,28 @@ public class AssemblyBuilder {
         } else if (curIRStmt instanceof load) {
             load curLoad = (load) curIRStmt ;
             entity from = curLoad.from, to = curLoad.to ;
-            VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
+            // VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
+            VirtualReg rd = entityToReg(to) ;
             if (from instanceof register && ((register) from).isGlobal) {
                 register fromGlobal = (register) from ;
                 curBlock.push_back(new loadInst(fromGlobal.type.size, fromGlobal.registerID, rd));
+                // curBlock.push_back(new laInst(rd, fromGlobal.registerID)) ;
             } else {
                 VirtualReg rs = entityToReg(from) ;
                 
                 if (!curFunction.allocaRegs.contains(((register) from).registerID)) {
                     // real load
                     if (curFunction.regOffset.containsKey(rs)) {
-                        // int imm = -curFunction.regOffset.get(rs) ;
-                        // // if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
-                        // // else {
-                        //     VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
-                        //     curBlock.push_back(new liInst(t, new Imm(imm)));
-                        //     curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
-                        //     curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
-                        // // }
-                        // // loadFromImm(to.type.size, rd, imm, s0) ;
-                        // // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
+                        int imm = -curFunction.regOffset.get(rs) ;
+                        // if (immInRange(imm)) curBlock.push_back(new loadInst(to.type.size, rd, new Imm(imm), s0));
+                        // else {
+                            VirtualReg t = new VirtualReg(curFunction.curRegID ++, 4) ;
+                            curBlock.push_back(new liInst(t, new Imm(imm)));
+                            curBlock.push_back(new binaryInst(binaryInstOp.add, s0, t, t));
+                            curBlock.push_back(new loadInst(to.type.size, rd, new Imm(0), t));
+                        // }
+                        // loadFromImm(to.type.size, rd, imm, s0) ;
+                        // curBlock.push_back(new loadInst(to.type.size, rd, new Imm (imm), s0));
                     } else {
                         curBlock.push_back(new loadInst(to.type.size, rd, new Imm (0), rs));
                     }
@@ -401,7 +406,8 @@ public class AssemblyBuilder {
             }
             curBlock.push_back(new callInst(curFuncCall.functionName)) ;
             if (!curFuncCall.isVoid) {
-                VirtualReg rd = new VirtualReg(curFunction.curRegID ++, curFuncCall.destReg.type.size) ;
+                // VirtualReg rd = new VirtualReg(curFunction.curRegID ++, curFuncCall.destReg.type.size) ;
+                VirtualReg rd = entityToReg(curFuncCall.destReg) ;
                 curBlock.push_back(new mvInst(a0, rd)) ;
                 curFunction.toRegMap.put(curFuncCall.destReg.registerID, rd) ;
             }
@@ -418,17 +424,18 @@ public class AssemblyBuilder {
             curFunction.toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
         } else if (curIRStmt instanceof trunc) {
             trunc curIRTrunc = (trunc) curIRStmt ;
-            curFunction.toRegMap.put(curIRTrunc.to.registerID, entityToReg(curIRTrunc.from)) ;
+            curFunction.toRegMap.put(((register)curIRTrunc.to).registerID, entityToReg(curIRTrunc.from)) ;
             // System.out.println(curIRTrunc.to.registerID + " " + entityToReg(curIRTrunc.from)) ;
         } else if (curIRStmt instanceof zext) {
             zext curIRZext = (zext) curIRStmt ;
-            curFunction.toRegMap.put(curIRZext.to.registerID, entityToReg(curIRZext.from)) ;
+            curFunction.toRegMap.put(((register) curIRZext.to).registerID, entityToReg(curIRZext.from)) ;
         } else if (curIRStmt instanceof getelementptr) {
             getelementptr curIRGetelementptr = (getelementptr) curIRStmt ;
             register from = curIRGetelementptr.from, to = curIRGetelementptr.to ;
             int size = ((IRPointerType) from.type).type.size ;
             VirtualReg rs = entityToReg(from) ;
-            VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
+            // VirtualReg rd = new VirtualReg(curFunction.curRegID ++, to.type.size) ;
+            VirtualReg rd = entityToReg(to) ;
             // entity value = curIRGetelementptr.value.get(0) ;
             entity value ;
             if (curIRGetelementptr.value.size() == 1) {
@@ -451,7 +458,8 @@ public class AssemblyBuilder {
         } else if (curIRStmt instanceof phi) {
             phi curIRPhi = (phi) curIRStmt ;
             register dest = curIRPhi.destReg ;
-            VirtualReg rd = new VirtualReg(curFunction.curRegID ++, dest.type.size) ;
+            // VirtualReg rd = new VirtualReg(curFunction.curRegID ++, dest.type.size) ;
+            VirtualReg rd = entityToReg(dest) ;
             curFunction.toRegMap.put (dest.registerID, rd) ;
             for (int i = 0; i < curIRPhi.labels.size(); i ++) {
                 label curLabel = curIRPhi.labels.get(i) ;
@@ -459,9 +467,11 @@ public class AssemblyBuilder {
                 if (!curFunction.phiRd.containsKey(curLabel.labelID)) {
                     curFunction.phiRd.put(curLabel.labelID, new ArrayList<>()) ;
                     curFunction.phiValue.put(curLabel.labelID, new ArrayList<>()) ;
+                    curFunction.phiAtBlock.put(curLabel.labelID, new ArrayList<>()) ;
                 }
                 curFunction.phiRd.get(curLabel.labelID).add(rd) ;
                 curFunction.phiValue.get(curLabel.labelID).add(value) ;
+                curFunction.phiAtBlock.get(curLabel.labelID).add(curBlock.identifier) ;
             }
         }
     }
@@ -470,27 +480,44 @@ public class AssemblyBuilder {
             if (curFunc.phiRd.isEmpty()) continue ;
             curFunction = curFunc ;
             for (AssemblyBlock block : curFunc.blocks) {
-                boolean flag = curFunc.phiRd.containsKey(block.identifier) ;
-                if (!flag) continue ;
+                if (!curFunc.phiRd.containsKey(block.identifier)) continue ;
                 curBlock = block ;
                 for (int i = 0; i < curFunc.phiValue.get(block.identifier).size(); i ++) {
-                    entity value = curFunc.phiValue.get(block.identifier).get(i);
-                    Inst markInst = null ;
-                    for (Inst inst = block.head; inst != null; inst = inst.next) {
-                        if (inst instanceof bnezInst || inst instanceof jumpInst) {
-                            if (markInst == null) {
-                                markInst = inst; break ;
-                            }
-                        }
-                    }
-                    VirtualReg rs = entityToReg(value, markInst) ;
-                    // System.out.println(value + " " + rs);
-                    // VirtualReg rs = entityToReg(value) ;
+                    // entity value = curFunc.phiValue.get(block.identifier).get(i);
+                    // Inst markInst = null ;
+                    // for (Inst inst = block.head; inst != null; inst = inst.next) {
+                    //     if (inst instanceof bnezInst || inst instanceof jumpInst) {
+                    //         if (markInst == null) {
+                    //             markInst = inst; break ;
+                    //         }
+                    //     }
+                    // }
+                    // VirtualReg rs = entityToReg(value, markInst) ;
+                    // // System.out.println(value + " " + rs);
+                    // // VirtualReg rs = entityToReg(value) ;
+                    // VirtualReg rd = curFunc.phiRd.get(block.identifier).get(i) ;
+                    // for (Inst inst = block.head; inst != null; inst = inst.next) {
+                    //     if (inst instanceof bnezInst || inst instanceof jumpInst) {
+                    //         // System.out.println("mv\t" + rd + ", " + rs);
+                    //         block.insert_before(inst, new mvInst(rs, rd)) ;
+                    //     }
+                    // }
+                    entity value = curFunc.phiValue.get(block.identifier).get(i) ;
                     VirtualReg rd = curFunc.phiRd.get(block.identifier).get(i) ;
+                    String phiAtBlockStr = curFunc.phiAtBlock.get(block.identifier).get(i) ;
                     for (Inst inst = block.head; inst != null; inst = inst.next) {
-                        if (inst instanceof bnezInst || inst instanceof jumpInst) {
-                            // System.out.println("mv\t" + rd + ", " + rs);
-                            block.insert_before(inst, new mvInst(rs, rd)) ;
+                        if (inst instanceof bnezInst) {
+                            bnezInst curBnez = (bnezInst) inst ;
+                            if (curBnez.toLabel.labelID.equals(phiAtBlockStr)) {
+                                VirtualReg rs = entityToReg(value, inst) ;
+                                block.insert_before(inst, new mvInst(rs, rd));
+                            }
+                        } else if (inst instanceof jumpInst) {
+                            jumpInst curJump = (jumpInst) inst ;
+                            if (curJump.toLabel.labelID.equals(phiAtBlockStr)) {
+                                VirtualReg rs = entityToReg(value, inst) ;
+                                block.insert_before(inst, new mvInst(rs, rd));
+                            }
                         }
                     }
                 }
@@ -606,7 +633,7 @@ public class AssemblyBuilder {
             } else if (inst instanceof loadInst) {
                 loadInst curInst = (loadInst) inst ;
                 curInst.rs2 = loadVirtualReg(inst, curInst.rs2, t0) ;
-                curInst.rs1 = storeVirtualReg(inst, curInst.rs1, t1) ; // rd
+                curInst.rd = storeVirtualReg(inst, curInst.rd, t1) ; // rd
             } else if (inst instanceof mvInst) {
                 mvInst curInst = (mvInst) inst ;
                 curInst.rs1 = loadVirtualReg(inst, curInst.rs1, t0) ;

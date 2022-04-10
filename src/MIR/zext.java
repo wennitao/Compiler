@@ -7,8 +7,8 @@ import MIR.IRType.IRType;
 
 public class zext extends statement {
     IRType fromType, toType ;
-    public register from, to ;
-    public zext (register _from, register _to, IRType _fromType, IRType _toType) {
+    public entity from, to ;
+    public zext (entity _from, entity _to, IRType _fromType, IRType _toType) {
         fromType = _fromType; toType = _toType ;
         from = _from; to = _to ;
     }
@@ -33,6 +33,6 @@ public class zext extends statement {
 
     @Override
     public void updateUseReg (register origReg, entity toReg) {
-        if (from == origReg) from = (register) toReg ;
+        if (from == origReg) from = toReg ;
     }
 }

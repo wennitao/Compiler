@@ -7,3 +7,5 @@ optim-new/*
 *.out
 *.in
 *.ans
+*.yaml
+*.txt

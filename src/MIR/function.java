@@ -2,6 +2,8 @@ package MIR;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import MIR.IRType.IRType;
 
@@ -16,6 +18,7 @@ public class function {
     public ArrayList<String> parameterId ;
     public boolean isBuiltin, isEmpty = true ;
     public ArrayList<alloca> allocaInst = new ArrayList<>() ;
+    public Map<String, block> labelToBlock = new HashMap<>() ;
     public function (String _identifier) {
         identifier = _identifier ;
         // label rootBlockLabel = new label(identifier + "_entry") ;

@@ -7,15 +7,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 import MIR.* ;
 import MIR.IRType.IRPointerType;
 
 public class MemToReg {
     private globalDefine globalDefine ;
-    private Map<String, block> labelToBlock ;
-    private Map<block, ArrayList<block> > succ, pred, bucket ;
+    private Map<block, ArrayList<block> > bucket ;
     private Map<block, Integer> dfnum ;
     private Map<block, block> parent, semi, ancestor, idom, samedom, best ;
     private Map<Integer, block> vertex ;
@@ -45,9 +43,6 @@ public class MemToReg {
     }
 
     private void init () {
-        succ = new HashMap<>() ;
-        pred = new HashMap<>() ;
-        labelToBlock = new HashMap<>() ;
         dfnum = new HashMap<>() ;
         parent = new HashMap<>() ;
         vertex = new HashMap<>() ;
@@ -64,6 +59,10 @@ public class MemToReg {
 
     private void analyzeFunction (function curFunc) {
         getSuccAndPred (curFunc) ;
+        deleteUnvisitedBlocks (curFunc) ;
+        getSuccAndPred (curFunc);
+        edgeSplitting (curFunc) ;
+        getSuccAndPred (curFunc) ;
         Dominators(curFunc) ;
         getAllocaRegs (curFunc) ;
         getVarDef (curFunc) ;
@@ -73,38 +72,71 @@ public class MemToReg {
     }
 
     private void addBlockEdge (block from, block to) {
-        // System.out.println(from.identifier + " " + to.identifier);
-        succ.get(from).add(to) ;
-        pred.get(to).add(from) ;
+        from.succ.add(to) ;
+        to.pred.add(from) ;
     }
 
     private void getSuccAndPred (function curFunc) {
         for (block curBlock : curFunc.blocks) {
-            labelToBlock.put(curBlock.identifier, curBlock) ;
-            succ.put(curBlock, new ArrayList<>()) ;
-            pred.put(curBlock, new ArrayList<>()) ;
+            curFunc.labelToBlock.put(curBlock.identifier, curBlock) ;
             dfnum.put(curBlock, 0) ;
+            curBlock.succ = new ArrayList<>() ;
+            curBlock.pred = new ArrayList<>() ;
         }
-        for (block curBlock : curFunc.blocks) {
-            for (statement curStmt : curBlock.statements) {
-                if (curStmt instanceof branch) {
-                    branch curBranch = (branch) curStmt ;
-                    block toBlock = labelToBlock.get(curBranch.trueBranch.labelID) ;
+        for (int i = 0; i < curFunc.blocks.size(); i ++) {
+            block curBlock = curFunc.blocks.get(i) ;
+            statement curStmt = curBlock.statements.get(curBlock.statements.size() - 1) ;
+            if (curStmt instanceof branch) {
+                branch curBranch = (branch) curStmt ;
+                block toBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
+                addBlockEdge(curBlock, toBlock);
+                if (curBranch.isConditioned) {
+                    toBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
                     addBlockEdge(curBlock, toBlock);
-                    if (curBranch.isConditioned) {
-                        toBlock = labelToBlock.get(curBranch.falseBranch.labelID) ;
-                        addBlockEdge(curBlock, toBlock);
-                    }
+                }
+            } else if (i < curFunc.blocks.size() - 1) {
+                addBlockEdge(curBlock, curFunc.blocks.get(i + 1));
+            }
+        }
+        // for (block curBlock : curFunc.blocks) {
+        //     for (statement curStmt : curBlock.statements) {
+        //         if (curStmt instanceof branch) {
+        //             branch curBranch = (branch) curStmt ;
+        //             block toBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
+        //             addBlockEdge(curBlock, toBlock);
+        //             if (curBranch.isConditioned) {
+        //                 toBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
+        //                 addBlockEdge(curBlock, toBlock);
+        //             }
+        //         }
+        //     }
+        // }
+    }
+
+    private void deleteUnvisitedBlocks (function curFunc) {
+        Set<block> visited = new HashSet<>(), deleteBlocks = new HashSet<>() ;
+        Queue<block> queue = new LinkedList<>() ;
+        queue.add(curFunc.blocks.get(0)) ;
+        visited.add(curFunc.blocks.get(0)) ;
+        while (!queue.isEmpty()) {
+            block b = queue.poll() ;
+            for (block nxt : b.succ) {
+                if (!visited.contains(nxt)) {
+                    queue.add(nxt); visited.add(nxt) ;
                 }
             }
         }
+        for (block b : curFunc.blocks)
+            if (!visited.contains(b)) deleteBlocks.add(b) ;
+        for (block b : deleteBlocks)
+            curFunc.blocks.remove(b) ;
     }
 
     private void DFS (block p, block n) {
         if (dfnum.get(n).equals(0)) {
             dfnum.put(n, N); vertex.put(N, n); parent.put(n, p) ;
             N = N + 1 ;
-            for (block w : succ.get(n))
+            for (block w : n.succ)
                 DFS (n, w) ;
         }
     }
@@ -134,7 +166,7 @@ public class MemToReg {
         DFS (null, r) ;
         for (int i = N - 1; i >= 1; i --) {
             block n = vertex.get(i), p = parent.get(n), s = p, ss ;
-            for (block v : pred.get(n)) {
+            for (block v : n.pred) {
                 if (dfnum.get(v) <= dfnum.get(n)) ss = v ;
                 else ss = semi.get(AncestorWithLowestSemi(v)) ;
                 if (dfnum.get(ss) < dfnum.get(s)) s = ss ;
@@ -160,7 +192,7 @@ public class MemToReg {
 
     private void computeDF (block n) {
         Set<block> S = new HashSet<>() ;
-        for (block y : succ.get(n)) {
+        for (block y : n.succ) {
             if (idom.get(y) != n) S.add(y) ;
         }
         for (block c : child.get(n)) {
@@ -218,6 +250,47 @@ public class MemToReg {
         }
     }
 
+    private void edgeSplitting (function curFunc) {
+        ArrayList<block> addBlocks = new ArrayList<>() ;
+        ArrayList<Integer> addIdx = new ArrayList<>() ;
+        for (block from : curFunc.blocks) {
+            if (from.succ.size() == 1) continue ;
+            for (block to : from.succ) {
+                if (to.pred.size() == 1) continue ;
+                block mid = new block(from.identifier + "_mid") ;
+                branch newBranch = new branch(new label(to.identifier)) ;
+                mid.statements.add(newBranch) ;
+                branch fromBranch = (branch) from.statements.get(from.statements.size() - 1) ;
+                if (fromBranch.trueBranch.labelID == to.identifier) {
+                    fromBranch.trueBranch = new label(mid.identifier) ;
+                } else {
+                    fromBranch.falseBranch = new label(mid.identifier) ;
+                }
+                // update phi in block to
+                for (statement stmt : to.statements) {
+                    if (stmt instanceof phi) {
+                        phi curPhi = (phi) stmt ;
+                        for (int i = 0; i < curPhi.labels.size(); i ++) {
+                            if (curPhi.labels.get(i).labelID.equals(from.identifier))
+                                curPhi.labels.set(i, new label(mid.identifier)) ;
+                        }
+                    }
+                } 
+
+                int idx = curFunc.blocks.indexOf(from) ;
+                addBlocks.add(mid); addIdx.add(idx + 1) ;
+                // from.succ.remove(to); from.succ.add(mid) ;
+                // to.pred.remove(from); to.pred.add(mid) ;
+            }
+        }
+
+        for (int i = 0; i < addBlocks.size(); i ++) {
+            block b = addBlocks.get(i) ;
+            int idx = addIdx.get(i) ;
+            curFunc.blocks.add(idx, b) ;
+        }
+    }
+
     private void placePhiFunctions (function curFunc) {
         defsites = new HashMap<>() ;
         A_phi = new HashMap<>() ;
@@ -239,7 +312,7 @@ public class MemToReg {
                 for (block Y : DF.get(n)) {
                     if (!A_phi.get(Y).contains(a)) {
                         phi curPhi = new phi(a, ((IRPointerType) a.type).type) ;
-                        for (block pre : pred.get(Y)) {
+                        for (block pre : Y.pred) {
                             curPhi.labels.add(new label(pre.identifier)) ;
                             curPhi.value.add(a) ;
                         }
@@ -399,19 +472,23 @@ public class MemToReg {
                 }
             }
 
-        Rename (curFunc.blocks.get(0), IncomingVals) ;
+        Rename (curFunc, curFunc.blocks.get(0), IncomingVals) ;
     }
 
-    private void regUpdate (register from, entity to) {
+    private void regUpdate (block b, register from, entity to) {
         if (to instanceof register && !varUseStmt.containsKey(to)) varUseStmt.put((register) to, new HashSet<>()) ;
-        for (statement stmt : varUseStmt.get(from)) {
-            stmt.updateUseReg(from, to);
-            if (to instanceof register) varUseStmt.get(to).add(stmt) ;
+        if (varUseStmt.containsKey(from)) {
+            for (statement stmt : varUseStmt.get(from)) {
+                // System.out.println (stmt) ;
+                stmt.updateUseReg(from, to);
+                if (to instanceof register) varUseStmt.get(to).add(stmt) ;
+            }
         }
         varUseStmt.remove(from) ;
     }
 
-    private void Rename (block B, Map<register, entity> IncomingVals) {
+    private void Rename (function curFunc, block B, Map<register, entity> IncomingVals) {
+        // System.out.println(B.identifier);
         visited.add(B) ;
         ArrayList<Integer> eraseStmts = new ArrayList<>() ;
         Map<register, entity> newIncomingVals = new HashMap<>(IncomingVals) ;
@@ -422,7 +499,7 @@ public class MemToReg {
                 if (!allocaRegs.contains((register) curLoad.from)) continue ;
                 register L = (register) curLoad.from, V = (register) curLoad.to ;
                 // regUpdate.put(V, newIncomingVals.get(L)) ;
-                regUpdate(V, newIncomingVals.get(L));
+                regUpdate(B, V, newIncomingVals.get(L));
                 // System.out.println("reg update " + V + " " + newIncomingVals.get(L));
                 eraseStmts.add(i) ;
             } else if (stmt instanceof store) {
@@ -430,10 +507,11 @@ public class MemToReg {
                 if (!allocaRegs.contains((register) curStore.dest)) continue ;
                 register L = (register) curStore.dest; entity V = curStore.from ;
                 newIncomingVals.put(L, V) ;
+                // System.out.println("incomingVals " + L + ": " + V) ;
                 eraseStmts.add(i) ;
             } else if (stmt instanceof branch) {
                 branch curBranch = (branch) stmt ;
-                block toBlock = labelToBlock.get(curBranch.trueBranch.labelID) ;
+                block toBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
                 for (phi curPhi : phiInsertions.get(toBlock)) {
                     for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
                         label fromLabel = curPhi.labels.get(phiIdx) ;
@@ -445,7 +523,7 @@ public class MemToReg {
                     }
                 }
                 if (curBranch.isConditioned) {
-                    toBlock = labelToBlock.get(curBranch.falseBranch.labelID) ;
+                    toBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
                     for (phi curPhi : phiInsertions.get(toBlock)) {
                         for (int phiIdx = 0; phiIdx < curPhi.labels.size(); phiIdx ++) {
                             label fromLabel = curPhi.labels.get(phiIdx) ;
@@ -474,9 +552,9 @@ public class MemToReg {
             // System.out.println(B.statements.get(idx));
             B.statements.remove(idx) ;
         }
-        for (block nxt : succ.get(B)) {
+        for (block nxt : B.succ) {
             if (!visited.contains(nxt))
-                Rename (nxt, newIncomingVals) ;
+                Rename (curFunc, nxt, newIncomingVals) ;
         }
     }
 

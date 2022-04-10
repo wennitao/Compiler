@@ -7,6 +7,7 @@ public class block {
     public String identifier ;
     public ArrayList<statement> statements = new ArrayList<>();
     public boolean hasJumped = false ;
+    public ArrayList<block> succ = new ArrayList<>(), pred = new ArrayList<>() ;
     public block (String _identifier) {
         identifier = _identifier ;
     }
