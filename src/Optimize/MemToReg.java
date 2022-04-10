@@ -58,59 +58,17 @@ public class MemToReg {
     }
 
     private void analyzeFunction (function curFunc) {
-        getSuccAndPred (curFunc) ;
+        curFunc.getSuccAndPred() ;
         deleteUnvisitedBlocks (curFunc) ;
-        getSuccAndPred (curFunc);
+        curFunc.getSuccAndPred() ;
         edgeSplitting (curFunc) ;
-        getSuccAndPred (curFunc) ;
+        curFunc.getSuccAndPred() ;
         Dominators(curFunc) ;
         getAllocaRegs (curFunc) ;
         getVarDef (curFunc) ;
         placePhiFunctions(curFunc);
         RenamePhi(curFunc);
         EliminateAlloca (curFunc) ;
-    }
-
-    private void addBlockEdge (block from, block to) {
-        from.succ.add(to) ;
-        to.pred.add(from) ;
-    }
-
-    private void getSuccAndPred (function curFunc) {
-        for (block curBlock : curFunc.blocks) {
-            curFunc.labelToBlock.put(curBlock.identifier, curBlock) ;
-            dfnum.put(curBlock, 0) ;
-            curBlock.succ = new ArrayList<>() ;
-            curBlock.pred = new ArrayList<>() ;
-        }
-        for (int i = 0; i < curFunc.blocks.size(); i ++) {
-            block curBlock = curFunc.blocks.get(i) ;
-            statement curStmt = curBlock.statements.get(curBlock.statements.size() - 1) ;
-            if (curStmt instanceof branch) {
-                branch curBranch = (branch) curStmt ;
-                block toBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
-                addBlockEdge(curBlock, toBlock);
-                if (curBranch.isConditioned) {
-                    toBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
-                    addBlockEdge(curBlock, toBlock);
-                }
-            } else if (i < curFunc.blocks.size() - 1) {
-                addBlockEdge(curBlock, curFunc.blocks.get(i + 1));
-            }
-        }
-        // for (block curBlock : curFunc.blocks) {
-        //     for (statement curStmt : curBlock.statements) {
-        //         if (curStmt instanceof branch) {
-        //             branch curBranch = (branch) curStmt ;
-        //             block toBlock = curFunc.labelToBlock.get(curBranch.trueBranch.labelID) ;
-        //             addBlockEdge(curBlock, toBlock);
-        //             if (curBranch.isConditioned) {
-        //                 toBlock = curFunc.labelToBlock.get(curBranch.falseBranch.labelID) ;
-        //                 addBlockEdge(curBlock, toBlock);
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     private void deleteUnvisitedBlocks (function curFunc) {
@@ -161,6 +119,7 @@ public class MemToReg {
         for (block curBlock : curFunc.blocks) {
             bucket.put(curBlock, new ArrayList<>()) ;
             child.put(curBlock, new HashSet<>()) ;
+            dfnum.put(curBlock, 0) ;
         }
         block r = curFunc.blocks.get(0) ;
         DFS (null, r) ;

@@ -22,6 +22,7 @@ public class SimpleDCE {
     }
     private void DCE () {
         for (function curFunc : globalDefine.functions) {
+            if (curFunc.isBuiltin) continue ;
             DCE (curFunc) ;
         }
     }

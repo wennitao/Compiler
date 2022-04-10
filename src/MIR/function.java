@@ -34,6 +34,35 @@ public class function {
         parameters = new ArrayList<>() ;
         parameterId = new ArrayList<>() ;
     }
+
+    private void addBlockEdge (block from, block to) {
+        from.succ.add(to) ;
+        to.pred.add(from) ;
+    }
+
+    public void getSuccAndPred () {
+        for (block curBlock : this.blocks) {
+            this.labelToBlock.put(curBlock.identifier, curBlock) ;
+            curBlock.succ = new ArrayList<>() ;
+            curBlock.pred = new ArrayList<>() ;
+        }
+        for (int i = 0; i < this.blocks.size(); i ++) {
+            block curBlock = this.blocks.get(i) ;
+            statement curStmt = curBlock.statements.get(curBlock.statements.size() - 1) ;
+            if (curStmt instanceof branch) {
+                branch curBranch = (branch) curStmt ;
+                block toBlock = this.labelToBlock.get(curBranch.trueBranch.labelID) ;
+                addBlockEdge(curBlock, toBlock);
+                if (curBranch.isConditioned) {
+                    toBlock = this.labelToBlock.get(curBranch.falseBranch.labelID) ;
+                    addBlockEdge(curBlock, toBlock);
+                }
+            } else if (i < this.blocks.size() - 1) {
+                addBlockEdge(curBlock, this.blocks.get(i + 1));
+            }
+        }
+    }
+
     public void print(PrintStream out) {
         if (isBuiltin) out.print ("declare " + returnType + " @" + identifier + '(') ;
         else out.print ("define " + returnType + " @" + identifier + '(') ;

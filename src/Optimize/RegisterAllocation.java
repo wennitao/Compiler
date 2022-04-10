@@ -167,7 +167,8 @@ public class RegisterAllocation {
     //     }
     // }
     private void getSucc (AssemblyFunction curFunction) {
-        for (AssemblyBlock block : curFunction.blocks)
+        for (AssemblyBlock block : curFunction.blocks) {
+            block.succ = new HashSet<>() ;
             for (Inst inst = block.head; inst != null; inst = inst.next) {
                 if (inst instanceof bnezInst) {
                     bnezInst bnezinst = (bnezInst) inst ;
@@ -178,6 +179,7 @@ public class RegisterAllocation {
                     block.succ.add(curFunction.labelToBlock.get(jumpinst.toLabel.labelID)) ;
                 }
             }
+        }
     }
     private void getUseAndDef (AssemblyFunction curFunction) {
         curFunction.use.clear(); curFunction.def.clear();

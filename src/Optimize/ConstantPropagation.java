@@ -8,19 +8,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import MIR.binary;
-import MIR.block;
-import MIR.branch;
-import MIR.constant;
-import MIR.entity;
-import MIR.function;
-import MIR.functioncall;
-import MIR.globalDefine;
-import MIR.label;
-import MIR.load;
-import MIR.phi;
-import MIR.register;
-import MIR.statement;
+import MIR.* ;
 import MIR.binary.IROperator;
 
 public class ConstantPropagation {
@@ -32,6 +20,7 @@ public class ConstantPropagation {
 
     private void analyzeRoot () {
         for (function curFunc : globalDefine.functions) {
+            if (curFunc.isBuiltin) continue ;
             analyzeFunction(curFunc);
         }
     }
@@ -49,14 +38,22 @@ public class ConstantPropagation {
         regVal = new HashMap<>(); regFlag = new HashMap<>() ;
         blockExecuted = new HashMap<>() ;
         regUseStmt = new HashMap<>() ;
+        Map<block, ArrayList<phi> > blockToPhi = new HashMap<>() ;
+
+        regs.addAll(curFunc.parameters) ;
 
         for (block curBlock : curFunc.blocks)
             for (statement stmt : curBlock.statements) {
                 regs.addAll(stmt.getDefVar()) ;
                 regs.addAll(stmt.getUseVar()) ;
             }
+
         for (register reg : regs) {
-            regVal.put(reg, -1); regFlag.put(reg, -1) ;
+            if (reg.isGlobal) {
+                regVal.put(reg, 0); regFlag.put(reg, 1) ;
+            } else {
+                regVal.put(reg, -1); regFlag.put(reg, -1) ;
+            }
             regUseStmt.put(reg, new HashSet<>()) ;
         }
         for (block curBlock : curFunc.blocks)
@@ -66,26 +63,56 @@ public class ConstantPropagation {
             }
         for (block curBlock : curFunc.blocks)
             blockExecuted.put(curBlock, false) ;
+
+        for (block b : curFunc.blocks)
+            blockToPhi.put(b, new ArrayList<>()) ;
+        for (block curBlock : curFunc.blocks)
+            for (statement stmt : curBlock.statements) {
+                if (stmt instanceof phi) {
+                    phi curPhi = (phi) stmt ;
+                    for (label curLabel : curPhi.labels) {
+                        block b = curFunc.labelToBlock.get(curLabel.labelID) ;
+                        blockToPhi.get(b).add(curPhi) ;
+                    }
+                }
+            }
         
         W_v = new LinkedList<>() ;
         W_b = new LinkedList<>() ;
         block headBlock = curFunc.blocks.get(0) ;
         blockExecuted.put(headBlock, true) ;
         W_b.add(headBlock) ;
+
+        // function parameters
+        for (register reg : curFunc.parameters) {
+            updateReg(reg, 1, 0) ;
+            W_v.add(reg) ;
+        }
+
         while (!W_v.isEmpty() || !W_b.isEmpty()) {
             if (!W_v.isEmpty()) {
                 register x = W_v.poll() ;
+                if (x.isGlobal) continue ;
                 for (statement stmt : regUseStmt.get(x)) {
                     analyzeStatement(curFunc, stmt) ;
                 }
-            }
-            if (!W_b.isEmpty()) {
+            } else if (!W_b.isEmpty()) {
                 block b = W_b.poll() ;
                 for (statement stmt : b.statements) {
                     analyzeStatement(curFunc, stmt) ;
                 }
+                // System.out.println(b.identifier) ;
+                for (phi stmt : blockToPhi.get(b)) {
+                    // System.out.println(stmt);
+                    analyzeStatement(curFunc, stmt);
+                }
             }
         }
+
+        // System.out.println(curFunc.identifier);
+        // for (register reg : regs) {
+        //     System.out.println(reg + " flag: " + regFlag.get(reg) + " val: " + regVal.get(reg));
+        // }
 
         ArrayList<block> deleteBlocks = new ArrayList<>() ;
         for (block b : curFunc.blocks) {
@@ -96,10 +123,18 @@ public class ConstantPropagation {
 
         for (block curBlock : curFunc.blocks) {
             ArrayList<statement> deleteStmts = new ArrayList<>() ;
+            ArrayList<statement> stmtNeedUpdate = new ArrayList<>(), updateStmt = new ArrayList<>() ;
             for (statement stmt : curBlock.statements) {
                 for (register reg : stmt.getUseVar()) {
-                    if (regFlag.get(reg) == 0) 
+                    if (regFlag.get(reg) == 0) {
                         stmt.updateUseReg(reg, new constant(regVal.get(reg), reg.type));
+                        if (stmt instanceof branch) {
+                            branch curBranch = (branch) stmt ;
+                            stmtNeedUpdate.add(stmt) ;
+                            branch newBranch = new branch(regVal.get(reg) == 1 ? curBranch.trueBranch : curBranch.falseBranch) ;
+                            updateStmt.add(newBranch) ;
+                        }
+                    }
                 }
                 for (register reg : stmt.getDefVar())
                     if (regFlag.get(reg) == 0)
@@ -107,7 +142,14 @@ public class ConstantPropagation {
             }
             for (statement stmt : deleteStmts)
                 curBlock.statements.remove(stmt) ;
+            for (int i = 0; i < stmtNeedUpdate.size(); i ++) {
+                statement stmt = stmtNeedUpdate.get(i) ;
+                int idx = curBlock.statements.indexOf(stmt) ;
+                curBlock.statements.set(idx, updateStmt.get(i)) ;
+            }
         }
+
+        curFunc.getSuccAndPred();
     }
 
     private void analyzeStatement (function curFunc, statement stmt) {
@@ -133,10 +175,12 @@ public class ConstantPropagation {
             register destReg = curPhi.destReg ;
             boolean regHasTwoVals = false ;
             Set<Integer> possibleVals = new HashSet<>() ; 
+            // System.out.println(stmt) ;
             for (int i = 0; i < curPhi.labels.size(); i ++) {
                 label curLabel = curPhi.labels.get(i) ;
                 entity curVal = curPhi.value.get(i) ;
                 block curBlock = curFunc.labelToBlock.get(curLabel.labelID) ;
+                // System.out.println(curBlock.identifier + " " + blockExecuted.get(curBlock)) ;
                 if (blockExecuted.get(curBlock) == true) {
                     if (curVal instanceof register && regFlag.get((register) curVal) == 1) {
                         regHasTwoVals = true ;
@@ -149,6 +193,7 @@ public class ConstantPropagation {
                 }
             }
             if (!regHasTwoVals) {
+                // System.out.println("size: " + possibleVals.size());
                 if (possibleVals.size() >= 2) {
                     updateReg(destReg, 1, 0);
                 } else if (possibleVals.size() == 1) {
@@ -190,6 +235,22 @@ public class ConstantPropagation {
             } else {
                 updateBlock(curFunc.labelToBlock.get(curBranch.trueBranch.labelID));
             }
+        } else if (stmt instanceof bitcast) {
+            bitcast curBitcast = (bitcast) stmt ;
+            register from = curBitcast.from, to = curBitcast.to ;
+            updateReg(to, regFlag.get(from), regVal.get(from));
+        } else if (stmt instanceof trunc) {
+            trunc curTrunc = (trunc) stmt ;
+            entity from = curTrunc.from ;
+            register to = (register) curTrunc.to ;
+            if (from instanceof constant) updateReg(to, 0, ((constant) from).value) ;
+            else updateReg(to, regFlag.get((register) from), regVal.get((register) from));
+        } else if (stmt instanceof zext) {
+            zext curZext = (zext) stmt ;
+            entity from = curZext.from ;
+            register to = (register) curZext.to ;
+            if (from instanceof constant) updateReg(to, 0, ((constant) from).value) ;
+            else updateReg(to, regFlag.get((register) from), regVal.get((register) from));
         }
     }
 
@@ -216,9 +277,9 @@ public class ConstantPropagation {
 
     private void updateReg (register reg, int flag, int val) {
         if (flag == 0) {
-            regVal.put(reg, val) ;
             if (regFlag.get(reg) == -1) {
                 regFlag.put(reg, 0) ;
+                regVal.put(reg, val) ;
                 W_v.add(reg) ;
             }
         } else if (flag == 1) {
