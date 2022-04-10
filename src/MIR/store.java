@@ -27,6 +27,7 @@ public class store extends statement {
     public Set<register> getUseVar() {
         Set<register> S = new HashSet<>() ;
         if (from instanceof register) S.add((register) from) ;
+        if (dest instanceof register) S.add((register) dest) ;
         return S ;
     }
     @Override

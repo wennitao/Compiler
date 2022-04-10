@@ -9,6 +9,7 @@ import java.util.Set;
 
 import MIR.block;
 import MIR.function;
+import MIR.functioncall;
 import MIR.globalDefine;
 import MIR.register;
 import MIR.statement;
@@ -53,8 +54,10 @@ public class SimpleDCE {
         Queue<register> W = new LinkedList<>(regs) ;
         while (!W.isEmpty()) {
             register v = W.poll() ;
+            // if (!varUseStmt.containsKey(v)) continue ;
             if (varUseStmt.get(v).isEmpty()) {
                 for (statement defStmt : varDefStmt.get(v)) {
+                    if (defStmt instanceof functioncall) continue ;
                     block b = atBlock.get(defStmt) ;
                     b.statements.remove(defStmt) ;
                     for (register reg : defStmt.getUseVar()) {
