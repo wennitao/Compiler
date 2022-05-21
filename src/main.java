@@ -7,6 +7,7 @@ import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
 import MIR.globalDefine;
+import Optimize.AggressiveDCE;
 import Optimize.ConstantPropagation;
 import Optimize.MemToReg;
 import Optimize.RegisterAllocation;
@@ -47,6 +48,7 @@ public class main {
         InputStream raw = new FileInputStream(name);
         PrintStream IRout = new PrintStream("llvm-test.ll") ;
         PrintStream SSA = new PrintStream("ssa.ll") ;
+        PrintStream SCCP = new PrintStream("SCCP.ll") ;
         PrintStream IROptOut = new PrintStream("opt.ll") ;
         PrintStream AssmDebugOut = new PrintStream("debug.s") ;
         out = new PrintStream("test.s") ;
@@ -77,6 +79,8 @@ public class main {
                 new IRPrinter().visitGlobalDef(SSA, globalDef);
                 new SimpleDCE(globalDef) ;
                 new ConstantPropagation(globalDef) ;
+                new IRPrinter().visitGlobalDef(SCCP, globalDef);
+                new AggressiveDCE(globalDef) ;
                 new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
                 AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
