@@ -34,6 +34,8 @@ public class ConstantPropagation {
     Queue<block> W_b = new LinkedList<>() ;
 
     private void analyzeFunction (function curFunc) {
+        updateBranch (curFunc) ;
+
         regs = new HashSet<>() ;
         regVal = new HashMap<>(); regFlag = new HashMap<>() ;
         blockExecuted = new HashMap<>() ;
@@ -72,6 +74,7 @@ public class ConstantPropagation {
                     phi curPhi = (phi) stmt ;
                     for (label curLabel : curPhi.labels) {
                         block b = curFunc.labelToBlock.get(curLabel.labelID) ;
+                        if (!blockToPhi.containsKey(b)) blockToPhi.put(b, new ArrayList<>()) ;
                         blockToPhi.get(b).add(curPhi) ;
                     }
                 }
@@ -114,6 +117,25 @@ public class ConstantPropagation {
         //     System.out.println(reg + " flag: " + regFlag.get(reg) + " val: " + regVal.get(reg));
         // }
 
+        // update phi before delete blocks
+        for (block b : curFunc.blocks) {
+            for (statement stmt : b.statements) {
+                if (!(stmt instanceof phi)) continue ;
+                phi curPhi = (phi) stmt ;
+                ArrayList<Integer> deleteIdx = new ArrayList<>() ;
+                for (int i = 0; i < curPhi.labels.size(); i ++) {
+                    label curLabel = curPhi.labels.get(i) ;
+                    block fromBlock = curFunc.labelToBlock.get(curLabel.labelID) ;
+                    if (blockExecuted.get(fromBlock) == false) deleteIdx.add(i) ;
+                }
+                for (int i = deleteIdx.size() - 1; i >= 0; i --) {
+                    int idx = deleteIdx.get(i) ;
+                    curPhi.labels.remove(idx) ;
+                    curPhi.value.remove(idx) ;
+                }
+            }
+        }
+
         ArrayList<block> deleteBlocks = new ArrayList<>() ;
         for (block b : curFunc.blocks) {
             if (blockExecuted.get(b) == false)
@@ -121,12 +143,13 @@ public class ConstantPropagation {
         }
         for (block b : deleteBlocks) curFunc.blocks.remove(b) ;
 
+        // update constant and delete unused defs
         for (block curBlock : curFunc.blocks) {
             ArrayList<statement> deleteStmts = new ArrayList<>() ;
             ArrayList<statement> stmtNeedUpdate = new ArrayList<>(), updateStmt = new ArrayList<>() ;
             for (statement stmt : curBlock.statements) {
                 for (register reg : stmt.getUseVar()) {
-                    if (regFlag.get(reg) == 0) {
+                    if (regFlag.get(reg) <= 0) {
                         stmt.updateUseReg(reg, new constant(regVal.get(reg), reg.type));
                         if (stmt instanceof branch) {
                             branch curBranch = (branch) stmt ;
@@ -147,6 +170,21 @@ public class ConstantPropagation {
                 int idx = curBlock.statements.indexOf(stmt) ;
                 curBlock.statements.set(idx, updateStmt.get(i)) ;
             }
+        }
+
+        // copy propagation
+        for (block b : curFunc.blocks) {
+            ArrayList<statement> deleteStatements = new ArrayList<>() ;
+            for (statement stmt : b.statements) {
+                if (!(stmt instanceof phi)) continue ;
+                phi curPhi = (phi) stmt ;
+                if (curPhi.labels.size() > 1) continue ;
+                deleteStatements.add(curPhi) ;
+                register fromReg = curPhi.destReg, toReg = (register) curPhi.value.get(0) ;
+                for (statement useStmt : regUseStmt.get(fromReg))
+                    useStmt.updateUseReg(fromReg, toReg);
+            }
+            b.statements.removeAll(deleteStatements) ;
         }
 
         curFunc.getSuccAndPred();
@@ -214,7 +252,7 @@ public class ConstantPropagation {
                 entity curVal = curPhi.value.get(i) ;
                 block curBlock = curFunc.labelToBlock.get(curLabel.labelID) ;
                 // System.out.println(curBlock.identifier + " " + blockExecuted.get(curBlock)) ;
-                if (blockExecuted.get(curBlock) == true) {
+                if (blockExecuted.containsKey(curBlock) && blockExecuted.get(curBlock) == true) {
                     if (curVal instanceof register && regFlag.get((register) curVal) == 1) {
                         regHasTwoVals = true ;
                         updateReg(destReg, 1, 0);
@@ -327,6 +365,23 @@ public class ConstantPropagation {
         if (blockExecuted.get(b) == false) {
             blockExecuted.put(b, true) ;
             W_b.add(b) ;
+        }
+    }
+
+    // constant conditional branch
+    private void updateBranch (function curFunction) {
+        for (block b : curFunction.blocks) {
+            for (int i = 0; i < b.statements.size(); i ++) {
+                statement stmt = b.statements.get(i) ;
+                if (stmt instanceof branch) {
+                    branch curBranch = (branch) stmt ;
+                    if (curBranch.isConditioned && curBranch.condition instanceof constant) {
+                        constant cond = (constant) curBranch.condition ;
+                        branch newBranch = new branch(cond.value == 1 ? curBranch.trueBranch : curBranch.falseBranch) ;
+                        b.statements.set(i, newBranch) ;
+                    }
+                }
+            }
         }
     }
 }

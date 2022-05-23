@@ -1,5 +1,6 @@
 package Optimize;
 
+import java.security.DrbgParameters.NextBytes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,19 +20,24 @@ public class AggressiveDCE {
     }
 
     private void DCE () {
+        ArrayList<function> delFunctions = new ArrayList<>() ;
         for (function curFunction : globalDefine.functions) {
+            if (curFunction.isBuiltin) continue ;
             buildControlDependenceGraph(curFunction);
             markLiveStatement(curFunction) ;
             deleteUnmarkedStatement (curFunction) ;
+            udpateBlockLabel(curFunction);
             deleteEmptyBlock (curFunction) ;
-            curFunction.blocks.remove(0) ;
+            if (curFunction.blocks.isEmpty()) delFunctions.add(curFunction) ;
         }
+        globalDefine.functions.removeAll(delFunctions) ;
     }
 
     Map<block, ArrayList<block> > succ, pred ; // G'
     Map<block, ArrayList<block> > CDG_succ, CDG_pred ;
 
     private void CDGAddEdge (block u, block v) {
+        // System.out.println(u.identifier + " " + v.identifier) ;
         CDG_succ.get(u).add(v) ;
         CDG_pred.get(v).add(u) ;
     }
@@ -40,6 +46,12 @@ public class AggressiveDCE {
         buildReverseGraph(curFunction);
         dominatorTreeInit() ;
         Dominators(curFunction) ;
+
+        CDG_succ = new HashMap<>(); CDG_pred = new HashMap<>() ;
+        for (block b : curFunction.blocks) {
+            CDG_succ.put(b, new ArrayList<>()) ;
+            CDG_pred.put(b, new ArrayList<>()) ;
+        }
         
         for (block y : curFunction.blocks) {
             DF.get(y).forEach(x -> CDGAddEdge(x, y));
@@ -56,13 +68,17 @@ public class AggressiveDCE {
 
         block entryBlock = new block("controlGraphEntryBlock") ;
         curFunction.blocks.add(0, entryBlock);
+        block exitBlock = new block ("controlGraphExitBlock") ;
+        curFunction.blocks.add(curFunction.blocks.size(), exitBlock) ;
         for (block b : curFunction.blocks) {
             succ.put(b, new ArrayList<>()) ;
             pred.put(b, new ArrayList<>()) ;
         }
         
         addEdge (entryBlock, curFunction.blocks.get(1)) ;
-        addEdge (entryBlock, curFunction.returnBlock) ;
+        addEdge (entryBlock, exitBlock) ;
+        addEdge (curFunction.returnBlock, exitBlock) ;
+        // addEdge (entryBlock, curFunction.returnBlock) ;
         for (block b : curFunction.blocks)
             b.succ.forEach(to -> addEdge (b, to));
     }
@@ -121,7 +137,7 @@ public class AggressiveDCE {
             child.put(curBlock, new HashSet<>()) ;
             dfnum.put(curBlock, 0) ;
         }
-        block r = curFunc.returnBlock ;
+        block r = curFunc.blocks.get(curFunc.blocks.size() - 1) ;
         DFS (null, r) ;
         for (int i = N - 1; i >= 1; i --) {
             block n = vertex.get(i), p = parent.get(n), s = p, ss ;
@@ -177,6 +193,7 @@ public class AggressiveDCE {
     Map<register, ArrayList<statement> > regDefStmt ;
     Queue<statement> worklist ; 
     Map<statement, Boolean> statementIsLive ;
+    Map<block, Boolean> blockIsLive ;
     Map<statement, block> belongsToBlock ;
 
     private void markLiveStatement(function curFunction) {
@@ -197,6 +214,8 @@ public class AggressiveDCE {
         }
             
         worklist = new LinkedList<>() ;
+        statementIsLive = new HashMap<>() ;
+        blockIsLive = new HashMap<>() ;
         for (block b : curFunction.blocks) {
             for (statement stmt : b.statements) {
                 if (stmt instanceof functioncall || stmt instanceof returnStmt || stmt instanceof store) {
@@ -205,10 +224,15 @@ public class AggressiveDCE {
                 }
             }
         }
-        
-        statementIsLive = new HashMap<>() ;
+
+        block entryBlock = curFunction.blocks.get(1) ;
+        statement entryBranch = entryBlock.statements.get(entryBlock.statements.size() - 1) ;
+        worklist.add(entryBranch) ;
+        statementIsLive.put(entryBranch, true) ;
+
         while (!worklist.isEmpty()) {
             statement curStmt = worklist.poll() ;
+            // System.out.println(curStmt) ;
             for (register reg : curStmt.getUseVar()) {
                 if (!regDefStmt.containsKey(reg)) continue ;
                 for (statement stmt : regDefStmt.get(reg)) {
@@ -218,16 +242,33 @@ public class AggressiveDCE {
                 }
             }
             block curBlock = belongsToBlock.get(curStmt) ;
-            for (block preBlock : curBlock.pred) {
+            blockIsLive.put(curBlock, true) ;
+            for (block preBlock : CDG_pred.get(curBlock)) {
                 statement condBranch = null ;
                 for (statement stmt : preBlock.statements) {
-                    if (stmt instanceof branch && ((branch) stmt).isConditioned == true) {
-                        condBranch = stmt; break ;
+                    if (stmt instanceof branch) {
+                        if (((branch) stmt).isConditioned == true) condBranch = stmt;
+                        // else statementIsLive.put(stmt, true) ;
                     }
                 }
-                if (statementIsLive.containsKey(condBranch)) continue ;
+                if (condBranch == null || statementIsLive.containsKey(condBranch)) continue ;
                 statementIsLive.put(condBranch, true) ;
                 worklist.add(condBranch) ;
+            }
+        }
+
+        Map<block, Boolean> blockIsLive = new HashMap<>() ;
+        for (statement stmt : statementIsLive.keySet()) {
+            blockIsLive.put(belongsToBlock.get(stmt), true) ;
+        }
+        for (block b : curFunction.blocks) {
+            if (!blockIsLive.containsKey(b)) continue ;
+            for (statement stmt : b.statements) {
+                if (stmt instanceof branch) {
+                    branch curBranch = (branch) stmt ;
+                    block toBlock = curFunction.labelToBlock.get(curBranch.trueBranch.labelID) ;
+                    if (blockIsLive.containsKey(toBlock)) statementIsLive.put(curBranch, true) ;
+                }
             }
         }
     }
@@ -236,9 +277,70 @@ public class AggressiveDCE {
         for (block b : curFunction.blocks) {
             ArrayList<statement> delStatements = new ArrayList<>() ;
             for (statement stmt : b.statements) {
+                if (blockIsLive.containsKey(b) && stmt instanceof branch) continue ;
                 if (!statementIsLive.containsKey(stmt)) delStatements.add(stmt) ;
             }
             b.statements.removeAll(delStatements) ;
+        }
+    }
+
+    Map<String, String> nextActivateBlock, preActivateBlock ;
+    Map<block, Boolean> blockVisited ;
+    private void blockDFS (block curBlock, block preActBlock) {
+        blockVisited.put(curBlock, true) ;
+        for (block toBlock : curBlock.succ) {
+            if (blockVisited.containsKey(toBlock)) continue ;
+            if (blockIsLive.containsKey(toBlock)) blockDFS(toBlock, toBlock);
+            else blockDFS(toBlock, preActBlock);
+        }
+        if (!blockIsLive.containsKey(curBlock)) {
+            for (block nextBlock : curBlock.succ) {
+                if (blockIsLive.containsKey(nextBlock)) {
+                    nextActivateBlock.put(curBlock.identifier, nextBlock.identifier) ;
+                    break ;
+                } else if (nextActivateBlock.containsKey(nextBlock.identifier)) {
+                    nextActivateBlock.put(curBlock.identifier, nextActivateBlock.get(nextBlock.identifier)) ;
+                    break ;
+                }
+            }
+            preActivateBlock.put(curBlock.identifier, preActBlock.identifier) ;
+        }
+    }
+
+    private void udpateBlockLabel (function curFunction) {
+        nextActivateBlock = new HashMap<>() ;
+        preActivateBlock = new HashMap<>() ;
+        blockVisited = new HashMap<>() ;
+        block entryBlock = curFunction.blocks.get(1) ;
+        blockDFS(entryBlock, entryBlock);
+        // for (String s : nextActivateBlock.keySet()) System.out.println (s + " " + nextActivateBlock.get(s) + " " + preActivateBlock.get(s)) ;
+        for (block curBlock : curFunction.blocks) {
+            if (!blockIsLive.containsKey(curBlock)) continue ;
+            for (statement stmt : curBlock.statements) {
+                if (stmt instanceof branch) {
+                    branch curBranch = (branch) stmt ;
+                    block toBlock = curFunction.labelToBlock.get(curBranch.trueBranch.labelID) ;
+                    if (!blockIsLive.containsKey(toBlock)) {
+                        curBranch.trueBranch = new label(nextActivateBlock.get(toBlock.identifier)) ;
+                    }
+                    if (curBranch.isConditioned) {
+                        toBlock = curFunction.labelToBlock.get(curBranch.falseBranch.labelID) ;
+                        if (!blockIsLive.containsKey(toBlock)) {
+                            curBranch.falseBranch = new label(nextActivateBlock.get(toBlock.identifier)) ;
+                        }
+                    }
+                } else if (stmt instanceof phi) {
+                    phi curPhi = (phi) stmt ;
+                    for (int i = 0; i < curPhi.labels.size(); i ++) {
+                        label curLabel = curPhi.labels.get(i) ;
+                        block fromBlock = curFunction.labelToBlock.get(curLabel.labelID) ;
+                        if (!blockIsLive.containsKey(fromBlock)) {
+                            label newLabel = new label(preActivateBlock.get(fromBlock.identifier)) ;
+                            curPhi.labels.set(i, newLabel) ;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -248,6 +350,7 @@ public class AggressiveDCE {
             if (b.statements.isEmpty()) delBlocks.add(b) ;
         }   
         curFunction.blocks.removeAll(delBlocks) ;
+        
         curFunction.getSuccAndPred();
     }
 }
