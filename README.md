@@ -1,6 +1,8 @@
 ## Mx Compiler
 pass all basic optimizations
 
-codegen pass SSA, simple DCE, SCCP
+optimization pass SSA, simple DCE, SCCP, ADCE
 
-(but inst limit didn't pass because of ADCE...)
+pass test case: adce-adv, const-adv, const, ssa
+
+now optimizing inline...

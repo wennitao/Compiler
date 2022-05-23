@@ -233,6 +233,7 @@ public class AggressiveDCE {
         while (!worklist.isEmpty()) {
             statement curStmt = worklist.poll() ;
             // System.out.println(curStmt) ;
+            // mark use vars' define
             for (register reg : curStmt.getUseVar()) {
                 if (!regDefStmt.containsKey(reg)) continue ;
                 for (statement stmt : regDefStmt.get(reg)) {
@@ -241,6 +242,19 @@ public class AggressiveDCE {
                     worklist.add(stmt) ;
                 }
             }
+
+            // if phi mark previous blocks
+            if (curStmt instanceof phi) {
+                phi curPhi = (phi) curStmt ;
+                for (label curLabel : curPhi.labels) {
+                    block fromBlock = curFunction.labelToBlock.get(curLabel.labelID) ;
+                    statement fromBranch = fromBlock.statements.get(fromBlock.statements.size() - 1) ;
+                    if (statementIsLive.containsKey(fromBranch)) continue ;
+                    statementIsLive.put(fromBranch, true) ;
+                    worklist.add(fromBranch) ;
+                }
+            }
+
             block curBlock = belongsToBlock.get(curStmt) ;
             blockIsLive.put(curBlock, true) ;
             for (block preBlock : CDG_pred.get(curBlock)) {

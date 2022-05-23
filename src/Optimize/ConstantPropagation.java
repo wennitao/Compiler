@@ -149,7 +149,7 @@ public class ConstantPropagation {
             ArrayList<statement> stmtNeedUpdate = new ArrayList<>(), updateStmt = new ArrayList<>() ;
             for (statement stmt : curBlock.statements) {
                 for (register reg : stmt.getUseVar()) {
-                    if (regFlag.get(reg) <= 0) {
+                    if (regFlag.get(reg) == 0) {
                         stmt.updateUseReg(reg, new constant(regVal.get(reg), reg.type));
                         if (stmt instanceof branch) {
                             branch curBranch = (branch) stmt ;

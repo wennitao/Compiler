@@ -43,15 +43,15 @@ public class main {
                     out = new PrintStream(new FileOutputStream(args[i+1]));
             }
         }
-        // String name = "test.mx";
-        InputStream raw = System.in;
-        // InputStream raw = new FileInputStream(name);
+        String name = "test.mx";
+        // InputStream raw = System.in;
+        InputStream raw = new FileInputStream(name);
         PrintStream IRout = new PrintStream("llvm-test.ll") ;
         PrintStream SSA = new PrintStream("ssa.ll") ;
         PrintStream SCCP = new PrintStream("SCCP.ll") ;
         PrintStream IROptOut = new PrintStream("opt.ll") ;
         PrintStream AssmDebugOut = new PrintStream("debug.s") ;
-        // out = new PrintStream("test.s") ;
+        out = new PrintStream("test.s") ;
         try {
             CharStream input = CharStreams.fromStream(raw);
             MxLiteLexer lexer = new MxLiteLexer(input);
@@ -81,7 +81,6 @@ public class main {
                 new ConstantPropagation(globalDef) ;
                 new IRPrinter().visitGlobalDef(SCCP, globalDef);
                 new AggressiveDCE(globalDef) ;
-                // new ConstantPropagation(globalDef) ;
                 new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
                 AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
