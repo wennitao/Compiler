@@ -34,4 +34,9 @@ public class globalDefineStmt extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        
+    }
 }

@@ -74,4 +74,20 @@ public class functioncall extends statement {
                 parameters.set(i, toReg) ;
         }
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (destReg == origReg) destReg = toReg ;
+    }
+
+    public Object clone () {
+        functioncall newFunctioncall = new functioncall() ;
+        newFunctioncall.destReg = destReg ;
+        newFunctioncall.functionName = functionName ;
+        newFunctioncall.isVoid = isVoid ;
+        newFunctioncall.parameters = new ArrayList<>(parameters) ;
+        newFunctioncall.realFunctionName = realFunctionName ;
+        newFunctioncall.returnType = returnType ;
+        return newFunctioncall ;
+    }
 }

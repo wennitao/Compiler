@@ -47,4 +47,15 @@ public class getelementptr extends statement {
         }
         if (from == origReg) from = (register) toReg ;
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (to == origReg) to = toReg ;
+    }
+
+    public Object clone () {
+        getelementptr newGetelementptr = new getelementptr(from, to) ;
+        newGetelementptr.value = new ArrayList<>(value) ;
+        return newGetelementptr ;
+    }
 }

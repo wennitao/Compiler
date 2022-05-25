@@ -47,4 +47,14 @@ public class binary extends statement {
         if (left == origReg) left = toReg ;
         if (right == origReg) right = toReg ;
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (dest == origReg) dest = toReg ;
+    }
+
+    public Object clone () {
+        binary newBinary = new binary(op, type, left, right, dest) ;
+        return newBinary ;
+    }
 }

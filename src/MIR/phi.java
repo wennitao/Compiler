@@ -49,4 +49,17 @@ public class phi extends statement {
                 value.set(i, toReg) ;
         }
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (destReg == origReg) destReg = toReg ;
+    }
+
+    public Object clone () {
+        // System.out.println("clone phi");
+        phi newPhi = new phi(destReg, type) ;
+        newPhi.value = new ArrayList<>(value) ;
+        newPhi.labels = new ArrayList<>(labels) ;
+        return newPhi ;
+    }
 }

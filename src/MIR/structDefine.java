@@ -39,4 +39,9 @@ public class structDefine extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        
+    }
 }

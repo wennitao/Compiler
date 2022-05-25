@@ -9,6 +9,7 @@ import Frontend.SymbolCollector;
 import MIR.globalDefine;
 import Optimize.AggressiveDCE;
 import Optimize.ConstantPropagation;
+import Optimize.InlineExpansion;
 import Optimize.MemToReg;
 import Optimize.RegisterAllocation;
 import Optimize.SimpleDCE;
@@ -49,6 +50,7 @@ public class main {
         PrintStream IRout = new PrintStream("llvm-test.ll") ;
         PrintStream SSA = new PrintStream("ssa.ll") ;
         PrintStream SCCP = new PrintStream("SCCP.ll") ;
+        PrintStream ADCE = new PrintStream("ADCE.ll") ;
         PrintStream IROptOut = new PrintStream("opt.ll") ;
         PrintStream AssmDebugOut = new PrintStream("debug.s") ;
         out = new PrintStream("test.s") ;
@@ -81,6 +83,8 @@ public class main {
                 new ConstantPropagation(globalDef) ;
                 new IRPrinter().visitGlobalDef(SCCP, globalDef);
                 new AggressiveDCE(globalDef) ;
+                new IRPrinter().visitGlobalDef(ADCE, globalDef);
+                new InlineExpansion (globalDef) ;
                 new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
                 AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;

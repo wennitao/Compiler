@@ -39,4 +39,9 @@ public class branch extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         if (condition == origReg) condition = toReg ;
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        
+    }
 }

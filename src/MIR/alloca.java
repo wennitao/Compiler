@@ -31,4 +31,14 @@ public class alloca extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (reg == origReg) reg = toReg ;
+    }
+
+    public Object clone () {
+        alloca newAlloca = new alloca(reg, type) ;
+        return newAlloca ;
+    }
 }

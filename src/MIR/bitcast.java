@@ -32,4 +32,9 @@ public class bitcast extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         if (from == origReg) from = (register) toReg ;
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (to == origReg) to = toReg ;
+    }
 }

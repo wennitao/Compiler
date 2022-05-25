@@ -41,4 +41,9 @@ public class store extends statement {
     public void updateUseReg (register origReg, entity toReg) {
         if (from == origReg) from = toReg ;
     }
+
+    @Override
+    public void updateDefReg (register origReg, register toReg) {
+        if (dest == origReg) dest = toReg ;   
+    }
 }
