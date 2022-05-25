@@ -6,12 +6,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import AST.statementNode;
 import MIR.* ;
 
 public class InlineExpansion {
     private globalDefine globalDefine ;
-    final int K = 3 ;
+    final int expansionLimit = 100 ;
     public InlineExpansion (globalDefine _GlobalDefine) {
         globalDefine = _GlobalDefine ;
         inlineExpansion() ;
@@ -23,6 +22,7 @@ public class InlineExpansion {
             if (curFunction.isBuiltin) continue ;
             // if (curFunction.identifier.equals("main")) continue ;
             inlineExpansion(curFunction);
+            curFunction.getSuccAndPred();
         }
     }
 
@@ -43,7 +43,7 @@ public class InlineExpansion {
         int blockCount = curFunction.blocks.size() ;
         int curBlockIdx = 0, curStmtIdx = 0 ;
         block preExistBlock = null ;
-        while (curBlockIdx < blockCount) {
+        while (curBlockIdx < blockCount && functioncallCount < expansionLimit) {
             block curBlock = curFunction.blocks.get(curBlockIdx) ;
             if (preExistBlocks.contains(curBlock)) preExistBlock = curBlock ;
             statement curStatement = curBlock.statements.get(curStmtIdx) ;
@@ -88,7 +88,7 @@ public class InlineExpansion {
                 // curFunction.blocks.add(functionCallBlock) ;
                 // curFunction.blocks.add(outBlock) ;
                 curFunction.blocks.add(curBlockIdx + 1, outBlock);
-                // curFunction.blocks.add(functionCallBlock) ;
+                curFunction.blocks.add(curFunction.blocks.size() - 1, functionCallBlock) ;
                 // curFunction.blocks.add(returnBlock);
                 curBlockIdx ++; curStmtIdx = -1; blockCount ++;
 
@@ -118,6 +118,7 @@ public class InlineExpansion {
     private block functioncallFillInBlock (function curFunction, functioncall curFunctioncall, block toBlock, String blockName) {
         function callFunction = strToFunction.get(curFunctioncall.functionName) ;
         Map<register, entity> functionParameters = new HashMap<>() ;
+        Map<String, register> nameToReg = new HashMap<>() ;
         register returnReg = null ;
         for (int i = 0; i < curFunctioncall.parameters.size(); i ++) {
             functionParameters.put(callFunction.parameters.get(i), curFunctioncall.parameters.get(i)) ;
@@ -128,15 +129,22 @@ public class InlineExpansion {
                 if (returnStmt.returnReg instanceof register) returnReg = (register) returnStmt.returnReg ;
             }
         }
+
         boolean isFirstBlock = true ;
         block returnBlock = null ;
         for (block b : callFunction.blocks) {
-            block newBlock = null ;
+            block newBlock = new block(blockName + "_" + b.identifier) ;
             if (isFirstBlock) {
-                newBlock = toBlock; isFirstBlock = false ;
-            } else {
-                newBlock = new block(blockName + "_" + b.identifier) ;
+                // System.out.println (toBlock.identifier + " " + newBlock.identifier) ;
+                toBlock.push_back(new branch(new label(newBlock.identifier)));
+                isFirstBlock = false ;
             }
+            // block newBlock = null ;
+            // if (isFirstBlock) {
+            //     newBlock = toBlock; isFirstBlock = false ;
+            // } else {
+            //     newBlock = new block(blockName + "_" + b.identifier) ;
+            // }
             if (b == callFunction.returnBlock) {
                 returnBlock = newBlock ;
             }
@@ -152,8 +160,15 @@ public class InlineExpansion {
                 }
                 // update use reg
                 for (register reg : replaceByParameterRegs) newStmt.updateUseReg(reg, functionParameters.get(reg));
+                if (returnReg != null) newStmt.updateUseReg(returnReg, curFunctioncall.destReg);
                 for (register reg : renameRegs) {
-                    register newReg = new register(blockName + "_" + reg.registerID, reg.type, false) ;
+                    String regName = blockName + "_" + reg.registerID ;
+                    register newReg = null ;
+                    if (nameToReg.containsKey(regName)) newReg = nameToReg.get(regName) ;
+                    else {
+                        newReg = new register(blockName + "_" + reg.registerID, reg.type, false) ;
+                        nameToReg.put(regName, newReg) ;
+                    }
                     newStmt.updateUseReg(reg, newReg) ;
                 }
                 
@@ -161,8 +176,15 @@ public class InlineExpansion {
                 register curDefReg = newStmt.getDefVar().isEmpty() ? null : (register) newStmt.getDefVar().toArray()[0] ;
                 if (returnReg != null && curDefReg == returnReg) {
                     newStmt.updateDefReg(returnReg, curFunctioncall.destReg);
-                } else if (!newStmt.getDefVar().isEmpty()) {
-                    register newDestReg = new register(blockName + "_" + curDefReg.registerID, curDefReg.type, false) ;
+                } else if (!newStmt.getDefVar().isEmpty() && !curDefReg.isGlobal) {
+                    String regName = blockName + "_" + curDefReg.registerID ;
+                    register newDestReg = null ;
+                    if (nameToReg.containsKey(regName)) newDestReg = nameToReg.get(regName) ;
+                    else {
+                        newDestReg = new register(blockName + "_" + curDefReg.registerID, curDefReg.type, false) ;
+                        nameToReg.put(regName, newDestReg) ;
+                    }
+                    // register newDestReg = new register(blockName + "_" + curDefReg.registerID, curDefReg.type, false) ;
                     newStmt.updateDefReg(curDefReg, newDestReg);
                 }
 

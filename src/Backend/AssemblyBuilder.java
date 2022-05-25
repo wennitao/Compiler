@@ -421,14 +421,20 @@ public class AssemblyBuilder {
             }
         } else if (curIRStmt instanceof bitcast) {
             bitcast curIRBitcast = (bitcast) curIRStmt ;
-            curFunction.toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
+            VirtualReg rs = entityToReg(curIRBitcast.from), rd = entityToReg(curIRBitcast.to) ;
+            // curFunction.toRegMap.put (curIRBitcast.to.registerID, entityToReg(curIRBitcast.from)) ;
+            curBlock.push_back(new mvInst(rs, rd));
         } else if (curIRStmt instanceof trunc) {
             trunc curIRTrunc = (trunc) curIRStmt ;
-            curFunction.toRegMap.put(((register)curIRTrunc.to).registerID, entityToReg(curIRTrunc.from)) ;
+            VirtualReg rs = entityToReg(curIRTrunc.from), rd = entityToReg(curIRTrunc.to) ;
+            // curFunction.toRegMap.put(((register)curIRTrunc.to).registerID, entityToReg(curIRTrunc.from)) ;
             // System.out.println(curIRTrunc.to.registerID + " " + entityToReg(curIRTrunc.from)) ;
+            curBlock.push_back(new mvInst(rs, rd));
         } else if (curIRStmt instanceof zext) {
             zext curIRZext = (zext) curIRStmt ;
-            curFunction.toRegMap.put(((register) curIRZext.to).registerID, entityToReg(curIRZext.from)) ;
+            VirtualReg rs = entityToReg(curIRZext.from), rd = entityToReg(curIRZext.to) ;
+            // curFunction.toRegMap.put(((register) curIRZext.to).registerID, entityToReg(curIRZext.from)) ;
+            curBlock.push_back(new mvInst(rs, rd));
         } else if (curIRStmt instanceof getelementptr) {
             getelementptr curIRGetelementptr = (getelementptr) curIRStmt ;
             register from = curIRGetelementptr.from, to = curIRGetelementptr.to ;
