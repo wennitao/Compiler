@@ -19,6 +19,7 @@ public class function {
     public boolean isBuiltin, isEmpty = true ;
     public ArrayList<alloca> allocaInst = new ArrayList<>() ;
     public Map<String, block> labelToBlock = new HashMap<>() ;
+    public int instCount = 0 ;
     public function (String _identifier) {
         identifier = _identifier ;
         // label rootBlockLabel = new label(identifier + "_entry") ;
@@ -61,6 +62,12 @@ public class function {
                 addBlockEdge(curBlock, this.blocks.get(i + 1));
             }
         }
+    }
+
+    public void countInst () {
+        instCount = 0 ;
+        for (block b : this.blocks)
+            instCount += b.statements.size() ;
     }
 
     public void print(PrintStream out) {

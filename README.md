@@ -1,8 +1,8 @@
 ## Mx Compiler
 pass all basic optimizations
 
-optimization pass SSA, simple DCE, SCCP, ADCE
+optimization pass SSA, simple DCE, SCCP, ADCE, inline
 
-pass test case: adce-adv, const-adv, const, inline, ssa
+pass test case: adce-adv, const-adv, const, inline, inline-adv, ssa
 
-now optimizing inline...
+now optimizing loop: strength reduction

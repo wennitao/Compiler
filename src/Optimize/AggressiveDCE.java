@@ -1,6 +1,5 @@
 package Optimize;
 
-import java.security.DrbgParameters.NextBytes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,21 +15,24 @@ public class AggressiveDCE {
     
     public AggressiveDCE (globalDefine _globalDefine) {
         globalDefine = _globalDefine ;
-        DCE () ;
     }
 
-    private void DCE () {
+    public void DCE () {
         ArrayList<function> delFunctions = new ArrayList<>() ;
         for (function curFunction : globalDefine.functions) {
             if (curFunction.isBuiltin) continue ;
-            buildControlDependenceGraph(curFunction);
-            markLiveStatement(curFunction) ;
-            deleteUnmarkedStatement (curFunction) ;
-            udpateBlockLabel(curFunction);
-            deleteEmptyBlock (curFunction) ;
+            DCE (curFunction) ;
             if (curFunction.blocks.isEmpty()) delFunctions.add(curFunction) ;
         }
         globalDefine.functions.removeAll(delFunctions) ;
+    }
+
+    public void DCE (function curFunction) {
+        buildControlDependenceGraph(curFunction);
+        markLiveStatement(curFunction) ;
+        deleteUnmarkedStatement (curFunction) ;
+        udpateBlockLabel(curFunction);
+        deleteEmptyBlock (curFunction) ;
     }
 
     Map<block, ArrayList<block> > succ, pred ; // G'
@@ -366,5 +368,6 @@ public class AggressiveDCE {
         curFunction.blocks.removeAll(delBlocks) ;
         
         curFunction.getSuccAndPred();
+        curFunction.countInst();
     }
 }

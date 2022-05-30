@@ -20,6 +20,7 @@ import MIR.IRType.IRPointerType;
 import MIR.IRType.IRType;
 import MIR.IRType.IRVoidType;
 // import Optimize.RegisterAllocation;
+import MIR.binary.IROperator;
 
 public class AssemblyBuilder {
     globalDefine globalDef ;
@@ -247,66 +248,77 @@ public class AssemblyBuilder {
         } else if (curIRStmt instanceof binary) {
             binary curIRInst = (binary) curIRStmt ;
             entity left = curIRInst.left, right = curIRInst.right, dest = curIRInst.dest ;
-            VirtualReg rs1, rs2, rd ;
-            rs1 = entityToReg(left); rs2 = entityToReg(right) ;
-            // rd = new VirtualReg(((register) dest).registerID, dest.type.size) ;
-            rd = entityToReg(dest) ;
-            switch (curIRInst.op) {
-                case add:
-                    curBlock.push_back(new binaryInst(binaryInstOp.add, rs1, rs2, rd)) ;
-                    break;
-                case sub:
-                    curBlock.push_back(new binaryInst(binaryInstOp.sub, rs1, rs2, rd));
-                    break ;
-                case mul:
-                    curBlock.push_back(new binaryInst(binaryInstOp.mul, rs1, rs2, rd));
-                    break ;
-                case sdiv:
-                    curBlock.push_back(new binaryInst(binaryInstOp.div, rs1, rs2, rd));
-                    break ;
-                case srem:
-                    curBlock.push_back(new binaryInst(binaryInstOp.rem, rs1, rs2, rd));
-                    break ;
-                case slt:
-                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd)); 
-                    break ;   
-                case sle:
-                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
-                    curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
-                    break ;
-                case sgt:
-                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
-                    break ;
-                case sge:
-                    curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd));
-                    curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd)); 
-                    break ;   
-                case eq:
-                    curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
-                    curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
-                    break ;
-                case ne:
-                    curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
-                    curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
-                    curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
-                    break ;
-                case shl:
-                    curBlock.push_back(new binaryInst(binaryInstOp.sll, rs1, rs2, rd));    
-                    break ;
-                case ashr:
-                    curBlock.push_back(new binaryInst(binaryInstOp.sra, rs1, rs2, rd));
-                    break ;
-                case and:
-                    curBlock.push_back(new binaryInst(binaryInstOp.and, rs1, rs2, rd));
-                    break ;
-                case xor:
-                    curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
-                    break ;
-                case or:
-                    curBlock.push_back(new binaryInst(binaryInstOp.or, rs1, rs2, rd));
-                    break ;    
-                default:
-                    break;
+            VirtualReg rd = entityToReg(dest) ;
+            if (curIRInst.op == IROperator.add && ((left instanceof constant && immInRange(((constant) left).value)) || (right instanceof constant && immInRange(((constant) right).value)))) {
+                VirtualReg rs; Imm imm ;
+                if (left instanceof constant) {
+                    imm = new Imm(((constant) left).value) ;
+                    rs = entityToReg(right) ;
+                } else {
+                    imm = new Imm(((constant) right).value) ;
+                    rs = entityToReg(left) ;
+                }
+                curBlock.push_back(new ImmInst(immInstOp.addi, rs, imm, rd));
+            } else {
+                VirtualReg rs1, rs2 ;
+                rs1 = entityToReg(left); rs2 = entityToReg(right) ;
+                switch (curIRInst.op) {
+                    case add:
+                        curBlock.push_back(new binaryInst(binaryInstOp.add, rs1, rs2, rd)) ;
+                        break;
+                    case sub:
+                        curBlock.push_back(new binaryInst(binaryInstOp.sub, rs1, rs2, rd));
+                        break ;
+                    case mul:
+                        curBlock.push_back(new binaryInst(binaryInstOp.mul, rs1, rs2, rd));
+                        break ;
+                    case sdiv:
+                        curBlock.push_back(new binaryInst(binaryInstOp.div, rs1, rs2, rd));
+                        break ;
+                    case srem:
+                        curBlock.push_back(new binaryInst(binaryInstOp.rem, rs1, rs2, rd));
+                        break ;
+                    case slt:
+                        curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd)); 
+                        break ;   
+                    case sle:
+                        curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
+                        curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
+                        break ;
+                    case sgt:
+                        curBlock.push_back(new binaryInst(binaryInstOp.slt, rs2, rs1, rd));
+                        break ;
+                    case sge:
+                        curBlock.push_back(new binaryInst(binaryInstOp.slt, rs1, rs2, rd));
+                        curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd)); 
+                        break ;   
+                    case eq:
+                        curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
+                        curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
+                        break ;
+                    case ne:
+                        curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
+                        curBlock.push_back(new ImmInst(immInstOp.sltiu, rd, new Imm(1), rd));
+                        curBlock.push_back(new ImmInst(immInstOp.xori, rd, new Imm(1), rd));
+                        break ;
+                    case shl:
+                        curBlock.push_back(new binaryInst(binaryInstOp.sll, rs1, rs2, rd));    
+                        break ;
+                    case ashr:
+                        curBlock.push_back(new binaryInst(binaryInstOp.sra, rs1, rs2, rd));
+                        break ;
+                    case and:
+                        curBlock.push_back(new binaryInst(binaryInstOp.and, rs1, rs2, rd));
+                        break ;
+                    case xor:
+                        curBlock.push_back(new binaryInst(binaryInstOp.xor, rs1, rs2, rd));
+                        break ;
+                    case or:
+                        curBlock.push_back(new binaryInst(binaryInstOp.or, rs1, rs2, rd));
+                        break ;    
+                    default:
+                        break;
+                }
             }
             curFunction.toRegMap.put(((register) dest).registerID, rd) ;
         } else if (curIRStmt instanceof load) {
@@ -350,8 +362,10 @@ public class AssemblyBuilder {
             if (to instanceof register && ((register) to).isGlobal) {
                 register toGlobal = (register) to ;
                 VirtualReg rs = entityToReg(from), t = new VirtualReg(curFunction.curRegID ++, 4) ;
-                curBlock.push_back(new liInst(t, new Imm(0)));
-                curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
+                // curBlock.push_back(new liInst(t, new Imm(0)));
+                // curBlock.push_back(new storeInst(toGlobal.type.size, toGlobal.registerID, rs, t)); 
+                curBlock.push_back(new laInst(t, toGlobal.registerID));
+                curBlock.push_back(new storeInst(toGlobal.type.size, rs, new Imm(0), t));
             } else {
                 VirtualReg rs = entityToReg(from), rd = entityToReg(to) ;
                 // System.out.println(rs + " " + rd);

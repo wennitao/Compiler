@@ -10,7 +10,7 @@ import MIR.* ;
 
 public class InlineExpansion {
     private globalDefine globalDefine ;
-    final int expansionLimit = 100 ;
+    final int expansionLimit = 50;
     public InlineExpansion (globalDefine _GlobalDefine) {
         globalDefine = _GlobalDefine ;
         inlineExpansion() ;
@@ -23,6 +23,8 @@ public class InlineExpansion {
             // if (curFunction.identifier.equals("main")) continue ;
             inlineExpansion(curFunction);
             curFunction.getSuccAndPred();
+            // new AggressiveDCE(globalDefine).DCE(curFunction) ;
+            new BlockMerging(globalDefine).blockMerging(curFunction);
         }
     }
 
@@ -43,7 +45,7 @@ public class InlineExpansion {
         int blockCount = curFunction.blocks.size() ;
         int curBlockIdx = 0, curStmtIdx = 0 ;
         block preExistBlock = null ;
-        while (curBlockIdx < blockCount && functioncallCount < expansionLimit) {
+        while (curBlockIdx < blockCount) {
             block curBlock = curFunction.blocks.get(curBlockIdx) ;
             if (preExistBlocks.contains(curBlock)) preExistBlock = curBlock ;
             statement curStatement = curBlock.statements.get(curStmtIdx) ;
@@ -52,7 +54,7 @@ public class InlineExpansion {
             if (curStatement instanceof functioncall) {
                 functioncall curFunctioncall = (functioncall) curStatement ;
                 function callFunction = strToFunction.get(curFunctioncall.functionName) ;
-                if (curFunctioncall.functionName.equals(curFunction.identifier) || callFunction.isBuiltin) {
+                if (curFunctioncall.functionName.equals(curFunction.identifier) || callFunction.isBuiltin || callFunction.blocks.size() > 100 || callFunction.instCount > 2000) {
                     curStmtIdx ++ ;
                     if (curStmtIdx == curBlock.statements.size()) {
                         curBlockIdx ++; curStmtIdx = 0 ;

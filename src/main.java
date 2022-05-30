@@ -82,10 +82,9 @@ public class main {
                 // new SimpleDCE(globalDef) ;
                 new ConstantPropagation(globalDef) ;
                 new IRPrinter().visitGlobalDef(SCCP, globalDef);
-                new AggressiveDCE(globalDef) ;
+                new AggressiveDCE(globalDef).DCE() ;
                 new IRPrinter().visitGlobalDef(ADCE, globalDef);
                 new InlineExpansion (globalDef) ;
-                new AggressiveDCE(globalDef) ;
                 new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
                 AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;

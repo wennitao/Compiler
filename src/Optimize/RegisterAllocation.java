@@ -1,5 +1,6 @@
 package Optimize;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.antlr.v4.runtime.misc.Pair;
 
 import Assembly.* ;
 import Assembly.Inst.* ;
+import Assembly.Inst.ImmInst.immInstOp;
 import Assembly.Inst.binaryInst.binaryInstOp;
 import Assembly.Operand.Imm;
 import Assembly.Operand.PhysicalReg;
@@ -40,6 +42,7 @@ public class RegisterAllocation {
         globalDef = _globalDef ;
         init_phyRegs();
         analyzeRoot () ;
+        mergeConsecutiveImmInst();
     }
     private void init_phyRegs () {
         phyRegs = globalDef.phyRegs ;
@@ -753,5 +756,43 @@ public class RegisterAllocation {
             tailBlock.push_back(new binaryInst(binaryInstOp.add, sp, t0, sp)) ;
             tailBlock.push_back(new retInst());
         }
+    }
+
+    private void mergeConsecutiveImmInst () {
+        for (AssemblyFunction function : globalDef.functions) {
+            mergeConsecutiveImmInst(function);
+        }
+    }
+    private void mergeConsecutiveImmInst (AssemblyFunction curFunction) {
+        for (AssemblyBlock block : curFunction.blocks) {
+            mergeConsecutiveImmInst(block);
+        }
+    }
+    private void mergeConsecutiveImmInst (AssemblyBlock block) {
+        for (Inst curInst = block.head; curInst != null; curInst = curInst.next) {
+            if (!(curInst instanceof ImmInst) || ((ImmInst) curInst).op != immInstOp.addi) continue ;
+            Inst begInst = curInst, endInst = curInst ;
+            int value = ((ImmInst) begInst).imm.value ;
+            while (true) {
+                Inst nextInst = endInst.next ;
+                if (nextInst == null || !(nextInst instanceof ImmInst) || ((ImmInst) nextInst).op != immInstOp.addi) break ;
+                if (endInst.rd != nextInst.rs1) break ;
+                if (!immInRange(value + ((ImmInst) nextInst).imm.value)) break ;
+                endInst = nextInst ;
+                value += ((ImmInst) endInst).imm.value ;
+            }
+            ImmInst newInst = new ImmInst(immInstOp.addi, begInst.rs1, new Imm(value), endInst.rd) ;
+            if (begInst.prev != null) begInst.prev.next = newInst ;
+            else block.head = newInst ;
+            newInst.prev = begInst.prev ;
+            newInst.next = endInst.next ;
+            if (endInst.next != null) endInst.next.prev = newInst ;
+            else block.tail = newInst ;
+            curInst = newInst ;
+            // System.out.println(newInst);
+        }
+    }
+    private boolean immInRange (int val) {
+        return val >= -2048 && val < 2048 ;
     }
 }

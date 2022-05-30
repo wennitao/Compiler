@@ -22,21 +22,30 @@ __init:
 	add	sp, sp, t0
 	ret
 
-	.globl	Edge
+	.globl	wpp
 	.p2align	2
-	.type	Edge,@function
-Edge:
-.Edge_assemblyInit:
+	.type	wpp,@function
+wpp:
+.wpp_assemblyInit:
 	li	t0, 16
 	sub	sp, sp, t0
 	add	t1, sp, t0
 	sw	ra, -4(t1)
 	sw	s0, -8(t1)
 	mv	s0, t1
-	j	.Edge_entry
-.Edge_entry:
-	j	.Edge_return
-.Edge_return:
+	j	.wpp_entry
+.wpp_entry:
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	a0, fuckLLVM_w
+	j	.wpp_return
+.wpp_return:
 	li	t0, 16
 	add	t1, sp, t0
 	lw	ra, -4(t1)
@@ -44,21 +53,95 @@ Edge:
 	add	sp, sp, t0
 	ret
 
-	.globl	EdgeList
+	.globl	wppp
 	.p2align	2
-	.type	EdgeList,@function
-EdgeList:
-.EdgeList_assemblyInit:
+	.type	wppp,@function
+wppp:
+.wppp_assemblyInit:
 	li	t0, 16
 	sub	sp, sp, t0
 	add	t1, sp, t0
 	sw	ra, -4(t1)
 	sw	s0, -8(t1)
 	mv	s0, t1
-	j	.EdgeList_entry
-.EdgeList_entry:
-	j	.EdgeList_return
-.EdgeList_return:
+	j	.wppp_entry
+.wppp_entry:
+	j	.wppp_call_wpp_0
+.wppp_call_wpp_0:
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	a0, fuckLLVM_w
+	j	.wppp_return
+.wppp_return:
 	li	t0, 16
 	add	t1, sp, t0
 	lw	ra, -4(t1)
@@ -66,3110 +149,6333 @@ EdgeList:
 	add	sp, sp, t0
 	ret
 
-	.globl	classEdgeList_init
+	.globl	wpppp
 	.p2align	2
-	.type	classEdgeList_init,@function
-classEdgeList_init:
-.classEdgeList_init_assemblyInit:
-	li	t0, 32
+	.type	wpppp,@function
+wpppp:
+.wpppp_assemblyInit:
+	li	t0, 16
 	sub	sp, sp, t0
 	add	t1, sp, t0
 	sw	ra, -4(t1)
 	sw	s0, -8(t1)
 	mv	s0, t1
-	li	ra, -12
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	a1, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	a2, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s2, 0(ra)
-	j	.classEdgeList_init_entry
-.classEdgeList_init_entry:
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s2, ra, 0
-	li	ra, -24
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	li	t0, 12
-	mul	ra, ra, t0
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	li	ra, -24
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s2)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s2, ra, 8
-	li	ra, -24
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	li	t0, 4
-	mul	t0, ra, t0
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	li	ra, -24
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s2)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s2, ra, 16
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	li	t0, 4
-	mul	t0, ra, t0
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(a0)
+	j	.wpppp_entry
+.wpppp_entry:
+	j	.wpppp_call_wppp_8
+.wpppp_call_wppp_8:
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	a0, fuckLLVM_w
+	j	.wpppp_return
+.wpppp_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	block
+	.p2align	2
+	.type	block,@function
+block:
+.block_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.block_entry
+.block_entry:
+	call	block
+	j	.block_return
+.block_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	bblock
+	.p2align	2
+	.type	bblock,@function
+bblock:
+.bblock_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.bblock_entry
+.bblock_entry:
+	j	.bblock_call_wpppp_15
+.bblock_call_wpppp_15:
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	call	bblock
+	call	bblock
+	j	.bblock_return
+.bblock_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add1
+	.p2align	2
+	.type	add1,@function
+add1:
+.add1_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add1_entry
+.add1_entry:
+	addi	a0, a0, 1
+	j	.add1_return
+.add1_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add2
+	.p2align	2
+	.type	add2,@function
+add2:
+.add2_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add2_entry
+.add2_entry:
+	j	.add2_call_add1_17
+.add2_call_add1_17:
+	addi	a0, a0, 2
+	j	.add2_return
+.add2_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add4
+	.p2align	2
+	.type	add4,@function
+add4:
+.add4_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add4_entry
+.add4_entry:
+	j	.add4_call_add2_19
+.add4_call_add2_19:
+	addi	a0, a0, 4
+	j	.add4_return
+.add4_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add8
+	.p2align	2
+	.type	add8,@function
+add8:
+.add8_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add8_entry
+.add8_entry:
+	j	.add8_call_add4_21
+.add8_call_add4_21:
+	addi	a0, a0, 8
+	j	.add8_return
+.add8_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add16
+	.p2align	2
+	.type	add16,@function
+add16:
+.add16_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add16_entry
+.add16_entry:
+	j	.add16_call_add8_23
+.add16_call_add8_23:
+	addi	a0, a0, 16
+	j	.add16_return
+.add16_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add32
+	.p2align	2
+	.type	add32,@function
+add32:
+.add32_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add32_entry
+.add32_entry:
+	j	.add32_call_add16_25
+.add32_call_add16_25:
+	addi	a0, a0, 32
+	j	.add32_return
+.add32_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add64
+	.p2align	2
+	.type	add64,@function
+add64:
+.add64_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add64_entry
+.add64_entry:
+	j	.add64_call_add32_27
+.add64_call_add32_27:
+	addi	a0, a0, 64
+	j	.add64_return
+.add64_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add128
+	.p2align	2
+	.type	add128,@function
+add128:
+.add128_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add128_entry
+.add128_entry:
+	j	.add128_call_add64_29
+.add128_call_add64_29:
+	addi	a0, a0, 128
+	j	.add128_return
+.add128_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add256
+	.p2align	2
+	.type	add256,@function
+add256:
+.add256_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add256_entry
+.add256_entry:
+	j	.add256_call_add128_31
+.add256_call_add128_31:
+	addi	a0, a0, 256
+	j	.add256_return
+.add256_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add512
+	.p2align	2
+	.type	add512,@function
+add512:
+.add512_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add512_entry
+.add512_entry:
+	j	.add512_call_add256_33
+.add512_call_add256_33:
+	addi	a0, a0, 512
+	j	.add512_return
+.add512_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add1024
+	.p2align	2
+	.type	add1024,@function
+add1024:
+.add1024_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add1024_entry
+.add1024_entry:
+	j	.add1024_call_add512_35
+.add1024_call_add512_35:
+	addi	a0, a0, 1024
+	j	.add1024_return
+.add1024_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add2048
+	.p2align	2
+	.type	add2048,@function
+add2048:
+.add2048_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add2048_entry
+.add2048_entry:
+	j	.add2048_call_add1024_37
+.add2048_call_add1024_37:
+	addi	ra, a0, 2047
+	addi	a0, ra, 1
+	j	.add2048_return
+.add2048_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add4096
+	.p2align	2
+	.type	add4096,@function
+add4096:
+.add4096_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add4096_entry
+.add4096_entry:
+	call	add2048
+	call	add2048
+	j	.add4096_return
+.add4096_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add8192
+	.p2align	2
+	.type	add8192,@function
+add8192:
+.add8192_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add8192_entry
+.add8192_entry:
+	j	.add8192_call_add4096_39
+.add8192_call_add4096_39:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add8192_return
+.add8192_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add16384
+	.p2align	2
+	.type	add16384,@function
+add16384:
+.add16384_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add16384_entry
+.add16384_entry:
+	j	.add16384_call_add8192_41
+.add16384_call_add8192_41:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add16384_return
+.add16384_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add32768
+	.p2align	2
+	.type	add32768,@function
+add32768:
+.add32768_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add32768_entry
+.add32768_entry:
+	j	.add32768_call_add16384_43
+.add32768_call_add16384_43:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add32768_return
+.add32768_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add65536
+	.p2align	2
+	.type	add65536,@function
+add65536:
+.add65536_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add65536_entry
+.add65536_entry:
+	j	.add65536_call_add32768_45
+.add65536_call_add32768_45:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add65536_return
+.add65536_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add131072
+	.p2align	2
+	.type	add131072,@function
+add131072:
+.add131072_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add131072_entry
+.add131072_entry:
+	j	.add131072_call_add65536_47
+.add131072_call_add65536_47:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add131072_return
+.add131072_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add262144
+	.p2align	2
+	.type	add262144,@function
+add262144:
+.add262144_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add262144_entry
+.add262144_entry:
+	j	.add262144_call_add131072_49
+.add262144_call_add131072_49:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add262144_return
+.add262144_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	add524288
+	.p2align	2
+	.type	add524288,@function
+add524288:
+.add524288_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.add524288_entry
+.add524288_entry:
+	j	.add524288_call_add262144_51
+.add524288_call_add262144_51:
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	j	.add524288_return
+.add524288_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	wP
+	.p2align	2
+	.type	wP,@function
+wP:
+.wP_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.wP_entry
+.wP_entry:
+	li	ra, 3
+	j	.wP_ID4_for_suite
+.wP_ID4_for_suite:
 	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s2)
-	li	ra, 0
-	j	.classEdgeList_init_ID38_for_condition
-.classEdgeList_init_ID38_for_condition:
-	li	t0, -24
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	slt	t0, ra, t0
-	bnez	t0, .classEdgeList_init_ID38_for_suite
-	j	.classEdgeList_init_ID38_for_out
-.classEdgeList_init_ID38_for_suite:
-	li	t0, -12
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	addi	t0, t0, 8
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t1, t1, t0
-	li	t0, -1
-	sw	t0, 0(t1)
-	j	.classEdgeList_init_ID38_for_incr
-.classEdgeList_init_ID38_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.classEdgeList_init_ID38_for_condition
-.classEdgeList_init_ID38_for_out:
-	li	ra, 0
-	j	.classEdgeList_init_ID48_for_condition
-.classEdgeList_init_ID48_for_condition:
-	li	t0, -16
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	slt	t0, ra, t0
-	bnez	t0, .classEdgeList_init_ID48_for_suite
-	j	.classEdgeList_init_ID48_for_out
-.classEdgeList_init_ID48_for_suite:
-	li	t0, -12
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	addi	t0, t0, 16
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t0, t1, t0
-	li	t1, -1
-	sw	t1, 0(t0)
-	j	.classEdgeList_init_ID48_for_incr
-.classEdgeList_init_ID48_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.classEdgeList_init_ID48_for_condition
-.classEdgeList_init_ID48_for_out:
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 24
-	li	t0, 0
-	sw	t0, 0(ra)
-	j	.classEdgeList_init_return
-.classEdgeList_init_return:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s2, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classEdgeList_addEdge
-	.p2align	2
-	.type	classEdgeList_addEdge,@function
-classEdgeList_addEdge:
-.classEdgeList_addEdge_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -20
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	a1, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	a2, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	a3, 0(ra)
-	j	.classEdgeList_addEdge_entry
-.classEdgeList_addEdge_entry:
-	li	a0, 12
-	call	malloc
-	j	.classEdgeList_addEdge_call_Edge_0_out
-.classEdgeList_addEdge_call_Edge_0_out:
-	addi	ra, a0, 0
-	li	t0, -16
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	sw	t0, 0(ra)
-	addi	t0, a0, 4
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	addi	ra, a0, 8
-	li	t0, -24
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	sw	t0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	t1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 24
-	lw	t0, 0(ra)
-	li	ra, 12
-	mul	ra, t0, ra
-	add	ra, t1, ra
-	sw	a0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	li	t0, -20
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	addi	t0, t0, 24
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, t1, t0
-	add	t2, ra, t0
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 16
-	lw	t1, 0(ra)
-	li	ra, 4
-	li	t0, -16
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	mul	ra, t0, ra
-	add	ra, t1, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t2)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 16
-	lw	t1, 0(ra)
-	li	t0, 4
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	mul	ra, ra, t0
-	add	ra, t1, ra
-	li	t0, -20
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	addi	t0, t0, 24
-	lw	t0, 0(t0)
-	sw	t0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t0, ra, 24
-	lw	ra, 0(t0)
-	li	t1, 1
-	add	ra, ra, t1
-	sw	ra, 0(t0)
-	j	.classEdgeList_addEdge_return
-.classEdgeList_addEdge_return:
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classEdgeList_nVertices
-	.p2align	2
-	.type	classEdgeList_nVertices,@function
-classEdgeList_nVertices:
-.classEdgeList_nVertices_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classEdgeList_nVertices_entry
-.classEdgeList_nVertices_entry:
-	addi	ra, a0, 16
-	lw	ra, 0(ra)
-	li	t1, -1
-	li	t0, 4
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	a0, 0(ra)
-	j	.classEdgeList_nVertices_return
-.classEdgeList_nVertices_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classEdgeList_nEdges
-	.p2align	2
-	.type	classEdgeList_nEdges,@function
-classEdgeList_nEdges:
-.classEdgeList_nEdges_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classEdgeList_nEdges_entry
-.classEdgeList_nEdges_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	li	t1, -1
-	li	t0, 4
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	a0, 0(ra)
-	j	.classEdgeList_nEdges_return
-.classEdgeList_nEdges_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	Array_Node
-	.p2align	2
-	.type	Array_Node,@function
-Array_Node:
-.Array_Node_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	j	.Array_Node_entry
-.Array_Node_entry:
-	addi	t0, a0, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	addi	s7, a0, 0
-	li	a0, 132
-	call	malloc
-	li	ra, 16
-	sw	ra, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s7)
-	j	.Array_Node_return
-.Array_Node_return:
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_push_back
-	.p2align	2
-	.type	classArray_Node_push_back,@function
-classArray_Node_push_back:
-.classArray_Node_push_back_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -16
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	a1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s4, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s5, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	j	.classArray_Node_push_back_entry
-.classArray_Node_push_back_entry:
-	j	.classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.classArray_Node_push_back_call_classArray_Node_size_1_out:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t0, -1
-	li	t2, 4
-	mul	t0, t0, t2
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	xor	ra, t1, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.classArray_Node_push_back_ID12_if_out
-.classArray_Node_push_back_ID12_if_out:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	t0, t0, ra
-	li	ra, -12
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	t1, 1
-	add	t0, t0, t1
-	sw	t0, 0(ra)
-	j	.classArray_Node_push_back_return
-.classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t1, 0(ra)
-	j	.classArray_Node_push_back_call_classArray_Node_size_1_out
-.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	mv	s6, ra
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	s1, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s4, ra, 0
-	mv	ra, s6
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	li	ra, 2
-	mul	s5, t0, ra
-	mv	ra, s5
-	li	t0, 8
-	mul	t0, ra, t0
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s5, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t0, ra, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	j	.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	xor	ra, ra, s1
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.classArray_Node_push_back_ID12_if_out
-.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	t0, t0, ra
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	li	t1, 8
-	mul	ra, ra, t1
-	add	ra, s6, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t0, ra, 8
-	lw	ra, 0(t0)
-	li	t1, 1
-	add	ra, ra, t1
-	sw	ra, 0(t0)
-	j	.classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_push_back_return:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s4, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s5, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_pop_back
-	.p2align	2
-	.type	classArray_Node_pop_back,@function
-classArray_Node_pop_back:
-.classArray_Node_pop_back_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_pop_back_entry
-.classArray_Node_pop_back_entry:
-	addi	t0, a0, 8
-	lw	t1, 0(t0)
-	li	ra, 1
-	sub	ra, t1, ra
-	sw	ra, 0(t0)
-	addi	ra, a0, 0
-	lw	t0, 0(ra)
-	addi	ra, a0, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	a0, 0(ra)
-	j	.classArray_Node_pop_back_return
-.classArray_Node_pop_back_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_back
-	.p2align	2
-	.type	classArray_Node_back,@function
-classArray_Node_back:
-.classArray_Node_back_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_back_entry
-.classArray_Node_back_entry:
-	addi	ra, a0, 0
-	lw	t0, 0(ra)
-	addi	ra, a0, 8
-	lw	ra, 0(ra)
-	li	t1, 1
-	sub	t1, ra, t1
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	a0, 0(ra)
-	j	.classArray_Node_back_return
-.classArray_Node_back_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_front
-	.p2align	2
-	.type	classArray_Node_front,@function
-classArray_Node_front:
-.classArray_Node_front_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_front_entry
-.classArray_Node_front_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	li	t1, 0
-	li	t0, 8
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	a0, 0(ra)
-	j	.classArray_Node_front_return
-.classArray_Node_front_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_size
-	.p2align	2
-	.type	classArray_Node_size,@function
-classArray_Node_size:
-.classArray_Node_size_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_size_entry
-.classArray_Node_size_entry:
-	addi	ra, a0, 8
-	lw	a0, 0(ra)
-	j	.classArray_Node_size_return
-.classArray_Node_size_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_resize
-	.p2align	2
-	.type	classArray_Node_resize,@function
-classArray_Node_resize:
-.classArray_Node_resize_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -32
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	a1, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s2, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s5, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	j	.classArray_Node_resize_entry
-.classArray_Node_resize_entry:
-	j	.classArray_Node_resize_ID6_while_condition
-.classArray_Node_resize_ID6_while_condition:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	slt	ra, t0, ra
-	bnez	ra, .classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_entry
-	j	.classArray_Node_resize_ID13_while_out
-.classArray_Node_resize_ID13_while_out:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	li	t0, -16
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	sw	t0, 0(ra)
-	j	.classArray_Node_resize_return
-.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_entry:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	mv	s6, ra
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	t0, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s5, ra, 0
-	mv	ra, s6
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	li	ra, 2
-	mul	s2, t0, ra
-	mv	ra, s2
-	li	t0, 8
-	mul	ra, ra, t0
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s2, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s5)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t0, ra, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	j	.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_condition:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	xor	ra, t0, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_suite
-	j	.classArray_Node_resize_ID6_while_condition
-.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_suite:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	t1, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	t0, t1, ra
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	li	t1, 8
-	mul	ra, ra, t1
-	add	ra, s6, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_incr
-.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_incr:
-	li	ra, -32
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t1, ra, 8
-	lw	t0, 0(t1)
-	li	ra, 1
-	add	ra, t0, ra
-	sw	ra, 0(t1)
-	j	.classArray_Node_resize_call_classArray_Node_doubleStorage_3_classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_resize_return:
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s2, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s5, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_get
-	.p2align	2
-	.type	classArray_Node_get,@function
-classArray_Node_get:
-.classArray_Node_get_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_get_entry
-.classArray_Node_get_entry:
-	addi	ra, a0, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, a1, ra
-	add	ra, t0, ra
-	lw	a0, 0(ra)
-	j	.classArray_Node_get_return
-.classArray_Node_get_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_set
-	.p2align	2
-	.type	classArray_Node_set,@function
-classArray_Node_set:
-.classArray_Node_set_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_set_entry
-.classArray_Node_set_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	t0, a1, t0
-	add	ra, ra, t0
-	sw	a2, 0(ra)
-	j	.classArray_Node_set_return
-.classArray_Node_set_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_swap
-	.p2align	2
-	.type	classArray_Node_swap,@function
-classArray_Node_swap:
-.classArray_Node_swap_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classArray_Node_swap_entry
-.classArray_Node_swap_entry:
-	addi	ra, a0, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, a1, ra
-	add	ra, t0, ra
-	lw	t0, 0(ra)
-	addi	ra, a0, 0
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, a1, ra
-	add	t1, t1, ra
-	addi	ra, a0, 0
-	lw	t2, 0(ra)
-	li	ra, 8
-	mul	ra, a2, ra
-	add	ra, t2, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	addi	ra, a0, 0
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, a2, ra
-	add	ra, t1, ra
-	sw	t0, 0(ra)
-	j	.classArray_Node_swap_return
-.classArray_Node_swap_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classArray_Node_doubleStorage
-	.p2align	2
-	.type	classArray_Node_doubleStorage,@function
-classArray_Node_doubleStorage:
-.classArray_Node_doubleStorage_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -20
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s4, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s9, 0(ra)
-	j	.classArray_Node_doubleStorage_entry
-.classArray_Node_doubleStorage_entry:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	mv	s7, ra
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	s9, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	s4, ra, 0
-	mv	ra, s7
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	ra, 0(ra)
+	sra	t1, ra, t0
 	li	t0, 2
-	mul	s6, ra, t0
-	mv	ra, s6
-	li	t0, 8
-	mul	ra, ra, t0
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s6, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t0, ra, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	j	.classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_doubleStorage_ID25_for_condition:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	xor	ra, ra, s9
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .classArray_Node_doubleStorage_ID25_for_suite
-	j	.classArray_Node_doubleStorage_return
-.classArray_Node_doubleStorage_ID25_for_suite:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t0, -20
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	addi	t0, t0, 8
-	lw	t0, 0(t0)
-	li	t1, 8
-	mul	t0, t0, t1
-	add	t0, ra, t0
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, s7, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.classArray_Node_doubleStorage_ID25_for_incr
-.classArray_Node_doubleStorage_ID25_for_incr:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	t1, ra, 8
-	lw	ra, 0(t1)
-	li	t0, 1
-	add	ra, ra, t0
-	sw	ra, 0(t1)
-	j	.classArray_Node_doubleStorage_ID25_for_condition
-.classArray_Node_doubleStorage_return:
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s4, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s9, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	Heap_Node
-	.p2align	2
-	.type	Heap_Node,@function
-Heap_Node:
-.Heap_Node_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s3, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s8, 0(ra)
-	j	.Heap_Node_entry
-.Heap_Node_entry:
-	addi	s6, a0, 0
-	li	a0, 12
-	call	malloc
-	mv	s8, a0
-	j	.Heap_Node_call_Array_Node_4_Array_Node_entry
-.Heap_Node_call_Array_Node_4_out:
-	mv	ra, s8
-	sw	ra, 0(s6)
-	j	.Heap_Node_return
-.Heap_Node_call_Array_Node_4_Array_Node_entry:
-	addi	t0, s8, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	addi	s3, s8, 0
-	li	a0, 132
-	call	malloc
-	li	ra, 16
-	sw	ra, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s3)
-	j	.Heap_Node_call_Array_Node_4_out
-.Heap_Node_return:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s3, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s8, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_push
-	.p2align	2
-	.type	classHeap_Node_push,@function
-classHeap_Node_push:
-.classHeap_Node_push_assemblyInit:
-	li	t0, 48
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -16
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	sw	s4, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	li	ra, -36
-	add	ra, s0, ra
-	sw	s8, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s10, 0(ra)
-	j	.classHeap_Node_push_entry
-.classHeap_Node_push_entry:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	s8, 0(ra)
-	mv	s10, a1
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.classHeap_Node_push_call_classHeap_Node_size_6_out:
-	li	ra, 1
-	sub	t0, a0, ra
-	j	.classHeap_Node_push_ID14_while_condition
-.classHeap_Node_push_ID14_while_condition:
-	li	ra, 0
-	slt	ra, ra, t0
-	bnez	ra, .classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry
-	j	.classHeap_Node_push_return
-.classHeap_Node_push_ID29_if_out:
-	li	t1, -16
-	add	t1, s0, t1
-	lw	t1, 0(t1)
-	addi	t1, t1, 0
-	lw	a1, 0(t1)
-	j	.classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry
-.classHeap_Node_push_call_classArray_Node_swap_7_out:
-	mv	t0, ra
-	j	.classHeap_Node_push_ID14_while_condition
-.classHeap_Node_push_call_classHeap_Node_pnt_8_out:
-	li	t1, -16
-	add	t1, s0, t1
-	lw	t1, 0(t1)
-	addi	t1, t1, 0
-	lw	t1, 0(t1)
-	j	.classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry
-.classHeap_Node_push_call_classNode_key__10_out:
-	li	t1, -16
-	add	t1, s0, t1
-	lw	t1, 0(t1)
-	addi	t1, t1, 0
-	lw	t1, 0(t1)
-	j	.classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry
-.classHeap_Node_push_call_classNode_key__12_out:
-	slt	t1, a0, t1
-	xori	t1, t1, 1
-	bnez	t1, .classHeap_Node_push_return
-	j	.classHeap_Node_push_ID29_if_out
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	li	t2, -1
-	li	t0, 4
-	mul	t0, t2, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	xor	ra, t1, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out:
-	addi	ra, s8, 0
-	lw	t1, 0(ra)
-	addi	ra, s8, 8
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t0, ra
-	add	t0, t1, ra
-	mv	ra, s10
-	sw	ra, 0(t0)
-	addi	t1, s8, 8
-	lw	t0, 0(t1)
-	li	ra, 1
-	add	ra, t0, ra
-	sw	ra, 0(t1)
-	j	.classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	addi	ra, s8, 8
-	lw	t1, 0(ra)
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	mv	s1, ra
-	addi	ra, s8, 8
-	lw	t0, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	t0, 0(ra)
-	addi	s4, s8, 0
-	mv	ra, s1
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	li	t0, 2
-	mul	s7, ra, t0
-	mv	ra, s7
-	li	t0, 8
-	mul	ra, ra, t0
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s7, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	addi	ra, s8, 8
-	li	t0, 0
-	sw	t0, 0(ra)
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	addi	ra, s8, 8
-	lw	ra, 0(ra)
-	li	t0, -20
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	xor	ra, ra, t0
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	addi	ra, s8, 0
-	lw	t1, 0(ra)
-	addi	ra, s8, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	t1, t1, ra
-	addi	ra, s8, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	ra, s1, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	addi	t0, s8, 8
-	lw	t1, 0(t0)
-	li	ra, 1
-	add	ra, t1, ra
-	sw	ra, 0(t0)
-	j	.classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.classHeap_Node_push_call_classHeap_Node_size_6_out
-.classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry:
-	addi	t1, a1, 0
-	lw	t1, 0(t1)
-	li	t2, 8
-	mul	t2, ra, t2
-	add	t1, t1, t2
-	lw	t2, 0(t1)
-	addi	t1, a1, 0
-	lw	a0, 0(t1)
-	li	t1, 8
-	mul	t1, ra, t1
-	add	a2, a0, t1
-	addi	t1, a1, 0
-	lw	a0, 0(t1)
-	li	t1, 8
-	mul	t1, t0, t1
-	add	t1, a0, t1
-	lw	t1, 0(t1)
-	sw	t1, 0(a2)
-	addi	t1, a1, 0
-	lw	t1, 0(t1)
-	li	a0, 8
-	mul	t0, t0, a0
-	add	t0, t1, t0
-	sw	t2, 0(t0)
-	j	.classHeap_Node_push_call_classArray_Node_swap_7_out
-.classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry:
-	li	ra, 1
-	sub	t1, t0, ra
-	li	ra, 2
-	div	ra, t1, ra
-	j	.classHeap_Node_push_call_classHeap_Node_pnt_8_out
-.classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry:
-	addi	t1, t1, 0
-	lw	t1, 0(t1)
-	li	t2, 8
-	mul	t2, ra, t2
-	add	t1, t1, t2
-	lw	t1, 0(t1)
-	j	.classHeap_Node_push_call_classNode_key__10_classNode_key__entry
-.classHeap_Node_push_call_classNode_key__10_classNode_key__entry:
-	addi	t1, t1, 4
-	lw	t2, 0(t1)
-	li	t1, 0
-	sub	a0, t1, t2
-	j	.classHeap_Node_push_call_classNode_key__10_out
-.classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry:
-	addi	t1, t1, 0
-	lw	t2, 0(t1)
-	li	t1, 8
-	mul	t1, t0, t1
-	add	t1, t2, t1
-	lw	t1, 0(t1)
-	j	.classHeap_Node_push_call_classNode_key__12_classNode_key__entry
-.classHeap_Node_push_call_classNode_key__12_classNode_key__entry:
-	addi	t1, t1, 4
-	lw	t2, 0(t1)
-	li	t1, 0
-	sub	t1, t1, t2
-	j	.classHeap_Node_push_call_classNode_key__12_out
-.classHeap_Node_push_return:
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	s4, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	ra, -36
-	add	ra, s0, ra
-	lw	s8, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s10, 0(ra)
-	li	t0, 48
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_pop
-	.p2align	2
-	.type	classHeap_Node_pop,@function
-classHeap_Node_pop:
-.classHeap_Node_pop_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -28
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s2, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s9, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s11, 0(ra)
-	j	.classHeap_Node_pop_entry
-.classHeap_Node_pop_entry:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry
-.classHeap_Node_pop_call_classArray_Node_front_13_out:
-	mv	s11, ra
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	s1, 0(ra)
-	j	.classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry
-.classHeap_Node_pop_call_classHeap_Node_size_14_out:
-	li	ra, 1
-	sub	a0, a0, ra
-	j	.classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry
-.classHeap_Node_pop_call_classArray_Node_swap_15_out:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out:
-	mv	a0, s11
-	j	.classHeap_Node_pop_return
-.classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry:
-	addi	ra, ra, 0
-	lw	t1, 0(ra)
-	li	ra, 0
-	li	t0, 8
-	mul	ra, ra, t0
-	add	ra, t1, ra
-	lw	ra, 0(ra)
-	j	.classHeap_Node_pop_call_classArray_Node_front_13_out
-.classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.classHeap_Node_pop_call_classHeap_Node_size_14_out
-.classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry:
-	addi	ra, s1, 0
-	lw	ra, 0(ra)
-	li	t1, 0
-	li	t0, 8
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	addi	ra, s1, 0
-	lw	t2, 0(ra)
-	li	t1, 0
-	li	ra, 8
-	mul	ra, t1, ra
-	add	t1, t2, ra
-	addi	ra, s1, 0
-	lw	t2, 0(ra)
-	li	ra, 8
-	mul	ra, a0, ra
-	add	ra, t2, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	addi	ra, s1, 0
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, a0, ra
-	add	ra, t1, ra
-	sw	t0, 0(ra)
-	j	.classHeap_Node_pop_call_classArray_Node_swap_15_out
-.classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry:
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
+	j	.wP_ID6_for_condition
+.wP_ID6_for_condition:
+	slt	t2, t0, t1
+	bnez	t2, .wP_ID6_for_suite
+	j	.wP_ID6_for_condition_mid
+.wP_ID6_for_condition_mid:
 	li	t1, 1
-	sub	t0, t0, t1
-	sw	t0, 0(ra)
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	a0, 0(ra)
-	li	a1, 0
-	call	classHeap_Node_lchild
-	mv	s9, a0
-	li	ra, -28
-	add	ra, s0, ra
-	lw	a0, 0(ra)
-	li	a1, 0
-	call	classHeap_Node_rchild
-	mv	s2, a0
-	li	ra, -28
-	add	ra, s0, ra
-	lw	a0, 0(ra)
-	call	classHeap_Node_size
-	slt	ra, s9, a0
-	bnez	ra, .classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid:
-	li	ra, 0
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	mv	a1, s9
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s1, a0
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s1
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid:
-	li	ra, 0
-	mv	s1, ra
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out:
-	bnez	ra, .classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid:
-	li	ra, 0
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true:
-	mv	s1, s9
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid:
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	a0, 0(ra)
-	call	classHeap_Node_size
-	slt	ra, s2, a0
-	bnez	ra, .classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	mv	a1, s2
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s9, a0
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	mv	a1, s1
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s9
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out:
-	bnez	ra, .classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true:
-	mv	s1, s2
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out:
-	li	ra, 0
-	xor	ra, s1, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out
-.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out:
-	li	ra, -28
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	mv	a2, s1
-	call	classArray_Node_swap
-	li	ra, -28
-	add	ra, s0, ra
-	lw	a0, 0(ra)
-	mv	a1, s1
-	call	classHeap_Node_maxHeapify
-	j	.classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
-.classHeap_Node_pop_return:
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s2, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s9, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s11, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_top
-	.p2align	2
-	.type	classHeap_Node_top,@function
-classHeap_Node_top:
-.classHeap_Node_top_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_top_entry
-.classHeap_Node_top_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_top_call_classArray_Node_front_18_classArray_Node_front_entry
-.classHeap_Node_top_call_classArray_Node_front_18_out:
-	j	.classHeap_Node_top_return
-.classHeap_Node_top_call_classArray_Node_front_18_classArray_Node_front_entry:
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t1, 0
-	li	t0, 8
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	a0, 0(ra)
-	j	.classHeap_Node_top_call_classArray_Node_front_18_out
-.classHeap_Node_top_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_size
-	.p2align	2
-	.type	classHeap_Node_size,@function
-classHeap_Node_size:
-.classHeap_Node_size_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_size_entry
-.classHeap_Node_size_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry
-.classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry:
-	addi	ra, ra, 8
-	lw	a0, 0(ra)
-	j	.classHeap_Node_size_return
-.classHeap_Node_size_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_lchild
-	.p2align	2
-	.type	classHeap_Node_lchild,@function
-classHeap_Node_lchild:
-.classHeap_Node_lchild_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_lchild_entry
-.classHeap_Node_lchild_entry:
-	li	ra, 2
-	mul	ra, a1, ra
-	li	t0, 1
-	add	a0, ra, t0
-	j	.classHeap_Node_lchild_return
-.classHeap_Node_lchild_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_rchild
-	.p2align	2
-	.type	classHeap_Node_rchild,@function
-classHeap_Node_rchild:
-.classHeap_Node_rchild_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_rchild_entry
-.classHeap_Node_rchild_entry:
-	li	ra, 2
-	mul	ra, a1, ra
-	li	t0, 2
-	add	a0, ra, t0
-	j	.classHeap_Node_rchild_return
-.classHeap_Node_rchild_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_pnt
-	.p2align	2
-	.type	classHeap_Node_pnt,@function
-classHeap_Node_pnt:
-.classHeap_Node_pnt_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_pnt_entry
-.classHeap_Node_pnt_entry:
-	li	ra, 1
-	sub	t0, a1, ra
-	li	ra, 2
-	div	a0, t0, ra
-	j	.classHeap_Node_pnt_return
-.classHeap_Node_pnt_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classHeap_Node_maxHeapify
-	.p2align	2
-	.type	classHeap_Node_maxHeapify,@function
-classHeap_Node_maxHeapify:
-.classHeap_Node_maxHeapify_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classHeap_Node_maxHeapify_entry
-.classHeap_Node_maxHeapify_entry:
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_lchild_20_classHeap_Node_lchild_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_out:
-	slt	ra, t1, ra
-	bnez	ra, .classHeap_Node_maxHeapify_ID16_AndAnd_true
-	j	.classHeap_Node_maxHeapify_entry_mid
-.classHeap_Node_maxHeapify_entry_mid:
-	li	ra, 0
-	j	.classHeap_Node_maxHeapify_ID16_AndAnd_out
-.classHeap_Node_maxHeapify_ID16_AndAnd_true:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_get_23_classArray_Node_get_entry
-.classHeap_Node_maxHeapify_call_classNode_key__24_out:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_get_25_classArray_Node_get_entry
-.classHeap_Node_maxHeapify_call_classNode_key__26_out:
-	slt	ra, ra, a2
-	j	.classHeap_Node_maxHeapify_ID16_AndAnd_out
-.classHeap_Node_maxHeapify_ID16_AndAnd_out_mid:
-	mv	t1, a1
-	j	.classHeap_Node_maxHeapify_ID28_if_out
-.classHeap_Node_maxHeapify_ID16_AndAnd_out:
-	bnez	ra, .classHeap_Node_maxHeapify_ID28_if_true
-	j	.classHeap_Node_maxHeapify_ID16_AndAnd_out_mid
-.classHeap_Node_maxHeapify_ID28_if_out_mid:
-	li	ra, 0
-	j	.classHeap_Node_maxHeapify_ID32_AndAnd_out
-.classHeap_Node_maxHeapify_ID28_if_true:
-	j	.classHeap_Node_maxHeapify_ID28_if_out
-.classHeap_Node_maxHeapify_ID32_AndAnd_out_mid:
-	mv	t0, t1
-	j	.classHeap_Node_maxHeapify_ID44_if_out
-.classHeap_Node_maxHeapify_ID28_if_out:
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_classHeap_Node_size_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_out:
-	slt	ra, t0, ra
-	bnez	ra, .classHeap_Node_maxHeapify_ID32_AndAnd_true
-	j	.classHeap_Node_maxHeapify_ID28_if_out_mid
-.classHeap_Node_maxHeapify_ID32_AndAnd_true:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_get_28_classArray_Node_get_entry
-.classHeap_Node_maxHeapify_call_classNode_key__29_out:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_get_30_classArray_Node_get_entry
-.classHeap_Node_maxHeapify_call_classNode_key__31_out:
-	slt	ra, ra, t2
-	j	.classHeap_Node_maxHeapify_ID32_AndAnd_out
-.classHeap_Node_maxHeapify_ID32_AndAnd_out:
-	bnez	ra, .classHeap_Node_maxHeapify_ID44_if_true
-	j	.classHeap_Node_maxHeapify_ID32_AndAnd_out_mid
-.classHeap_Node_maxHeapify_ID44_if_true:
-	j	.classHeap_Node_maxHeapify_ID44_if_out
-.classHeap_Node_maxHeapify_ID44_if_out:
-	xor	ra, t0, a1
-	sltiu	ra, ra, 1
-	bnez	ra, .classHeap_Node_maxHeapify_return
-	j	.classHeap_Node_maxHeapify_ID48_if_out
-.classHeap_Node_maxHeapify_ID48_if_out:
-	addi	ra, a0, 0
-	lw	a2, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_swap_32_classArray_Node_swap_entry
-.classHeap_Node_maxHeapify_call_classArray_Node_swap_32_out:
-	mv	a1, t0
-	call	classHeap_Node_maxHeapify
-	j	.classHeap_Node_maxHeapify_return
-.classHeap_Node_maxHeapify_call_classHeap_Node_lchild_20_classHeap_Node_lchild_entry:
-	li	ra, 2
-	mul	ra, a1, ra
-	li	t0, 1
-	add	t1, ra, t0
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_rchild_21_classHeap_Node_rchild_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_rchild_21_classHeap_Node_rchild_entry:
-	li	ra, 2
-	mul	ra, a1, ra
-	li	t0, 2
-	add	t0, ra, t0
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_classHeap_Node_size_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_classHeap_Node_size_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry:
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_22_out
-.classHeap_Node_maxHeapify_call_classArray_Node_get_23_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	t2, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t2, ra
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classNode_key__24_classNode_key__entry
-.classHeap_Node_maxHeapify_call_classNode_key__24_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	ra, 0(ra)
+	j	.wP_ID6_for_out
+.wP_ID6_for_suite:
+	rem	a0, ra, t0
 	li	t2, 0
-	sub	a2, t2, ra
-	j	.classHeap_Node_maxHeapify_call_classNode_key__24_out
-.classHeap_Node_maxHeapify_call_classArray_Node_get_25_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	t2, 0(ra)
-	li	ra, 8
-	mul	ra, a1, ra
-	add	ra, t2, ra
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classNode_key__26_classNode_key__entry
-.classHeap_Node_maxHeapify_call_classNode_key__26_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	t2, 0(ra)
-	li	ra, 0
-	sub	ra, ra, t2
-	j	.classHeap_Node_maxHeapify_call_classNode_key__26_out
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_classHeap_Node_size_entry:
-	addi	ra, a0, 0
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry
-.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry:
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classHeap_Node_size_27_out
-.classHeap_Node_maxHeapify_call_classArray_Node_get_28_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t2, 8
-	mul	t2, t0, t2
-	add	ra, ra, t2
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classNode_key__29_classNode_key__entry
-.classHeap_Node_maxHeapify_call_classNode_key__29_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	t2, 0(ra)
-	li	ra, 0
-	sub	t2, ra, t2
-	j	.classHeap_Node_maxHeapify_call_classNode_key__29_out
-.classHeap_Node_maxHeapify_call_classArray_Node_get_30_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	a2, 8
-	mul	a2, t1, a2
-	add	ra, ra, a2
-	lw	ra, 0(ra)
-	j	.classHeap_Node_maxHeapify_call_classNode_key__31_classNode_key__entry
-.classHeap_Node_maxHeapify_call_classNode_key__31_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	a2, 0(ra)
-	li	ra, 0
-	sub	ra, ra, a2
-	j	.classHeap_Node_maxHeapify_call_classNode_key__31_out
-.classHeap_Node_maxHeapify_call_classArray_Node_swap_32_classArray_Node_swap_entry:
-	addi	ra, a2, 0
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, a1, ra
-	add	ra, t1, ra
-	lw	ra, 0(ra)
-	addi	t1, a2, 0
-	lw	t1, 0(t1)
-	li	t2, 8
-	mul	t2, a1, t2
-	add	a1, t1, t2
-	addi	t1, a2, 0
-	lw	t2, 0(t1)
-	li	t1, 8
-	mul	t1, t0, t1
-	add	t1, t2, t1
-	lw	t1, 0(t1)
-	sw	t1, 0(a1)
-	addi	t1, a2, 0
-	lw	t1, 0(t1)
-	li	t2, 8
-	mul	t2, t0, t2
-	add	t1, t1, t2
-	sw	ra, 0(t1)
-	j	.classHeap_Node_maxHeapify_call_classArray_Node_swap_32_out
-.classHeap_Node_maxHeapify_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	init
-	.p2align	2
-	.type	init,@function
-init:
-.init_assemblyInit:
-	li	t0, 32
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s5, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	sw	s8, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s9, 0(ra)
-	j	.init_entry
-.init_entry:
-	call	getInt
-	li	ra, 0
-	sw	a0, fuckLLVM_n, ra
-	call	getInt
-	li	ra, 0
-	sw	a0, fuckLLVM_m, ra
-	li	a0, 28
-	call	malloc
-	j	.init_call_EdgeList_33_out
-.init_call_EdgeList_33_out:
-	li	ra, 0
-	sw	a0, fuckLLVM_g, ra
-	lw	s1, fuckLLVM_g
-	lw	s5, fuckLLVM_n
-	lw	s7, fuckLLVM_m
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_entry
-.init_call_classEdgeList_init_34_out:
-	li	s1, 0
-	j	.init_ID10_for_condition
-.init_ID10_for_condition:
-	lw	ra, fuckLLVM_m
-	slt	ra, s1, ra
-	bnez	ra, .init_ID10_for_suite
-	j	.init_return
-.init_ID10_for_suite:
-	call	getInt
-	mv	s8, a0
-	call	getInt
-	mv	s6, a0
-	call	getInt
-	mv	s5, a0
-	lw	s7, fuckLLVM_g
-	j	.init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_entry
-.init_ID10_for_incr:
-	li	ra, 1
-	add	s1, s1, ra
-	j	.init_ID10_for_condition
-.init_call_classEdgeList_init_34_classEdgeList_init_entry:
-	addi	s6, s1, 0
-	li	ra, 12
-	mul	ra, s7, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s7, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s6)
-	addi	s6, s1, 8
-	li	ra, 4
-	mul	t0, s7, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s7, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s6)
-	addi	s6, s1, 16
-	li	ra, 4
-	mul	ra, s5, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s5, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s6)
-	li	ra, 0
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition
-.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition:
-	slt	t0, ra, s7
-	bnez	t0, .init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_suite
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_out
-.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_suite:
-	addi	t0, s1, 8
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t0, t1, t0
-	li	t1, -1
-	sw	t1, 0(t0)
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_incr
-.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition
-.init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_out:
-	li	ra, 0
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition
-.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition:
-	slt	t0, ra, s5
-	bnez	t0, .init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_suite
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_out
-.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_suite:
-	addi	t0, s1, 16
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t0, t1, t0
-	li	t1, -1
-	sw	t1, 0(t0)
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_incr
-.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition
-.init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_out:
-	addi	ra, s1, 24
-	li	t0, 0
-	sw	t0, 0(ra)
-	j	.init_call_classEdgeList_init_34_out
-.init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_entry:
-	li	a0, 12
-	call	malloc
-	j	.init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_call_Edge_0_out
-.init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_call_Edge_0_out:
-	addi	ra, a0, 0
-	sw	s8, 0(ra)
-	addi	ra, a0, 4
-	sw	s6, 0(ra)
-	addi	ra, a0, 8
-	sw	s5, 0(ra)
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	addi	t0, s7, 24
-	lw	t1, 0(t0)
-	li	t0, 12
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	sw	a0, 0(ra)
-	addi	ra, s7, 8
-	lw	ra, 0(ra)
-	addi	t0, s7, 24
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, t1, t0
-	add	t1, ra, t0
-	addi	ra, s7, 16
-	lw	ra, 0(ra)
-	li	t0, 4
-	mul	t0, s8, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	addi	ra, s7, 16
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s8, ra
-	add	t0, t0, ra
-	addi	ra, s7, 24
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	addi	ra, s7, 24
-	lw	t0, 0(ra)
-	li	t1, 1
-	add	t0, t0, t1
-	sw	t0, 0(ra)
-	j	.init_ID10_for_incr
-.init_return:
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s5, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	s8, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s9, 0(ra)
-	li	t0, 32
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	Node
-	.p2align	2
-	.type	Node,@function
-Node:
-.Node_assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.Node_entry
-.Node_entry:
-	j	.Node_return
-.Node_return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	classNode_key_
-	.p2align	2
-	.type	classNode_key_,@function
-classNode_key_:
-.classNode_key__assemblyInit:
-	li	t0, 16
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	j	.classNode_key__entry
-.classNode_key__entry:
-	addi	ra, a0, 4
-	lw	ra, 0(ra)
-	li	t0, 0
-	sub	a0, t0, ra
-	j	.classNode_key__return
-.classNode_key__return:
-	li	t0, 16
-	add	t1, sp, t0
-	lw	ra, -4(t1)
-	lw	s0, -8(t1)
-	add	sp, sp, t0
-	ret
-
-	.globl	dijkstra
-	.p2align	2
-	.type	dijkstra,@function
-dijkstra:
-.dijkstra_assemblyInit:
-	li	t0, 64
-	sub	sp, sp, t0
-	add	t1, sp, t0
-	sw	ra, -4(t1)
-	sw	s0, -8(t1)
-	mv	s0, t1
-	li	ra, -56
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	li	ra, -64
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s2, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s5, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	li	ra, -44
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	li	ra, -48
-	add	ra, s0, ra
-	sw	s8, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	sw	s9, 0(ra)
-	li	ra, -40
-	add	ra, s0, ra
-	sw	s10, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s11, 0(ra)
-	j	.dijkstra_entry
-.dijkstra_entry:
-	lw	s1, fuckLLVM_n
-	li	ra, 4
-	mul	t0, s1, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s1, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	s6, a0, ra
-	lw	s1, fuckLLVM_n
-	li	ra, 4
-	mul	ra, s1, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s1, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	s2, a0, ra
-	li	ra, 0
-	j	.dijkstra_ID23_for_condition
-.dijkstra_ID23_for_condition:
-	lw	t0, fuckLLVM_n
-	slt	t0, ra, t0
-	bnez	t0, .dijkstra_ID23_for_suite
-	j	.dijkstra_ID23_for_out
-.dijkstra_ID23_for_suite:
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t1, s2, t0
-	lw	t0, fuckLLVM_INF
-	sw	t0, 0(t1)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t0, s6, t0
+	xor	t2, a0, t2
+	sltiu	t2, t2, 1
+	bnez	t2, .wP_ID13_if_true
+	j	.wP_ID6_for_incr
+.wP_ID13_if_true:
+	addi	ra, ra, 1
 	li	t1, 0
-	sw	t1, 0(t0)
-	j	.dijkstra_ID23_for_incr
-.dijkstra_ID23_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.dijkstra_ID23_for_condition
-.dijkstra_ID23_for_out:
-	li	t0, 4
-	li	ra, -56
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	mul	ra, ra, t0
-	add	ra, s2, ra
+	j	.wP_ID6_for_out
+.wP_ID6_for_incr:
+	addi	t0, t0, 1
+	j	.wP_ID6_for_condition
+.wP_ID6_for_out_mid:
 	li	t0, 0
-	sw	t0, 0(ra)
-	li	a0, 8
-	call	malloc
-	mv	s7, a0
-	j	.dijkstra_call_Heap_Node_36_Heap_Node_entry
-.dijkstra_call_Heap_Node_36_out:
-	li	a0, 8
-	call	malloc
-	j	.dijkstra_call_Node_37_out
-.dijkstra_call_Node_37_out:
-	mv	s1, a0
-	addi	t0, s1, 4
-	li	ra, 0
-	sw	ra, 0(t0)
-	addi	t0, s1, 0
-	li	ra, -56
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_entry
-.dijkstra_call_classHeap_Node_size_39_out:
-	li	ra, 0
-	xor	ra, t0, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_entry
-	j	.dijkstra_ID59_while_out
-.dijkstra_ID71_if_out:
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, s6, ra
-	li	t0, 1
-	sw	t0, 0(ra)
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 16
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, t0, ra
-	lw	s8, 0(ra)
-	j	.dijkstra_ID81_for_condition
-.dijkstra_ID81_for_condition:
-	li	ra, -1
-	xor	ra, s8, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .dijkstra_ID81_for_suite
-	j	.dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-.dijkstra_ID81_for_suite:
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	t0, 12
-	mul	t0, s8, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	addi	ra, ra, 4
-	lw	s5, 0(ra)
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 12
-	mul	ra, s8, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, s2, ra
-	lw	ra, 0(ra)
-	add	ra, ra, t0
-	li	t0, 4
-	mul	t0, s5, t0
-	add	t0, s2, t0
-	lw	t0, 0(t0)
-	slt	t0, ra, t0
-	xori	t0, t0, 1
-	bnez	t0, .dijkstra_ID81_for_incr
-	j	.dijkstra_ID115_if_out
-.dijkstra_ID115_if_out:
-	li	t0, 4
-	mul	t0, s5, t0
-	add	t0, s2, t0
-	sw	ra, 0(t0)
-	li	a0, 8
-	call	malloc
-	j	.dijkstra_call_Node_40_out
-.dijkstra_call_Node_40_out:
-	addi	ra, a0, 0
-	sw	s5, 0(ra)
-	addi	t0, a0, 4
-	li	ra, 4
-	mul	ra, s5, ra
-	add	ra, s2, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_entry
-.dijkstra_ID81_for_incr:
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 8
-	lw	ra, 0(ra)
-	li	t0, 4
-	mul	t0, s8, t0
-	add	ra, ra, t0
-	lw	s8, 0(ra)
-	j	.dijkstra_ID81_for_condition
-.dijkstra_call_classHeap_Node_pop_42_out:
-	addi	ra, s1, 0
-	lw	s1, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, s6, ra
-	lw	ra, 0(ra)
-	li	t0, 1
-	xor	ra, ra, t0
-	sltiu	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-	j	.dijkstra_ID71_if_out
-.dijkstra_ID59_while_out:
-	mv	a0, s2
-	j	.dijkstra_return
-.dijkstra_call_Heap_Node_36_Heap_Node_entry:
-	addi	s5, s7, 0
-	li	a0, 12
-	call	malloc
-	mv	s1, a0
-	j	.dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_Array_Node_entry
-.dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_out:
-	sw	s1, 0(s5)
-	j	.dijkstra_call_Heap_Node_36_out
-.dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_Array_Node_entry:
-	addi	ra, s1, 8
-	li	t0, 0
-	sw	t0, 0(ra)
-	addi	s8, s1, 0
-	li	a0, 132
-	call	malloc
-	li	ra, 16
-	sw	ra, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s8)
-	j	.dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_entry:
-	addi	ra, s7, 0
-	lw	s9, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_out:
-	li	ra, 1
-	sub	ra, a0, ra
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition:
+	j	.wP_ID19_AndAnd_out
+.wP_ID6_for_out:
 	li	t0, 0
 	slt	t0, t0, ra
-	bnez	t0, .dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry
-	j	.dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID29_if_out:
-	addi	t1, s7, 0
-	lw	a2, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_out:
-	mv	ra, t0
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_out:
-	addi	t1, s7, 0
-	lw	t1, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_out:
-	addi	t1, s7, 0
-	lw	t1, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_out:
-	slt	t1, t2, t1
-	xori	t1, t1, 1
-	bnez	t1, .dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID29_if_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	xor	ra, t2, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out:
-	addi	ra, s9, 0
-	lw	t0, 0(ra)
-	addi	ra, s9, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	sw	s1, 0(ra)
-	addi	t1, s9, 8
-	lw	ra, 0(t1)
-	li	t0, 1
-	add	ra, ra, t0
-	sw	ra, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	addi	ra, s9, 8
-	lw	t2, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	addi	ra, s9, 0
-	lw	s5, 0(ra)
-	addi	ra, s9, 8
-	lw	t0, 0(ra)
-	li	ra, -60
-	add	ra, s0, ra
-	sw	t0, 0(ra)
-	addi	s8, s9, 0
-	li	ra, -1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, s5, ra
-	lw	t0, 0(ra)
-	li	ra, 2
-	mul	s10, t0, ra
-	li	ra, 8
-	mul	t0, s10, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s10, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s8)
-	addi	ra, s9, 8
+	bnez	t0, .wP_ID19_AndAnd_true
+	j	.wP_ID6_for_out_mid
+.wP_ID19_AndAnd_true:
+	add	t0, ra, t1
+	li	t2, 9
+	rem	t2, t0, t2
 	li	t0, 0
-	sw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	addi	ra, s9, 8
-	lw	t0, 0(ra)
-	li	ra, -60
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	xor	ra, t0, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	addi	ra, s9, 0
-	lw	t0, 0(ra)
-	addi	ra, s9, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	t0, t0, ra
-	addi	ra, s9, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, s5, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	addi	ra, s9, 8
-	lw	t1, 0(ra)
-	li	t0, 1
-	add	t0, t1, t0
-	sw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry:
-	addi	t1, a2, 0
-	lw	t2, 0(t1)
-	li	t1, 8
-	mul	t1, t0, t1
-	add	t1, t2, t1
-	lw	t2, 0(t1)
-	addi	t1, a2, 0
-	lw	a0, 0(t1)
-	li	t1, 8
-	mul	t1, t0, t1
-	add	a0, a0, t1
-	addi	t1, a2, 0
-	lw	a1, 0(t1)
-	li	t1, 8
-	mul	t1, ra, t1
-	add	t1, a1, t1
-	lw	t1, 0(t1)
-	sw	t1, 0(a0)
-	addi	t1, a2, 0
-	lw	a0, 0(t1)
-	li	t1, 8
-	mul	ra, ra, t1
-	add	ra, a0, ra
-	sw	t2, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry:
-	li	t0, 1
-	sub	t0, ra, t0
-	li	t1, 2
-	div	t0, t0, t1
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry:
-	addi	t1, t1, 0
-	lw	t1, 0(t1)
-	li	t2, 8
-	mul	t2, t0, t2
-	add	t1, t1, t2
-	lw	t1, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_classNode_key__entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_classNode_key__entry:
-	addi	t1, t1, 4
-	lw	t1, 0(t1)
-	li	t2, 0
-	sub	t2, t2, t1
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_out
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry:
-	addi	t1, t1, 0
-	lw	a0, 0(t1)
-	li	t1, 8
-	mul	t1, ra, t1
-	add	t1, a0, t1
-	lw	t1, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_classNode_key__entry
-.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_classNode_key__entry:
-	addi	t1, t1, 4
-	lw	t1, 0(t1)
-	li	a0, 0
-	sub	t1, a0, t1
-	j	.dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_out
-.dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry:
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry
-.dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry:
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_size_39_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_entry:
-	addi	ra, s7, 0
-	lw	s5, 0(ra)
-	li	ra, -52
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_out:
-	li	ra, 1
-	sub	t2, a0, ra
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition:
-	li	ra, 0
-	slt	ra, ra, t2
-	bnez	ra, .dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry
-	j	.dijkstra_ID81_for_incr
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID29_if_out:
-	addi	ra, s7, 0
-	lw	a1, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_out:
-	mv	t2, t1
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_out:
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_out:
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_out:
-	slt	ra, t0, ra
-	xori	ra, ra, 1
-	bnez	ra, .dijkstra_ID81_for_incr
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID29_if_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out:
-	addi	ra, s5, 0
-	lw	ra, 0(ra)
-	li	t1, -1
-	li	t2, 4
-	mul	t1, t1, t2
+	xor	t0, t2, t0
+	sltiu	t0, t0, 1
+	j	.wP_ID19_AndAnd_out
+.wP_ID19_AndAnd_out:
+	bnez	t0, .wP_ID4_for_out
+	j	.wP_ID25_if_out
+.wP_ID25_if_out:
+	lw	t0, fuckLLVM_N
+	add	t0, t0, t1
+	la	t2, fuckLLVM_N
+	sw	t0, 0(t2)
 	add	ra, ra, t1
-	lw	ra, 0(ra)
+	addi	ra, ra, 1
+	j	.wP_ID4_for_suite
+.wP_ID4_for_out:
+	lw	t0, fuckLLVM_N
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	j	.wP_call_wpppp_53_out
+.wP_call_wpppp_53_out:
+	add	t0, t0, ra
+	li	ra, 2
+	rem	t0, t0, ra
+	li	ra, 0
 	xor	ra, t0, ra
 	sltiu	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out:
-	addi	ra, s5, 0
-	lw	ra, 0(ra)
-	addi	t0, s5, 8
-	lw	t0, 0(t0)
-	li	t1, 8
-	mul	t0, t0, t1
-	add	t0, ra, t0
-	li	ra, -52
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	addi	t1, s5, 8
-	lw	ra, 0(t1)
-	li	t0, 1
-	add	ra, ra, t0
-	sw	ra, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	addi	ra, s5, 8
-	lw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	addi	ra, s5, 0
-	lw	s9, 0(ra)
-	addi	ra, s5, 8
-	lw	ra, 0(ra)
-	li	t0, -36
-	add	t0, s0, t0
-	sw	ra, 0(t0)
-	addi	t0, s5, 0
-	li	ra, -12
-	add	ra, s0, ra
-	sw	t0, 0(ra)
-	li	t0, -1
+	bnez	ra, .wP_ID38_if_true
+	j	.wP_ID38_if_out
+.wP_ID38_if_true:
+	lw	a0, fuckLLVM_N
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	li	ra, 524288
+	sub	t0, a0, ra
 	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, s9, ra
-	lw	ra, 0(ra)
+	sub	a0, t0, ra
+	j	.wP_return
+.wP_ID38_if_out:
+	call	block
+	call	block
+	call	block
+	call	block
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	call	bblock
+	call	bblock
+	j	.wP_return
+.wP_return:
+	li	t0, 16
+	add	t1, sp, t0
+	lw	ra, -4(t1)
+	lw	s0, -8(t1)
+	add	sp, sp, t0
+	ret
+
+	.globl	sanity_check
+	.p2align	2
+	.type	sanity_check,@function
+sanity_check:
+.sanity_check_assemblyInit:
+	li	t0, 16
+	sub	sp, sp, t0
+	add	t1, sp, t0
+	sw	ra, -4(t1)
+	sw	s0, -8(t1)
+	mv	s0, t1
+	j	.sanity_check_entry
+.sanity_check_entry:
+	j	.sanity_check_call_wP_60
+.sanity_check_call_wP_60_out:
+	addi	a0, a0, 1
+	j	.sanity_check_return
+.sanity_check_call_wP_60_wP_ID4_for_suite:
+	li	ra, 1
+	sra	a0, t0, ra
+	li	ra, 2
+	j	.sanity_check_call_wP_60_wP_ID6_for_condition
+.sanity_check_call_wP_60_wP_ID6_for_condition:
+	slt	t1, ra, a0
+	bnez	t1, .sanity_check_call_wP_60_wP_ID6_for_suite
+	j	.sanity_check_call_wP_60_wP_ID6_for_condition_mid
+.sanity_check_call_wP_60_wP_ID6_for_condition_mid:
+	li	ra, 1
+	j	.sanity_check_call_wP_60_wP_ID6_for_out
+.sanity_check_call_wP_60_wP_ID6_for_suite:
+	rem	t2, t0, ra
+	li	t1, 0
+	xor	t1, t2, t1
+	sltiu	t1, t1, 1
+	bnez	t1, .sanity_check_call_wP_60_wP_ID13_if_true
+	j	.sanity_check_call_wP_60_wP_ID6_for_incr
+.sanity_check_call_wP_60_wP_ID13_if_true:
+	addi	t0, t0, 1
+	li	ra, 0
+	j	.sanity_check_call_wP_60_wP_ID6_for_out
+.sanity_check_call_wP_60_wP_ID6_for_incr:
+	addi	ra, ra, 1
+	j	.sanity_check_call_wP_60_wP_ID6_for_condition
+.sanity_check_call_wP_60_wP_ID6_for_out_mid:
+	li	t1, 0
+	j	.sanity_check_call_wP_60_wP_ID19_AndAnd_out
+.sanity_check_call_wP_60_wP_ID6_for_out:
+	li	t1, 0
+	slt	t1, t1, t0
+	bnez	t1, .sanity_check_call_wP_60_wP_ID19_AndAnd_true
+	j	.sanity_check_call_wP_60_wP_ID6_for_out_mid
+.sanity_check_call_wP_60_wP_ID19_AndAnd_true:
+	add	t2, t0, ra
+	li	t1, 9
+	rem	t1, t2, t1
+	li	t2, 0
+	xor	t1, t1, t2
+	sltiu	t1, t1, 1
+	j	.sanity_check_call_wP_60_wP_ID19_AndAnd_out
+.sanity_check_call_wP_60_wP_ID19_AndAnd_out:
+	bnez	t1, .sanity_check_call_wP_60_wP_ID4_for_out
+	j	.sanity_check_call_wP_60_wP_ID25_if_out
+.sanity_check_call_wP_60_wP_ID25_if_out:
+	lw	t1, fuckLLVM_N
+	add	t1, t1, ra
+	la	t2, fuckLLVM_N
+	sw	t1, 0(t2)
+	add	ra, t0, ra
+	addi	t0, ra, 1
+	j	.sanity_check_call_wP_60_wP_ID4_for_suite
+.sanity_check_call_wP_60_wP_ID4_for_out:
+	lw	t1, fuckLLVM_N
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	j	.sanity_check_call_wP_60_wP_call_wpppp_53_out
+.sanity_check_call_wP_60_wP_call_wpppp_53_out:
+	add	ra, t1, ra
 	li	t0, 2
-	mul	s10, ra, t0
-	li	ra, 8
-	mul	t0, s10, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s10, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	li	t0, -12
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	sw	ra, 0(t0)
-	addi	ra, s5, 8
+	rem	ra, ra, t0
 	li	t0, 0
-	sw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	addi	ra, s5, 8
-	lw	ra, 0(ra)
-	li	t0, -36
-	add	t0, s0, t0
-	lw	t0, 0(t0)
 	xor	ra, ra, t0
 	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	addi	ra, s5, 0
-	lw	t1, 0(ra)
-	addi	ra, s5, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	t1, t1, ra
-	addi	ra, s5, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	ra, s9, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	addi	ra, s5, 8
-	lw	t0, 0(ra)
-	li	t1, 1
-	add	t0, t0, t1
+	bnez	ra, .sanity_check_call_wP_60_wP_ID38_if_true
+	j	.sanity_check_call_wP_60_wP_ID38_if_out
+.sanity_check_call_wP_60_wP_ID38_if_true:
+	lw	a0, fuckLLVM_N
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	li	ra, 524288
+	sub	t0, a0, ra
+	li	ra, 4
+	sub	a0, t0, ra
+	j	.sanity_check_call_wP_60_wP_return
+.sanity_check_call_wP_60_wP_ID38_if_out:
+	call	block
+	call	block
+	call	block
+	call	block
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
 	sw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry:
-	addi	ra, a1, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	addi	t0, a1, 0
-	lw	a0, 0(t0)
-	li	t0, 8
-	mul	t0, t1, t0
-	add	a0, a0, t0
-	addi	t0, a1, 0
-	lw	a2, 0(t0)
-	li	t0, 8
-	mul	t0, t2, t0
-	add	t0, a2, t0
-	lw	t0, 0(t0)
-	sw	t0, 0(a0)
-	addi	t0, a1, 0
-	lw	t0, 0(t0)
-	li	a0, 8
-	mul	t2, t2, a0
-	add	t0, t0, t2
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
 	sw	ra, 0(t0)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry:
-	li	ra, 1
-	sub	ra, t2, ra
-	li	t0, 2
-	div	t1, ra, t0
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_classNode_key__entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	ra, 0(ra)
-	li	t0, 0
-	sub	t0, t0, ra
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_out
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	ra, 0(ra)
-	li	a0, 8
-	mul	a0, t2, a0
-	add	ra, ra, a0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_classNode_key__entry
-.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	ra, 0(ra)
-	li	a0, 0
-	sub	ra, a0, ra
-	j	.dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_entry:
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_out:
-	addi	ra, s7, 0
-	lw	s5, 0(ra)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_out:
-	li	ra, 1
-	sub	t1, a0, ra
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_out:
-	addi	ra, s7, 0
-	lw	ra, 0(ra)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out:
-	j	.dijkstra_call_classHeap_Node_pop_42_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry:
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	t1, 0
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	s1, 0(ra)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry:
-	addi	ra, s5, 0
-	lw	ra, 0(ra)
-	li	t2, 0
-	li	t0, 8
-	mul	t0, t2, t0
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	addi	ra, s5, 0
-	lw	t2, 0(ra)
-	li	a0, 0
-	li	ra, 8
-	mul	ra, a0, ra
-	add	t2, t2, ra
-	addi	ra, s5, 0
-	lw	a0, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, a0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t2)
-	addi	ra, s5, 0
-	lw	t2, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t2, ra
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
 	sw	t0, 0(ra)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry:
-	addi	t0, ra, 8
-	lw	t1, 0(t0)
-	li	ra, 1
-	sub	ra, t1, ra
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
 	sw	ra, 0(t0)
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry:
-	mv	a0, s7
-	li	a1, 0
-	call	classHeap_Node_lchild
-	mv	s8, a0
-	mv	a0, s7
-	li	a1, 0
-	call	classHeap_Node_rchild
-	mv	s5, a0
-	mv	a0, s7
-	call	classHeap_Node_size
-	slt	ra, s8, a0
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid:
-	li	ra, 0
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	mv	a1, s8
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s9, a0
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s9
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid:
-	li	s8, 0
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out:
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid:
-	li	ra, 0
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true:
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid:
-	mv	s5, s8
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out:
-	mv	a0, s7
-	call	classHeap_Node_size
-	slt	ra, s5, a0
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	mv	a1, s5
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s9, a0
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	mv	a1, s8
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s9
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out:
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true:
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out:
-	li	ra, 0
-	xor	ra, s5, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out
-.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out:
-	addi	ra, s7, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	mv	a2, s5
-	call	classArray_Node_swap
-	mv	a0, s7
-	mv	a1, s5
-	call	classHeap_Node_maxHeapify
-	j	.dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
-.dijkstra_return:
-	li	ra, -64
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s2, 0(ra)
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s5, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	ra, -44
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	ra, -48
-	add	ra, s0, ra
-	lw	s8, 0(ra)
-	li	ra, -24
-	add	ra, s0, ra
-	lw	s9, 0(ra)
-	li	ra, -40
-	add	ra, s0, ra
-	lw	s10, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s11, 0(ra)
-	li	t0, 64
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	call	bblock
+	call	bblock
+	j	.sanity_check_call_wP_60_wP_return
+.sanity_check_call_wP_60_wP_return:
+	j	.sanity_check_call_wP_60_out
+.sanity_check_call_wP_60:
+	li	t0, 3
+	j	.sanity_check_call_wP_60_wP_ID4_for_suite
+.sanity_check_return:
+	li	t0, 16
 	add	t1, sp, t0
 	lw	ra, -4(t1)
 	lw	s0, -8(t1)
@@ -3181,1055 +6487,1875 @@ dijkstra:
 	.type	main,@function
 main:
 .main_assemblyInit:
-	li	t0, 64
+	li	t0, 16
 	sub	sp, sp, t0
 	add	t1, sp, t0
 	sw	ra, -4(t1)
 	sw	s0, -8(t1)
 	mv	s0, t1
-	li	ra, -28
-	add	ra, s0, ra
-	sw	s1, 0(ra)
-	li	ra, -44
-	add	ra, s0, ra
-	sw	s2, 0(ra)
-	li	ra, -36
-	add	ra, s0, ra
-	sw	s3, 0(ra)
-	li	ra, -40
-	add	ra, s0, ra
-	sw	s4, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	sw	s5, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	sw	s6, 0(ra)
-	li	ra, -48
-	add	ra, s0, ra
-	sw	s7, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	sw	s8, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	sw	s9, 0(ra)
-	li	ra, -56
-	add	ra, s0, ra
-	sw	s11, 0(ra)
 	j	.main_entry
 .main_entry:
-	j	.main_call_init_44_init_entry
-.main_call_init_44_out:
-	li	ra, 0
-	mv	s7, ra
-	j	.main_ID3_for_condition
-.main_ID3_for_condition:
-	lw	ra, fuckLLVM_n
-	slt	ra, s7, ra
-	bnez	ra, .main_call_dijkstra_45_dijkstra_entry
-	j	.main_return
-.main_call_dijkstra_45_out:
-	li	s2, 0
-	j	.main_ID10_for_condition
-.main_ID10_for_condition:
-	lw	ra, fuckLLVM_n
-	slt	ra, s2, ra
-	bnez	ra, .main_ID10_for_suite
-	j	.main_ID10_for_out
-.main_ID10_for_suite:
-	li	ra, 4
-	mul	ra, s2, ra
-	add	ra, s1, ra
-	lw	ra, 0(ra)
-	lw	t0, fuckLLVM_INF
-	xor	ra, ra, t0
-	sltiu	ra, ra, 1
-	bnez	ra, .main_ID19_if_true
-	j	.main_ID19_if_false
-.main_ID19_if_true:
-	la	a0, fuckLLVM_.str.0
-	call	print
-	j	.main_ID19_if_out
-.main_ID19_if_false:
-	li	ra, 4
-	mul	ra, s2, ra
-	add	ra, s1, ra
-	lw	a0, 0(ra)
-	call	toString
-	call	print
-	j	.main_ID19_if_out
-.main_ID19_if_out:
-	la	a0, fuckLLVM_.str.1
-	call	print
-	j	.main_ID10_for_incr
-.main_ID10_for_incr:
-	li	ra, 1
-	add	s2, s2, ra
-	j	.main_ID10_for_condition
-.main_ID10_for_out:
-	la	a0, fuckLLVM_.str.2
-	call	println
-	j	.main_ID3_for_incr
-.main_ID3_for_incr:
-	li	ra, 1
-	add	ra, s7, ra
-	mv	s7, ra
-	j	.main_ID3_for_condition
-.main_call_init_44_init_entry:
-	call	getInt
-	li	ra, 0
-	sw	a0, fuckLLVM_n, ra
-	call	getInt
-	li	ra, 0
-	sw	a0, fuckLLVM_m, ra
-	li	a0, 28
-	call	malloc
-	j	.main_call_init_44_init_call_EdgeList_33_out
-.main_call_init_44_init_call_EdgeList_33_out:
-	li	ra, 0
-	sw	a0, fuckLLVM_g, ra
-	lw	s2, fuckLLVM_g
-	lw	s3, fuckLLVM_n
-	lw	s1, fuckLLVM_m
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_entry
-.main_call_init_44_init_call_classEdgeList_init_34_out:
-	li	s1, 0
-	j	.main_call_init_44_init_ID10_for_condition
-.main_call_init_44_init_ID10_for_condition:
-	lw	ra, fuckLLVM_m
-	slt	ra, s1, ra
-	bnez	ra, .main_call_init_44_init_ID10_for_suite
-	j	.main_call_init_44_out
-.main_call_init_44_init_ID10_for_suite:
-	call	getInt
-	mv	s2, a0
-	call	getInt
-	mv	s3, a0
-	call	getInt
-	mv	s5, a0
-	lw	s4, fuckLLVM_g
-	j	.main_call_init_44_init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_entry
-.main_call_init_44_init_ID10_for_incr:
-	li	ra, 1
-	add	s1, s1, ra
-	j	.main_call_init_44_init_ID10_for_condition
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_entry:
-	addi	s4, s2, 0
-	li	ra, 12
-	mul	ra, s1, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s1, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	addi	s4, s2, 8
-	li	ra, 4
-	mul	t0, s1, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s1, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	addi	s4, s2, 16
-	li	ra, 4
-	mul	ra, s3, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s3, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s4)
-	li	ra, 0
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition:
-	slt	t0, ra, s1
-	bnez	t0, .main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_suite
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_out
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_suite:
-	addi	t0, s2, 8
-	lw	t0, 0(t0)
-	li	t1, 4
-	mul	t1, ra, t1
-	add	t1, t0, t1
-	li	t0, -1
-	sw	t0, 0(t1)
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_incr
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_condition
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID38_for_out:
-	li	ra, 0
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition:
-	slt	t0, ra, s3
-	bnez	t0, .main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_suite
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_out
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_suite:
-	addi	t0, s2, 16
-	lw	t1, 0(t0)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t0, t1, t0
-	li	t1, -1
-	sw	t1, 0(t0)
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_incr
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_condition
-.main_call_init_44_init_call_classEdgeList_init_34_classEdgeList_init_ID48_for_out:
-	addi	t0, s2, 24
-	li	ra, 0
-	sw	ra, 0(t0)
-	j	.main_call_init_44_init_call_classEdgeList_init_34_out
-.main_call_init_44_init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_entry:
-	li	a0, 12
-	call	malloc
-	j	.main_call_init_44_init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_call_Edge_0_out
-.main_call_init_44_init_call_classEdgeList_addEdge_35_classEdgeList_addEdge_call_Edge_0_out:
-	addi	ra, a0, 0
-	sw	s2, 0(ra)
-	addi	ra, a0, 4
-	sw	s3, 0(ra)
-	addi	ra, a0, 8
-	sw	s5, 0(ra)
-	addi	ra, s4, 0
-	lw	t0, 0(ra)
-	addi	ra, s4, 24
-	lw	t1, 0(ra)
-	li	ra, 12
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	sw	a0, 0(ra)
-	addi	ra, s4, 8
-	lw	t0, 0(ra)
-	addi	ra, s4, 24
-	lw	t1, 0(ra)
-	li	ra, 4
-	mul	ra, t1, ra
-	add	t1, t0, ra
-	addi	ra, s4, 16
-	lw	ra, 0(ra)
-	li	t0, 4
-	mul	t0, s2, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	addi	ra, s4, 16
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s2, ra
-	add	ra, t0, ra
-	addi	t0, s4, 24
-	lw	t0, 0(t0)
-	sw	t0, 0(ra)
-	addi	t0, s4, 24
-	lw	ra, 0(t0)
-	li	t1, 1
-	add	ra, ra, t1
-	sw	ra, 0(t0)
-	j	.main_call_init_44_init_ID10_for_incr
-.main_call_dijkstra_45_dijkstra_entry:
-	lw	s1, fuckLLVM_n
-	li	ra, 4
-	mul	ra, s1, ra
-	li	t0, 4
-	add	a0, ra, t0
-	call	malloc
-	sw	s1, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	mv	s5, ra
-	lw	s1, fuckLLVM_n
-	li	ra, 4
-	mul	t0, s1, ra
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s1, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	mv	s3, ra
-	li	ra, 0
-	j	.main_call_dijkstra_45_dijkstra_ID23_for_condition
-.main_call_dijkstra_45_dijkstra_ID23_for_condition:
-	lw	t0, fuckLLVM_n
-	slt	t0, ra, t0
-	bnez	t0, .main_call_dijkstra_45_dijkstra_ID23_for_suite
-	j	.main_call_dijkstra_45_dijkstra_ID23_for_out
-.main_call_dijkstra_45_dijkstra_ID23_for_suite:
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t1, s3, t0
-	lw	t0, fuckLLVM_INF
-	sw	t0, 0(t1)
-	li	t0, 4
-	mul	t0, ra, t0
-	add	t1, s5, t0
-	li	t0, 0
-	sw	t0, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_ID23_for_incr
-.main_call_dijkstra_45_dijkstra_ID23_for_incr:
-	li	t0, 1
-	add	ra, ra, t0
-	j	.main_call_dijkstra_45_dijkstra_ID23_for_condition
-.main_call_dijkstra_45_dijkstra_ID23_for_out:
-	li	ra, 4
-	mul	ra, s7, ra
-	add	ra, s3, ra
-	li	t0, 0
-	sw	t0, 0(ra)
-	li	a0, 8
-	call	malloc
-	mv	s1, a0
-	j	.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_entry
-.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_out:
-	mv	s9, s1
-	li	a0, 8
-	call	malloc
-	j	.main_call_dijkstra_45_dijkstra_call_Node_37_out
-.main_call_dijkstra_45_dijkstra_call_Node_37_out:
-	addi	t0, a0, 4
-	li	ra, 0
-	sw	ra, 0(t0)
-	addi	ra, a0, 0
-	sw	s7, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_out:
-	li	ra, 0
-	xor	ra, t0, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_entry
-	j	.main_call_dijkstra_45_dijkstra_ID59_while_out
-.main_call_dijkstra_45_dijkstra_ID71_if_out:
-	li	ra, 4
-	mul	ra, s1, ra
-	add	t0, s5, ra
-	li	ra, 1
-	sw	ra, 0(t0)
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 16
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	mv	s2, ra
-	j	.main_call_dijkstra_45_dijkstra_ID81_for_condition
-.main_call_dijkstra_45_dijkstra_ID81_for_condition:
-	li	ra, -1
-	xor	ra, s2, ra
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_ID81_for_suite
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-.main_call_dijkstra_45_dijkstra_ID81_for_suite:
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 12
-	mul	ra, s2, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 4
-	lw	s4, 0(ra)
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 12
-	mul	ra, s2, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, s3, ra
-	lw	ra, 0(ra)
-	add	t0, ra, t0
-	li	ra, 4
-	mul	ra, s4, ra
-	add	ra, s3, ra
-	lw	ra, 0(ra)
-	slt	ra, t0, ra
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_ID81_for_incr
-	j	.main_call_dijkstra_45_dijkstra_ID115_if_out
-.main_call_dijkstra_45_dijkstra_ID115_if_out:
-	li	ra, 4
-	mul	ra, s4, ra
-	add	ra, s3, ra
-	sw	t0, 0(ra)
-	li	a0, 8
-	call	malloc
-	j	.main_call_dijkstra_45_dijkstra_call_Node_40_out
-.main_call_dijkstra_45_dijkstra_call_Node_40_out:
-	addi	ra, a0, 0
-	sw	s4, 0(ra)
-	addi	t0, a0, 4
-	li	ra, 4
-	mul	ra, s4, ra
-	add	ra, s3, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_entry
-.main_call_dijkstra_45_dijkstra_ID81_for_incr:
-	lw	ra, fuckLLVM_g
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	li	ra, 4
-	mul	ra, s2, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	mv	s2, ra
-	j	.main_call_dijkstra_45_dijkstra_ID81_for_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_out:
-	addi	ra, s4, 0
-	lw	s1, 0(ra)
-	li	ra, 4
-	mul	ra, s1, ra
-	add	ra, s5, ra
-	lw	ra, 0(ra)
-	li	t0, 1
-	xor	ra, ra, t0
-	sltiu	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-	j	.main_call_dijkstra_45_dijkstra_ID71_if_out
-.main_call_dijkstra_45_dijkstra_ID59_while_out:
-	mv	s1, s3
-	j	.main_call_dijkstra_45_out
-.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_entry:
-	addi	s4, s1, 0
-	li	a0, 12
-	call	malloc
-	mv	s6, a0
-	j	.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_Array_Node_entry
-.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_out:
-	sw	s6, 0(s4)
-	j	.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_out
-.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_Array_Node_entry:
-	addi	ra, s6, 8
-	li	t0, 0
-	sw	t0, 0(ra)
-	addi	s2, s6, 0
-	li	a0, 132
-	call	malloc
-	li	ra, 16
-	sw	ra, 0(a0)
-	li	t0, 1
-	li	ra, 4
-	mul	ra, t0, ra
-	add	ra, a0, ra
-	sw	ra, 0(s2)
-	j	.main_call_dijkstra_45_dijkstra_call_Heap_Node_36_Heap_Node_call_Array_Node_4_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_entry:
-	addi	ra, s9, 0
-	lw	s8, 0(ra)
-	mv	s4, a0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_out:
-	li	ra, 1
-	sub	t2, a0, ra
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition:
-	li	ra, 0
-	slt	ra, ra, t2
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID29_if_out:
-	addi	ra, s9, 0
-	lw	a2, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_out:
-	mv	t2, t1
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID14_while_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_out:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_out:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_out:
-	slt	ra, a0, ra
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_ID29_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	li	t1, -1
-	li	t2, 4
-	mul	t1, t1, t2
-	add	ra, ra, t1
-	lw	ra, 0(ra)
-	xor	ra, t0, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	addi	t0, s8, 8
-	lw	t0, 0(t0)
-	li	t1, 8
-	mul	t0, t0, t1
-	add	t0, ra, t0
-	mv	ra, s4
-	sw	ra, 0(t0)
-	addi	t1, s8, 8
-	lw	ra, 0(t1)
-	li	t0, 1
-	add	ra, ra, t0
-	sw	ra, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	addi	ra, s8, 8
-	lw	t0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	mv	s2, ra
-	addi	ra, s8, 8
-	lw	s11, 0(ra)
-	addi	s1, s8, 0
-	mv	ra, s2
-	li	t1, -1
-	li	t0, 4
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	li	t0, 2
-	mul	s6, ra, t0
-	mv	ra, s6
-	li	t0, 8
-	mul	t0, ra, t0
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s6, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	sw	ra, 0(s1)
-	addi	t0, s8, 8
-	li	ra, 0
-	sw	ra, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	addi	ra, s8, 8
-	lw	ra, 0(ra)
-	xor	ra, ra, s11
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	addi	ra, s8, 0
-	lw	ra, 0(ra)
-	addi	t0, s8, 8
-	lw	t0, 0(t0)
-	li	t1, 8
-	mul	t0, t0, t1
-	add	t1, ra, t0
-	addi	ra, s8, 8
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	ra, ra, t0
-	add	ra, s2, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	addi	t0, s8, 8
-	lw	t1, 0(t0)
-	li	ra, 1
-	add	ra, t1, ra
-	sw	ra, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_size_6_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry:
-	addi	ra, a2, 0
-	lw	ra, 0(ra)
-	li	t0, 8
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	t0, 0(ra)
-	addi	ra, a2, 0
-	lw	ra, 0(ra)
-	li	a0, 8
-	mul	a0, t1, a0
-	add	a0, ra, a0
-	addi	ra, a2, 0
-	lw	ra, 0(ra)
-	li	a1, 8
-	mul	a1, t2, a1
-	add	ra, ra, a1
-	lw	ra, 0(ra)
-	sw	ra, 0(a0)
-	addi	ra, a2, 0
-	lw	a0, 0(ra)
-	li	ra, 8
-	mul	ra, t2, ra
-	add	ra, a0, ra
-	sw	t0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_swap_7_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry:
-	li	ra, 1
-	sub	ra, t2, ra
-	li	t0, 2
-	div	t1, ra, t0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classHeap_Node_pnt_8_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_classNode_key__entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	ra, 0(ra)
-	li	t0, 0
+	j	.main_call___init_61
+.main_call___init_61:
+	li	ra, 3
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID4_for_suite
+.main_call_sanity_check_62_sanity_check_call_wP_60_out:
+	addi	t0, a0, 1
+	li	ra, 3
 	sub	a0, t0, ra
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__10_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry:
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t2, ra
-	add	ra, t0, ra
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_classNode_key__entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_classNode_key__entry:
-	addi	ra, ra, 4
-	lw	ra, 0(ra)
+	j	.main_return
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID4_for_suite:
+	li	t0, 1
+	sra	t2, ra, t0
+	li	t0, 2
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_condition
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_condition:
+	slt	t1, t0, t2
+	bnez	t1, .main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_suite
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_condition_mid
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_condition_mid:
+	li	t1, 1
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_suite:
+	rem	a0, ra, t0
+	li	t1, 0
+	xor	t1, a0, t1
+	sltiu	t1, t1, 1
+	bnez	t1, .main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID13_if_true
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_incr
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID13_if_true:
+	addi	ra, ra, 1
+	li	t1, 0
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_incr:
+	addi	t0, t0, 1
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_condition
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_out_mid:
 	li	t0, 0
-	sub	ra, t0, ra
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_38_classHeap_Node_push_call_classNode_key__12_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_entry:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_classHeap_Node_size_call_classArray_Node_size_19_classArray_Node_size_entry:
-	addi	ra, ra, 8
-	lw	t0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_size_39_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_entry:
-	addi	ra, s9, 0
-	lw	s4, 0(ra)
-	li	ra, -52
-	add	ra, s0, ra
-	sw	a0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_out:
-	li	ra, 1
-	sub	ra, a0, ra
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition:
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID19_AndAnd_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_out:
 	li	t0, 0
 	slt	t0, t0, ra
-	bnez	t0, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry
-	j	.main_call_dijkstra_45_dijkstra_ID81_for_incr
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID29_if_out:
-	addi	t0, s9, 0
-	lw	a0, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_out:
-	mv	ra, t1
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID14_while_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_out:
-	addi	t0, s9, 0
-	lw	t0, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_out:
-	addi	t0, s9, 0
-	lw	t0, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_out:
-	slt	t0, a0, t0
-	xori	t0, t0, 1
-	bnez	t0, .main_call_dijkstra_45_dijkstra_ID81_for_incr
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_ID29_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out:
-	addi	ra, s4, 0
-	lw	ra, 0(ra)
-	li	t1, -1
+	bnez	t0, .main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID19_AndAnd_true
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID6_for_out_mid
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID19_AndAnd_true:
+	add	t0, ra, t1
+	li	t2, 9
+	rem	t2, t0, t2
+	li	t0, 0
+	xor	t0, t2, t0
+	sltiu	t0, t0, 1
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID19_AndAnd_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID19_AndAnd_out:
+	bnez	t0, .main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID4_for_out
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID25_if_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID25_if_out:
+	lw	t0, fuckLLVM_N
+	add	t2, t0, t1
+	la	t0, fuckLLVM_N
+	sw	t2, 0(t0)
+	add	ra, ra, t1
+	addi	ra, ra, 1
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID4_for_suite
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID4_for_out:
+	lw	t0, fuckLLVM_N
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t1, fuckLLVM_w
+	sw	ra, 0(t1)
+	lw	ra, fuckLLVM_w
+	addi	t1, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t1, 0(ra)
+	lw	ra, fuckLLVM_w
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_call_wpppp_53_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_call_wpppp_53_out:
+	add	t0, t0, ra
+	li	ra, 2
+	rem	ra, t0, ra
+	li	t0, 0
+	xor	ra, ra, t0
+	sltiu	ra, ra, 1
+	bnez	ra, .main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID38_if_true
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID38_if_out
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID38_if_true:
+	lw	a0, fuckLLVM_N
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	call	add2048
+	li	ra, 524288
+	sub	ra, a0, ra
 	li	t0, 4
-	mul	t0, t1, t0
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	xor	ra, t2, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out:
-	addi	ra, s4, 0
-	lw	t1, 0(ra)
-	addi	ra, s4, 8
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t0, ra
-	add	t0, t1, ra
-	li	ra, -52
-	add	ra, s0, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t0)
-	addi	t1, s4, 8
-	lw	t0, 0(t1)
-	li	ra, 1
-	add	ra, t0, ra
-	sw	ra, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_classArray_Node_size_entry:
-	addi	ra, s4, 8
-	lw	t2, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_size_1_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_entry:
-	addi	ra, s4, 0
-	lw	ra, 0(ra)
-	mv	s8, ra
-	addi	ra, s4, 8
-	lw	s11, 0(ra)
-	addi	ra, s4, 0
-	li	t0, -24
-	add	t0, s0, t0
-	sw	ra, 0(t0)
-	mv	ra, s8
-	li	t0, -1
-	li	t1, 4
-	mul	t0, t0, t1
-	add	ra, ra, t0
-	lw	ra, 0(ra)
-	li	t0, 2
-	mul	s6, ra, t0
-	mv	ra, s6
-	li	t0, 8
-	mul	t0, ra, t0
-	li	ra, 4
-	add	a0, t0, ra
-	call	malloc
-	sw	s6, 0(a0)
-	li	ra, 1
-	li	t0, 4
-	mul	ra, ra, t0
-	add	ra, a0, ra
-	li	t0, -24
-	add	t0, s0, t0
-	lw	t0, 0(t0)
-	sw	ra, 0(t0)
-	addi	ra, s4, 8
-	li	t0, 0
+	sub	a0, ra, t0
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_return
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_ID38_if_out:
+	call	block
+	call	block
+	call	block
+	call	block
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
 	sw	t0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition:
-	addi	ra, s4, 8
-	lw	ra, 0(ra)
-	xor	ra, ra, s11
-	sltiu	ra, ra, 1
-	xori	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_ID12_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_suite:
-	addi	ra, s4, 0
-	lw	t0, 0(ra)
-	addi	ra, s4, 8
-	lw	t1, 0(ra)
-	li	ra, 8
-	mul	ra, t1, ra
-	add	t1, t0, ra
-	addi	ra, s4, 8
-	lw	t0, 0(ra)
-	li	ra, 8
-	mul	ra, t0, ra
-	add	ra, s8, ra
-	lw	ra, 0(ra)
-	sw	ra, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_incr:
-	addi	t1, s4, 8
-	lw	t0, 0(t1)
-	li	ra, 1
-	add	ra, t0, ra
-	sw	ra, 0(t1)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_push_back_5_classArray_Node_push_back_call_classArray_Node_doubleStorage_2_classArray_Node_doubleStorage_ID25_for_condition
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_classHeap_Node_size_entry:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_size_6_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_classArray_Node_swap_entry:
-	addi	t0, a0, 0
-	lw	t2, 0(t0)
-	li	t0, 8
-	mul	t0, t1, t0
-	add	t0, t2, t0
-	lw	t0, 0(t0)
-	addi	t2, a0, 0
-	lw	a1, 0(t2)
-	li	t2, 8
-	mul	t2, t1, t2
-	add	a1, a1, t2
-	addi	t2, a0, 0
-	lw	t2, 0(t2)
-	li	a2, 8
-	mul	a2, ra, a2
-	add	t2, t2, a2
-	lw	t2, 0(t2)
-	sw	t2, 0(a1)
-	addi	t2, a0, 0
-	lw	a0, 0(t2)
-	li	t2, 8
-	mul	ra, ra, t2
-	add	ra, a0, ra
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
 	sw	t0, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_swap_7_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_classHeap_Node_pnt_entry:
-	li	t0, 1
-	sub	t0, ra, t0
-	li	t1, 2
-	div	t1, t0, t1
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classHeap_Node_pnt_8_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_9_classArray_Node_get_entry:
-	addi	t0, t0, 0
-	lw	t0, 0(t0)
-	li	t2, 8
-	mul	t2, t1, t2
-	add	t0, t0, t2
-	lw	t0, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_classNode_key__entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_classNode_key__entry:
-	addi	t0, t0, 4
-	lw	t2, 0(t0)
-	li	t0, 0
-	sub	a0, t0, t2
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__10_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classArray_Node_get_11_classArray_Node_get_entry:
-	addi	t0, t0, 0
-	lw	t2, 0(t0)
-	li	t0, 8
-	mul	t0, ra, t0
-	add	t0, t2, t0
-	lw	t0, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_classNode_key__entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_classNode_key__entry:
-	addi	t0, t0, 4
-	lw	t0, 0(t0)
-	li	t2, 0
-	sub	t0, t2, t0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_push_41_classHeap_Node_push_call_classNode_key__12_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_entry:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_out:
-	addi	ra, s9, 0
-	lw	s1, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_out:
-	li	ra, 1
-	sub	a0, a0, ra
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_out:
-	addi	ra, s9, 0
-	lw	ra, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out:
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_classArray_Node_front_entry:
-	addi	ra, ra, 0
-	lw	t0, 0(ra)
-	li	t1, 0
-	li	ra, 8
-	mul	ra, t1, ra
-	add	ra, t0, ra
-	lw	s4, 0(ra)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_front_13_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_classHeap_Node_size_entry:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	call	classArray_Node_size
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_size_14_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_classArray_Node_swap_entry:
-	addi	ra, s1, 0
-	lw	t1, 0(ra)
-	li	ra, 0
-	li	t0, 8
-	mul	ra, ra, t0
-	add	ra, t1, ra
-	lw	ra, 0(ra)
-	addi	t0, s1, 0
-	lw	t2, 0(t0)
-	li	t0, 0
-	li	t1, 8
-	mul	t0, t0, t1
-	add	t1, t2, t0
-	addi	t0, s1, 0
-	lw	t2, 0(t0)
-	li	t0, 8
-	mul	t0, a0, t0
-	add	t0, t2, t0
-	lw	t0, 0(t0)
-	sw	t0, 0(t1)
-	addi	t0, s1, 0
-	lw	t1, 0(t0)
-	li	t0, 8
-	mul	t0, a0, t0
-	add	t0, t1, t0
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
 	sw	ra, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_swap_15_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classArray_Node_pop_back_16_classArray_Node_pop_back_entry:
-	addi	t0, ra, 8
-	lw	t1, 0(t0)
-	li	ra, 1
-	sub	ra, t1, ra
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
 	sw	ra, 0(t0)
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry:
-	mv	a0, s9
-	li	a1, 0
-	call	classHeap_Node_lchild
-	mv	s1, a0
-	mv	a0, s9
-	li	a1, 0
-	call	classHeap_Node_rchild
-	mv	s2, a0
-	mv	a0, s9
-	call	classHeap_Node_size
-	slt	ra, s1, a0
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_entry_mid:
-	li	ra, 0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_true:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	mv	a1, s1
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s6, a0
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s6
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid:
-	li	s1, 0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out:
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID16_AndAnd_out_mid
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid:
-	li	ra, 0
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_true:
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid:
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out:
-	mv	a0, s9
-	call	classHeap_Node_size
-	slt	ra, s2, a0
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID28_if_out_mid
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_true:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	mv	a1, s2
-	call	classArray_Node_get
-	call	classNode_key_
-	mv	s6, a0
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	mv	a1, s1
-	call	classArray_Node_get
-	call	classNode_key_
-	slt	ra, a0, s6
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out:
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID32_AndAnd_out_mid
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_true:
-	mv	s1, s2
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID44_if_out:
-	li	ra, 0
-	xor	ra, s1, ra
-	sltiu	ra, ra, 1
-	bnez	ra, .main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out
-.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_classHeap_Node_maxHeapify_ID48_if_out:
-	addi	ra, s9, 0
-	lw	a0, 0(ra)
-	li	a1, 0
-	mv	a2, s1
-	call	classArray_Node_swap
-	mv	a0, s9
-	mv	a1, s1
-	call	classHeap_Node_maxHeapify
-	j	.main_call_dijkstra_45_dijkstra_call_classHeap_Node_pop_42_classHeap_Node_pop_call_classHeap_Node_maxHeapify_17_out
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	lw	ra, fuckLLVM_w
+	addi	t0, ra, 1
+	la	ra, fuckLLVM_w
+	sw	t0, 0(ra)
+	lw	ra, fuckLLVM_w
+	addi	ra, ra, 1
+	la	t0, fuckLLVM_w
+	sw	ra, 0(t0)
+	lw	ra, fuckLLVM_w
+	call	bblock
+	call	bblock
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_wP_return
+.main_call_sanity_check_62_sanity_check_call_wP_60_wP_return:
+	j	.main_call_sanity_check_62_sanity_check_call_wP_60_out
 .main_return:
-	li	a0, 0
-	li	ra, -28
-	add	ra, s0, ra
-	lw	s1, 0(ra)
-	li	ra, -44
-	add	ra, s0, ra
-	lw	s2, 0(ra)
-	li	ra, -36
-	add	ra, s0, ra
-	lw	s3, 0(ra)
-	li	ra, -40
-	add	ra, s0, ra
-	lw	s4, 0(ra)
-	li	ra, -20
-	add	ra, s0, ra
-	lw	s5, 0(ra)
-	li	ra, -12
-	add	ra, s0, ra
-	lw	s6, 0(ra)
-	li	ra, -48
-	add	ra, s0, ra
-	lw	s7, 0(ra)
-	li	ra, -32
-	add	ra, s0, ra
-	lw	s8, 0(ra)
-	li	ra, -16
-	add	ra, s0, ra
-	lw	s9, 0(ra)
-	li	ra, -56
-	add	ra, s0, ra
-	lw	s11, 0(ra)
-	li	t0, 64
+	li	t0, 16
 	add	t1, sp, t0
 	lw	ra, -4(t1)
 	lw	s0, -8(t1)
@@ -4237,52 +8363,18 @@ main:
 	ret
 
 	.section	.sbss
-	.type	fuckLLVM_n,@object
-	.globl	fuckLLVM_n
+	.type	fuckLLVM_w,@object
+	.globl	fuckLLVM_w
 	.p2align	2
-fuckLLVM_n:
+fuckLLVM_w:
 	.word	0
-	.size	fuckLLVM_n, 8
+	.size	fuckLLVM_w, 8
 
 	.section	.sbss
-	.type	fuckLLVM_m,@object
-	.globl	fuckLLVM_m
+	.type	fuckLLVM_N,@object
+	.globl	fuckLLVM_N
 	.p2align	2
-fuckLLVM_m:
-	.word	0
-	.size	fuckLLVM_m, 8
-
-	.section	.sbss
-	.type	fuckLLVM_g,@object
-	.globl	fuckLLVM_g
-	.p2align	2
-fuckLLVM_g:
-	.word	0
-	.size	fuckLLVM_g, 8
-
-	.section	.sbss
-	.type	fuckLLVM_INF,@object
-	.globl	fuckLLVM_INF
-	.p2align	2
-fuckLLVM_INF:
-	.word	10000000
-	.size	fuckLLVM_INF, 8
-
-	.section	.rodata
-	.type	fuckLLVM_.str.0,@object
-fuckLLVM_.str.0:
-	.asciz	"-1 "
-	.size	fuckLLVM_.str.0, 3
-
-	.section	.rodata
-	.type	fuckLLVM_.str.1,@object
-fuckLLVM_.str.1:
-	.asciz	"  "
-	.size	fuckLLVM_.str.1, 2
-
-	.section	.rodata
-	.type	fuckLLVM_.str.2,@object
-fuckLLVM_.str.2:
-	.asciz	" "
-	.size	fuckLLVM_.str.2, 1
+fuckLLVM_N:
+	.word	1
+	.size	fuckLLVM_N, 8
 
