@@ -6,6 +6,7 @@ import Backend.IRBuilder;
 import Backend.IRPrinter;
 import Frontend.ASTBuilder;
 import Frontend.SymbolCollector;
+import Interpreter.IRInterpreter;
 import MIR.globalDefine;
 import Optimize.AggressiveDCE;
 import Optimize.ConstantPropagation;
@@ -44,6 +45,9 @@ public class main {
                     out = new PrintStream(new FileOutputStream(args[i+1]));
             }
         }
+
+        boolean JitSwitch = true ;
+
         String name = "test.mx";
         // InputStream raw = System.in;
         InputStream raw = new FileInputStream(name);
@@ -80,18 +84,23 @@ public class main {
                 new MemToReg(globalDef) ;
                 new IRPrinter().visitGlobalDef(SSA, globalDef);
                 // new SimpleDCE(globalDef) ;
-                new ConstantPropagation(globalDef) ;
-                new IRPrinter().visitGlobalDef(SCCP, globalDef);
-                new AggressiveDCE(globalDef).DCE() ;
-                new IRPrinter().visitGlobalDef(ADCE, globalDef);
-                new InlineExpansion (globalDef) ;
-                new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
-                AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
-                new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
-                new AssemblyPrinter(AssmDebugOut, assemblyGlobalDefine) ;
-                new RegisterAllocation(assemblyGlobalDefine) ;
-                new AssemblyPrinter(out, assemblyGlobalDefine) ;
+                if (!JitSwitch) {
+                    new ConstantPropagation(globalDef) ;
+                    new IRPrinter().visitGlobalDef(SCCP, globalDef);
+                    new AggressiveDCE(globalDef).DCE() ;
+                    new IRPrinter().visitGlobalDef(ADCE, globalDef);
+                    new InlineExpansion (globalDef) ;
+                    new IRPrinter().visitGlobalDef(IROptOut, globalDef);
+
+                    AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
+                    new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
+                    new AssemblyPrinter(AssmDebugOut, assemblyGlobalDefine) ;
+                    new RegisterAllocation(assemblyGlobalDefine) ;
+                    new AssemblyPrinter(out, assemblyGlobalDefine) ;
+                } else {
+                    new IRInterpreter(globalDef) ;
+                }
             }
         } catch(error er) {
             System.err.println(er.toString());

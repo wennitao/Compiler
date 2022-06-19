@@ -115,16 +115,16 @@ public class IRBuilder implements ASTVisitor{
         // gScope.functionIRParameters.put("toString", parameters) ;
         globalDef.functions.add(newFunc) ;
 
-        gScope = (globalScope) gScope.getScopeFromClassName(new position(0, 0), "__Array") ;
-        newFunc = new function ("size") ;
-        parameters = new ArrayList<>() ;
-        newFunc.isBuiltin = true ;
-        newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
-        parameters.add(new IRPointerType (new IRIntType (8))) ;
-        newFunc.returnType = new IRIntType(32) ;
-        // gScope.functionIRParameters.put("size", parameters) ;
-        globalDef.functions.add(newFunc) ;
-        gScope = (globalScope) gScope.parentScope() ;
+        // gScope = (globalScope) gScope.getScopeFromClassName(new position(0, 0), "__Array") ;
+        // newFunc = new function ("size") ;
+        // parameters = new ArrayList<>() ;
+        // newFunc.isBuiltin = true ;
+        // newFunc.parameters.add(new register(newFunc.curRegisterID ++, new IRPointerType (new IRIntType (8)))) ;
+        // parameters.add(new IRPointerType (new IRIntType (8))) ;
+        // newFunc.returnType = new IRIntType(32) ;
+        // // gScope.functionIRParameters.put("size", parameters) ;
+        // globalDef.functions.add(newFunc) ;
+        // gScope = (globalScope) gScope.parentScope() ;
 
         gScope = (globalScope) gScope.getScopeFromClassName(new position(0, 0), "string") ;
         newFunc = new function ("length") ;

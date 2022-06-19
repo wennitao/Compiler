@@ -499,7 +499,7 @@ public class MemToReg {
                 register reg = curPhi.destReg ;
                 if (allocaRegs.contains(reg)) {
                     int curID = regID.get(reg) ;
-                    register renameReg = new register(reg.registerID.substring(9) + "." + curID, ((IRPointerType) reg.type).type, false) ;
+                    register renameReg = new register(reg.registerID.substring(2) + "." + curID, ((IRPointerType) reg.type).type, false) ;
                     curPhi.destReg = renameReg ;
                     newIncomingVals.put(reg, renameReg) ;
                     regID.put(reg, curID + 1) ;
