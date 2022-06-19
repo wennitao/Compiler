@@ -22,13 +22,13 @@ public class IRInterpreter {
     private class stackInfo {
         function curFunction ;
         block curBlock, preBlock ;
-        int curStatementIdx ;
+        Integer curStatementIdx ;
         statement curStatement ;
         Map<register, Integer> regValue ;
         Map<register, String> stringValue ;
         register returnReg = null ;
-        stackInfo (function f, block cur, block pre, int curStatementIdx, statement curStmt, Map<register, Integer> regV, Map<register, String> stringV) {
-            curFunction = f; curBlock = cur; preBlock = pre; curStatement = curStmt ;
+        stackInfo (function f, block cur, block pre, Integer curStmtIdx, statement curStmt, Map<register, Integer> regV, Map<register, String> stringV) {
+            curFunction = f; curBlock = cur; preBlock = pre; curStatementIdx = curStmtIdx; curStatement = curStmt ;
             this.regValue = regV; this.stringValue = stringV ;
         }
     }
@@ -43,7 +43,7 @@ public class IRInterpreter {
     Stack<stackInfo> callStack = new Stack<>() ;
     function curFunction = null ;
     block curBlock = null, preBlock = null ;
-    int curStatementIdx = 0 ;
+    Integer curStatementIdx = null ;
     statement curStatement = null ;
     int curStackOffset = 0 ;
 
@@ -59,14 +59,16 @@ public class IRInterpreter {
         }
         curFunction = mainFunction ;
         curBlock = mainFunction.blocks.get(0) ;
-        curStatementIdx = 0 ;
+        curStatementIdx = Integer.valueOf(0) ;
         curStatement = curBlock.statements.get(0) ;
         stackInfo curInfo = new stackInfo(curFunction, curBlock, preBlock, curStatementIdx, curStatement, regValue, stringValue) ;
+        curInfo.returnReg = mainFunction.returnReg ;
         callStack.push(curInfo) ;
 
         while (!callStack.isEmpty()) {
             InterpretInstruction();
         }
+        // System.out.println("exit code: " + entityToInt(mainFunction.returnReg)) ;
     }
 
     Map<String, ArrayList<Integer> > classOffset = new HashMap<>() ;
@@ -115,7 +117,7 @@ public class IRInterpreter {
     }
 
     void InterpretInstruction () {
-        // System.out.println (curStatement) ;
+        System.out.println (curStatement) ;
         boolean moveToNextInst = false ;
         if (curStatement instanceof alloca) {
             alloca curAlloca = (alloca) curStatement ;
@@ -140,7 +142,7 @@ public class IRInterpreter {
                 int val = entityToInt(curBranch.condition) ;
                 block toBlock = (val == 1) ? curFunction.labelToBlock.get(curBranch.trueBranch.labelID) : curFunction.labelToBlock.get(curBranch.falseBranch.labelID) ;
                 preBlock = curBlock; curBlock = toBlock ;
-                curStatementIdx = 0 ;
+                curStatementIdx = 0;
                 curStatement = curBlock.statements.get(0) ;
             } else {
                 block toBlock = curFunction.labelToBlock.get(curBranch.trueBranch.labelID) ;
@@ -155,19 +157,22 @@ public class IRInterpreter {
             if (callFunction.isBuiltin) {
                 handleBuiltinFuncitoncall(curFunctioncall);
             } else {
+                Map<register, Integer> newRegValue = new HashMap<>() ;
+                Map<register, String> newStringValue = new HashMap<>() ;
                 for (int i = 0; i < curFunctioncall.parameters.size(); i ++) {
                     entity input = curFunctioncall.parameters.get(i) ;
                     register reg = callFunction.parameters.get(i) ;
-                    if (input instanceof constant) regValue.put(reg, ((constant) input).value) ;
-                    else if (regValue.containsKey(input)) regValue.put(reg, regValue.get((register) input)) ;
-                    else stringValue.put(reg, stringValue.get(input)) ;
+                    if (input instanceof constant) newRegValue.put(reg, ((constant) input).value) ;
+                    else if (regValue.containsKey(input)) newRegValue.put(reg, regValue.get((register) input)) ;
+                    else if (globalRegValue.containsKey(input)) newRegValue.put(reg, globalRegValue.get((register) input)) ;
+                    else newStringValue.put(reg, stringValue.get(input)) ;
                 }
 
                 curFunction = callFunction ;
                 curBlock = callFunction.blocks.get(0) ;
-                curStatementIdx = 0 ;
+                curStatementIdx = Integer.valueOf(0) ;
                 curStatement = curBlock.statements.get(0) ;
-                regValue = new HashMap<>(); stringValue = new HashMap<>() ;
+                regValue = newRegValue; stringValue = newStringValue ;
                 stackInfo curInfo = new stackInfo(curFunction, curBlock, preBlock, curStatementIdx, curStatement, regValue, stringValue) ;
                 if (!curFunctioncall.isVoid) curInfo.returnReg = curFunctioncall.destReg ;
                 callStack.push(curInfo) ;
@@ -216,7 +221,11 @@ public class IRInterpreter {
             register returnReg = callStack.peek().returnReg ;
             if (returnReg != null) value = entityToInt(curReturnStmt.returnReg) ;
             callStack.pop() ;
-            if (callStack.isEmpty()) return ;
+            if (callStack.isEmpty()) {
+                // main return
+                System.out.println("exit code: " + value);
+                return ;
+            }
             stackInfo curInfo = callStack.peek() ;
             curFunction = curInfo.curFunction ;
             curBlock = curInfo.curBlock ;
@@ -241,6 +250,7 @@ public class IRInterpreter {
     
         if (!moveToNextInst) {
             curStatementIdx ++ ;
+            callStack.peek().curStatementIdx = curStatementIdx ;
             curStatement = curBlock.statements.get(curStatementIdx) ;
         }
     }
@@ -391,6 +401,14 @@ public class IRInterpreter {
             register reg = builtinFunctioncall.destReg ;
             int val = str1.compareTo(str2) >= 0 ? 1 : 0 ;
             regValue.put(reg, val) ;
+        } else if (functionName.equals("malloc")) {
+            register reg = builtinFunctioncall.destReg ;
+            int val = entityToInt(builtinFunctioncall.parameters.get(0)) ;
+            regOffset.put(reg, curStackOffset) ;
+            regValue.put(reg, curStackOffset) ;
+            for (int i = 0; i < val; i ++)
+                MEM[curStackOffset + i] = 0 ;
+            curStackOffset += val ;
         }
     }
 

@@ -79,23 +79,29 @@ public class main {
 
             if (!SemanticSwitch) {
                 globalDefine globalDef = new globalDefine() ;
+                System.out.println ("begin building IR...") ;
                 new IRBuilder(globalDef, gScope).visit(ASTRoot) ;
                 new IRPrinter().visitGlobalDef(IRout, globalDef);
+                System.out.println ("begin building SSA...") ;
                 new MemToReg(globalDef) ;
                 new IRPrinter().visitGlobalDef(SSA, globalDef);
-                // new SimpleDCE(globalDef) ;
 
                 if (!JitSwitch) {
+                    System.out.println ("begin SCCP...") ;
                     new ConstantPropagation(globalDef) ;
                     new IRPrinter().visitGlobalDef(SCCP, globalDef);
+                    System.out.println ("begin ADCE...") ;
                     new AggressiveDCE(globalDef).DCE() ;
                     new IRPrinter().visitGlobalDef(ADCE, globalDef);
+                    System.out.println ("begin Inline...") ;
                     new InlineExpansion (globalDef) ;
                     new IRPrinter().visitGlobalDef(IROptOut, globalDef);
 
                     AssemblyGlobalDefine assemblyGlobalDefine = new AssemblyGlobalDefine() ;
+                    System.out.println ("begin Assembly Builder...") ;
                     new AssemblyBuilder(globalDef, assemblyGlobalDefine) ;
                     new AssemblyPrinter(AssmDebugOut, assemblyGlobalDefine) ;
+                    System.out.println ("begin color assign...") ;
                     new RegisterAllocation(assemblyGlobalDefine) ;
                     new AssemblyPrinter(out, assemblyGlobalDefine) ;
                 } else {

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 import MIR.* ;
 import MIR.IRType.IRPointerType;
@@ -431,7 +432,23 @@ public class MemToReg {
                 }
             }
 
-        Rename (curFunc, curFunc.blocks.get(0), IncomingVals) ;
+        // Rename (curFunc, curFunc.blocks.get(0), IncomingVals) ;
+        Stack<block> stack = new Stack<>() ;
+        Stack<Map<register, entity> > incomingStack = new Stack<>() ;
+        stack.add(curFunc.blocks.get(0)) ;
+        incomingStack.add(IncomingVals) ;
+        while (!stack.isEmpty()) {
+            block curBlock = stack.pop() ;
+            Map<register, entity> curIncomingVals = incomingStack.pop() ;
+            visited.add(curBlock) ;
+            Map<register, entity> newIncomingVals = Rename (curFunc, curBlock, curIncomingVals) ;
+            for (block nxt : curBlock.succ) {
+                if (!visited.contains(nxt)) {
+                    stack.add(nxt) ;
+                    incomingStack.add(newIncomingVals) ;
+                }
+            }
+        }
     }
 
     private void regUpdate (block b, register from, entity to) {
@@ -446,9 +463,9 @@ public class MemToReg {
         varUseStmt.remove(from) ;
     }
 
-    private void Rename (function curFunc, block B, Map<register, entity> IncomingVals) {
+    private Map<register, entity> Rename (function curFunc, block B, Map<register, entity> IncomingVals) {
         // System.out.println(B.identifier);
-        visited.add(B) ;
+        // visited.add(B) ;
         ArrayList<Integer> eraseStmts = new ArrayList<>() ;
         Map<register, entity> newIncomingVals = new HashMap<>(IncomingVals) ;
         for (int i = 0; i < B.statements.size(); i ++) {
@@ -511,10 +528,11 @@ public class MemToReg {
             // System.out.println(B.statements.get(idx));
             B.statements.remove(idx) ;
         }
-        for (block nxt : B.succ) {
-            if (!visited.contains(nxt))
-                Rename (curFunc, nxt, newIncomingVals) ;
-        }
+        // for (block nxt : B.succ) {
+        //     if (!visited.contains(nxt))
+        //         Rename (curFunc, nxt, newIncomingVals) ;
+        // }
+        return newIncomingVals ;
     }
 
     private void EliminateAlloca(function curFunc) {
