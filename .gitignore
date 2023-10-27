@@ -1,6 +1,7 @@
 codegen/*
 optim-new/*
 *.class
+.vscode
 .VSCodeCounter
 *.mx
 *.ll
@@ -9,3 +10,8 @@ optim-new/*
 *.ans
 *.yaml
 *.txt
+*.s
+tmp
+tmp.cpp
+test
+.DS_Store

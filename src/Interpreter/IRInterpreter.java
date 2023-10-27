@@ -22,14 +22,17 @@ public class IRInterpreter {
     private class stackInfo {
         function curFunction ;
         block curBlock, preBlock ;
-        Integer curStatementIdx ;
+        int curStatementIdx ;
         statement curStatement ;
         Map<register, Integer> regValue ;
         Map<register, String> stringValue ;
         register returnReg = null ;
-        stackInfo (function f, block cur, block pre, Integer curStmtIdx, statement curStmt, Map<register, Integer> regV, Map<register, String> stringV) {
+        stackInfo (function f, block cur, block pre, int curStmtIdx, statement curStmt, Map<register, Integer> regV, Map<register, String> stringV) {
             curFunction = f; curBlock = cur; preBlock = pre; curStatementIdx = curStmtIdx; curStatement = curStmt ;
             this.regValue = regV; this.stringValue = stringV ;
+        }
+        void update (block cur, block pre, int curStmtIdx, statement curStmt) {
+            curBlock = cur; preBlock = pre; curStatementIdx = curStmtIdx; curStatement = curStmt ;
         }
     }
 
@@ -43,9 +46,12 @@ public class IRInterpreter {
     Stack<stackInfo> callStack = new Stack<>() ;
     function curFunction = null ;
     block curBlock = null, preBlock = null ;
-    Integer curStatementIdx = null ;
+    int curStatementIdx = 0 ;
     statement curStatement = null ;
     int curStackOffset = 0 ;
+
+    final int visitUpperBound = 5 ;
+    Map<function, Integer> functionVisitCount = new HashMap<>() ;
 
     void beginInterpretation () {
         handleGlobalDefineStmt();
@@ -59,7 +65,7 @@ public class IRInterpreter {
         }
         curFunction = mainFunction ;
         curBlock = mainFunction.blocks.get(0) ;
-        curStatementIdx = Integer.valueOf(0) ;
+        curStatementIdx = 0 ;
         curStatement = curBlock.statements.get(0) ;
         stackInfo curInfo = new stackInfo(curFunction, curBlock, preBlock, curStatementIdx, curStatement, regValue, stringValue) ;
         curInfo.returnReg = mainFunction.returnReg ;
@@ -112,12 +118,13 @@ public class IRInterpreter {
     Map<String, function> strToFunction = new HashMap<>();
     private void collectFunctions () {
         for (function curFunction : globalDefine.functions) {
-            strToFunction.put(curFunction.identifier, curFunction) ;     
+            strToFunction.put(curFunction.identifier, curFunction) ;
+            if (!curFunction.isBuiltin) functionVisitCount.put(curFunction, 0) ;     
         }
     }
 
     void InterpretInstruction () {
-        System.out.println (curStatement) ;
+        // System.out.println (curStatement) ;
         boolean moveToNextInst = false ;
         if (curStatement instanceof alloca) {
             alloca curAlloca = (alloca) curStatement ;
@@ -150,13 +157,16 @@ public class IRInterpreter {
                 curStatementIdx = 0 ;
                 curStatement = curBlock.statements.get(0) ;
             }
+            callStack.peek().update(curBlock, preBlock, curStatementIdx, curStatement);
             moveToNextInst = true ;
         } else if (curStatement instanceof functioncall) {
             functioncall curFunctioncall = (functioncall) curStatement ;
             function callFunction = strToFunction.get(curFunctioncall.functionName) ;
+            int cnt = functionVisitCount.get(callFunction);
             if (callFunction.isBuiltin) {
                 handleBuiltinFuncitoncall(curFunctioncall);
-            } else {
+            } else if (cnt < visitUpperBound) {
+                // continue interpretation
                 Map<register, Integer> newRegValue = new HashMap<>() ;
                 Map<register, String> newStringValue = new HashMap<>() ;
                 for (int i = 0; i < curFunctioncall.parameters.size(); i ++) {
@@ -170,13 +180,19 @@ public class IRInterpreter {
 
                 curFunction = callFunction ;
                 curBlock = callFunction.blocks.get(0) ;
-                curStatementIdx = Integer.valueOf(0) ;
+                curStatementIdx = 0 ;
                 curStatement = curBlock.statements.get(0) ;
                 regValue = newRegValue; stringValue = newStringValue ;
                 stackInfo curInfo = new stackInfo(curFunction, curBlock, preBlock, curStatementIdx, curStatement, regValue, stringValue) ;
                 if (!curFunctioncall.isVoid) curInfo.returnReg = curFunctioncall.destReg ;
                 callStack.push(curInfo) ;
                 moveToNextInst = true ;
+
+                functionVisitCount.put (callFunction, cnt + 1) ;
+            } else {
+                // To Do: assembly to ravel
+                // call assemblyBuilder and optimizations
+                // all succ functions have been compiled
             }
         } else if (curStatement instanceof getelementptr) {
             getelementptr curGetelementptr = (getelementptr) curStatement ;
@@ -250,8 +266,8 @@ public class IRInterpreter {
     
         if (!moveToNextInst) {
             curStatementIdx ++ ;
-            callStack.peek().curStatementIdx = curStatementIdx ;
             curStatement = curBlock.statements.get(curStatementIdx) ;
+            callStack.peek().update(curBlock, preBlock, curStatementIdx, curStatement);
         }
     }
 

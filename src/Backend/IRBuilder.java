@@ -645,6 +645,7 @@ public class IRBuilder implements ASTVisitor{
         curFunction.blocks.add(curFunction.returnBlock) ;
         currentBlock = curFunction.allocaBlock ;
         for (alloca allocaInst : curFunction.allocaInst) currentBlock.push_back(allocaInst) ;
+        currentBlock.push_back(new branch(new label(curFunction.rootBlock.identifier)));
         globalDef.functions.add(constructorFunc) ;
     }
 
@@ -675,6 +676,7 @@ public class IRBuilder implements ASTVisitor{
             curFunction.blocks.add(curFunction.returnBlock) ;
             currentBlock = curFunction.allocaBlock ;
             for (alloca inst : curFunction.allocaInst) currentBlock.push_back(inst) ;
+            currentBlock.push_back(new branch(new label(curFunction.rootBlock.identifier)));
             globalDef.functions.add(constructorFunc) ;
             curFunction = null; currentBlock = null ;
         }

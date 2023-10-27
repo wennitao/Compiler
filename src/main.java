@@ -46,7 +46,7 @@ public class main {
             }
         }
 
-        boolean JitSwitch = true ;
+        boolean JitSwitch = false ;
 
         String name = "test.mx";
         // InputStream raw = System.in;
